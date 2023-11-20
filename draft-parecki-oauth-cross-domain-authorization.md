@@ -3,13 +3,13 @@ title: "OAuth Cross-Domain Authorization"
 abbrev: "Cross-Domain Authz"
 category: std
 
-docname: draft-parecki-oauth-cross-domain-authorization
+docname: draft-parecki-oauth-cross-app-authorization-latest
 submissiontype: IETF
 number:
 date:
 consensus: true
 v: 3
-area: AREA
+area: "Security"
 workgroup: "Web Authorization Protocol"
 keyword:
  - cross-domain
@@ -21,7 +21,7 @@ venue:
   mail: "oauth@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
   github: "oktadev/draft-parecki-oauth-cross-domain-authorization"
-  latest: "https://oktadev.github.io/draft-parecki-oauth-cross-domain-authorization/draft-parecki-oauth-cross-domain-authorization.html"
+  latest: "https://oktadev.github.io/draft-parecki-oauth-cross-domain-authorization/draft-parecki-oauth-cross-app-authorization.html"
 
 author:
  -

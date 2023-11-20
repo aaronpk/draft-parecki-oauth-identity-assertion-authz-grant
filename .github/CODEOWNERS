@@ -1,0 +1,3 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-parecki-oauth-cross-app-authorization.md aaron@parecki.com public@karlmcguinness.com
