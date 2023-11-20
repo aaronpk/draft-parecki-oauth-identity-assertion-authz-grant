@@ -3,7 +3,7 @@ title: "OAuth Cross-Domain Authorization"
 abbrev: "Cross-Domain Authz"
 category: std
 
-docname: draft-parecki-oauth-cross-app-authorization-latest
+docname: draft-parecki-oauth-cross-domain-authorization-latest
 submissiontype: IETF
 number:
 date:
