@@ -40,7 +40,7 @@ normative:
   RFC8693:
 
 informative:
-  RFC9740:
+  RFC9470:
 
 
 --- abstract
