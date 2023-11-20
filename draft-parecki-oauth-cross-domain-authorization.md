@@ -231,7 +231,7 @@ Notes:
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet
 
 
-# Token Request (Assertion) {#token-request}
+# Token Request (JWT Assertion) {#token-request}
 
 The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Resource Application's token endpoint using the ACDC JWT previously obtained.
 
@@ -245,6 +245,15 @@ The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Reso
 
     grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
     assertion=eyJhbGciOiJIUzI1NiIsI...
+
+## Processing Rules
+
+All of Section 5.2 of {{RFC7521}} applies, in addition to the following processing rules:
+
+* The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
+
+
+## Response
 
 The Resource Application token endpoint responds with an OAuth 2.0 Token Response, e.g.:
 
