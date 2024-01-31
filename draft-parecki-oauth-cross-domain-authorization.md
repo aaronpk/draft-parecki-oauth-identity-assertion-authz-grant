@@ -20,8 +20,8 @@ venue:
   type: "Working Group"
   mail: "oauth@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
-  github: "oktadev/draft-parecki-oauth-cross-domain-authorization"
-  latest: "https://oktadev.github.io/draft-parecki-oauth-cross-domain-authorization/draft-parecki-oauth-cross-domain-authorization.html"
+  github: "aaronpk/draft-parecki-oauth-cross-domain-authorization"
+  latest: "https://aaronpk.github.io/draft-parecki-oauth-cross-domain-authorization/draft-parecki-oauth-cross-domain-authorization.html"
 
 author:
  -
