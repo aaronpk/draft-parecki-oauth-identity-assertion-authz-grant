@@ -236,9 +236,9 @@ Notes:
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet
 
 
-# Token Request (JWT Assertion) {#token-request}
+# Access Token Request {#token-request}
 
-The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Resource Application's token endpoint using the previously obtained JWT authorization grant.
+The Requesting Application makes an access token request to the Resource Application's token endpoint using the previously obtained JWT authorization grant as a JWT Assertion {{RFC7523}}.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
 * `assertion` - The JWT authorization grant obtained in the previous step
