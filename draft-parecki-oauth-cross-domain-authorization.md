@@ -38,6 +38,7 @@ normative:
   RFC7521:
   RFC7523:
   RFC8693:
+  I-D.ietf-oauth-identity-chaining:
 
 informative:
   RFC9470:
@@ -55,9 +56,12 @@ Enterprises often have hundreds of SaaS applications.  SaaS applications often h
 
 It is industry best practice for an enterprise to connect their ecosystem of SaaS applications to their Identity Provider (IdP) to centralize identity and access management capabilites for the organization.  End-users get a better experience (SSO) and administrators get better security outcomes such multi-factor authentication and zero-trust.  SaaS applications today enable the administrator to establish trust with an IdP for user authentication but typically don't allow the administrator to trust the IdP for API authorization.
 
-The draft specification [Authorization Cross Domain Code 1.0](https://openid.bitbucket.io/draft-acdc-01.html) (ACDC) defines a new JWT-based grant type that can requested from an Authorization Server and exchanged with another Authorization Server for Access and Refresh tokens.  This new grant enables federation for Authorization Servers across policy or administrative boundaries. The same enterprise IdP for example that is trusted by applications for SSO can be extended to broker access to APIs.  This enables the enteprise to centralize more access decisions across their SaaS ecosystem and provides better end-user experience for users that need to connect multiple applications via OAuth 2.0.
+The draft specification Identity Chaining Across Trust Domains ({{I-D.ietf-oauth-identity-chaining}}) defines how to request a JWT authorization grant from from an Authorization Server and exchange it for an Access Token at another Authorization Server. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified. This specification defines the additional details necessary to support interoperable implementations for this specific use case.
 
-This specification extends support for the Authorization Cross-Domain Code (ACDC) grant to Token Exchange {{RFC8693}} requests, enabling applications to request access to 3rd party applications using backchannel operations that don't interupt the end user's interactive application experience.  Its also useful for deployments where SSO is SAML based and not using OpenID Connect.
+This specification enables federation for Authorization Servers across policy or administrative boundaries. The same enterprise IdP for example that is trusted by applications for SSO can be extended to broker access to APIs.  This enables the enterprise to centralize more access decisions across their SaaS ecosystem and provides better end-user experience for users that need to connect multiple applications via OAuth 2.0.
+
+This specification extends {{I-D.ietf-oauth-identity-chaining}}, enabling applications to request access to 3rd party applications using backchannel operations that don't interupt the end user's interactive application experience.  Its also useful for deployments where SSO is based on SAML and not using OpenID Connect.
+
 
 # Conventions and Definitions
 
@@ -66,13 +70,13 @@ This specification extends support for the Authorization Cross-Domain Code (ACDC
 ## Roles
 
 Requesting Application (Client)
-: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Application below) that is managed by the same enterprise IdP.
+: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Application below) that is managed by the same enterprise IdP. In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
 
 Resource Application (Resource)
-: Application that provides an OAuth 2.0 Protected Resource that is used across an enterprise's SaaS ecosystem.
+: Application that provides an OAuth 2.0 Protected Resource that is used across an enterprise's SaaS ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
 
 Identity Provider (IdP)
-: Organization's Identity Provider that is trusted by a set of applications in an enterprise's app ecosystem for identity and access management.
+: Organization's Identity Provider that is trusted by a set of applications in an enterprise's app ecosystem for identity and access management. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
 
 # Overview
 
@@ -87,8 +91,8 @@ The example flow is for an enterprise `acme`
 
 
 1. User logs in to the Requesting Application via SSO with the Enterprise IdP (SAML or OIDC)
-2. Requesting Application requests an Authorization Cross-Domain Code (ACDC) for the Resource Application from the IdP
-3. Requesting Application exchange the Authorization Cross-Domain Code (ACDC) for an access token at the Resource Application's token endpoint
+2. Requesting Application requests an JWT Authorization Grant for the Resource Application from the IdP
+3. Requesting Application exchange the JWT Authorization Grant for an access token at the Resource Application's token endpoint
 
 ## Preconditions
 
@@ -112,6 +116,7 @@ The user authenticates with the IdP and post backs an assertion to the Requestin
 
 Note: The Enterprise IdP may enforce security controls such as multi-factor authentication before granting the user access to the Requesting Application.
 
+
     POST /SAML2/SSO/ACS HTTP/1.1
     Host: https://acme.wiki.app/SAML2/ACS
     Content-Type: application/x-www-form-urlencoded
@@ -120,16 +125,16 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
     SAMLResponse={AuthnResponse}&RelayState=DyXvaJtZ1BqsURRC
 
 
-# ACDC Request (Token Exchange) {#acdc-request}
+# Token Exchange
 
 The Requesting Application makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoint with the following parameters:
 
-* `requested_token_type=urn:ietf:params:oauth:token-type:jwt-acdc`
+* `requested_token_type=urn:ietf:params:oauth:token-type:jwt-authorization-grant`
 * `resource` - The token endpoint of the Resource Application.
 * `scope` - The space-separated list of scopes at the Resource Application to include in the token
 * `subject_token` - The SSO assertion (SAML or OpenID Connect ID Token) for the target end-user
 * `subject_token_type` - For SAML2 Assertion: `urn:ietf:params:oauth:token-type:saml2`, or OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
-* Provides client authentication to the IdP (the example below uses the more secure `private_key_jwt` method)
+* Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
 For example:
 
@@ -138,7 +143,7 @@ For example:
     Content-Type: application/x-www-form-urlencoded
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-    &requested_token_type=urn:ietf:params:oauth:token-type:jwt-acdc
+    &requested_token_type=urn:ietf:params:oauth:token-type:jwt-authorization-grant
     &resource=https://acme.chat.app/oauth2/token
     &scope=chat.read+chat.history
     &subject_token=PHNhbWw6QXNzZXJ0aW9uCiAgeG1sbnM6c2FtbD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiIKICBJRD0iaWRlbnRpZmllcl8zIgogIFZlcnNpb249IjIuMCIKICBJc3N1ZUluc3RhbnQ9IjIwMjMtMDYtMDVUMDk6MjA6MDVaIj4KICA8c2FtbDpJc3N1ZXI-aHR0cHM6Ly9hY21lLmlkcC5jbG91ZDwvc2FtbDpJc3N1ZXI-CiAgPGRzOlNpZ25hdHVyZQogICAgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPi4uLjwvZHM6U2lnbmF0dXJlPgogIDxzYW1sOlN1YmplY3Q-CiAgICA8c2FtbDpOYW1lSUQKICAgICAgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjE6bmFtZWlkLWZvcm1hdDplbWFpbEFkZHJlc3MiPgogICAgICBrYXJsQGFjbWUuY29tCiAgICA8L3NhbWw6TmFtZUlEPgogICAgPHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbgogICAgICBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPgogICAgICA8c2FtbDpTdWJqZWN0Q29uZmlybWF0aW9uRGF0YQogICAgICAgIEluUmVzcG9uc2VUbz0iNmM5ODMwZTQtMTMzMi00ZjQ5LWFkZTAtZjI0ZjYxMTk2ZDdlIgogICAgICAgIFJlY2lwaWVudD0iaHR0cHM6Ly9hY21lLndpa2kuYXBwL1NBTUwyL0FDUyIKICAgICAgICBOb3RPbk9yQWZ0ZXI9IjIwMjMtMDYtMDVUMDk6MjU6MDVaIi8-CiAgICA8L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj4KICA8L3NhbWw6U3ViamVjdD4KICA8c2FtbDpDb25kaXRpb25zCiAgICBOb3RCZWZvcmU9IjIwMjMtMDYtMDVUMDk6MTU6MDVaIgogICAgTm90T25PckFmdGVyPSIyMDIzLTA2LTA1VDA5OjI1OjA1WiI-CiAgICA8c2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPgogICAgICA8c2FtbDpBdWRpZW5jZT5odHRwczovL2FjbWUud2lraS5hcHA8L3NhbWw6QXVkaWVuY2U-CiAgICA8L3NhbWw6QXVkaWVuY2VSZXN0cmljdGlvbj4KICA8L3NhbWw6Q29uZGl0aW9ucz4KICA8c2FtbDpBdXRoblN0YXRlbWVudAogICAgQXV0aG5JbnN0YW50PSIyMDIzLTA2LTA1VDA5OjIwOjAwWiIKICAgIFNlc3Npb25JbmRleD0iMzcxMWVjZDYtN2Y5NC00NWM3LTgxYzUtNDkyNjI1NDg0NWYzIj4KICAgIDxzYW1sOkF1dGhuQ29udGV4dD4KICAgICAgPHNhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICAgICAgdXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRUcmFuc3BvcnQKICAgICA8L3NhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICA8L3NhbWw6QXV0aG5Db250ZXh0PgogIDwvc2FtbDpBdXRoblN0YXRlbWVudD4KPC9zYW1sOkFzc2VydGlvbj4
@@ -156,7 +161,7 @@ IdP may also introspect the authentication context described in the SSO assertio
 
 ## Response
 
-If access is granted, the IdP will return a signed Authorization Cross-Domain Code JWT in the token exchange response defined in Section 2.2 of {{RFC8693}}:
+If access is granted, the IdP will return a signed JWT authorization grant in the token exchange response defined in Section 2.2 of {{RFC8693}}:
 
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -165,17 +170,17 @@ If access is granted, the IdP will return a signed Authorization Cross-Domain Co
 
     {
       "access_token": "eyJhbGciOiJIUzI1NiIsI...",
-      "issued_token_type": "urn:ietf:params:oauth:token-type:jwt-acdc",
+      "issued_token_type": "urn:ietf:params:oauth:token-type:jwt-authorization-grant",
       "token_type": "N_A",
       "scope": "chat.read chat.history",
       "expires_in": 300
     }
 
-* `access_token` - The ACDC. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
-* `issued_token_type` - `urn:ietf:params:oauth:token-type:jwt-acdc`
-* `token_type` - `N_A` Requited by Token Exchange.
+* `access_token` - The authorization grant. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
+* `issued_token_type` - `urn:ietf:params:oauth:token-type:jwt-authorization-grant`
+* `token_type` - `N_A` (Required by the Token Exchange spec)
 * `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
-* `expires_in` - The lifetime in seconds of the ACDC.
+* `expires_in` - The lifetime in seconds of the authorization grant.
 
 ### Error Response
 
@@ -191,25 +196,25 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
     }
 
 
-## Authorization Cross-Domain Code JWT {#acdc-jwt}
+## JWT Authorization Grant {#jwt-authorization-grant}
 
-The ACDC JWT is issued by the IdP `https://acme.idp.cloud` for the requested audience `https://acme.chat.app` and includes the following claims:
+The JWT authorization grant is issued by the IdP `https://acme.idp.cloud` for the requested audience `https://acme.chat.app` and includes the following claims:
 
 * `iss` - The IdP `issuer` URL
 * `sub` - The User ID at the IdP
-* `aud` - Token endpoint of the Resource Application
-* `azp` - Client ID of the Requesting Application as registered with the Resource Application.
+* `aud` - Token endpoint of the Resource Application's authorization server
+* `azp` - Client ID of the Requesting Application as registered with the Resource Application's authorization server.
 * `exp` -
 * `iat` -
 * `scopes` - Array of scopes at the Resource Application granted to the Requesting Application
 * `jti` - Unique ID of this JWT
 
-The `typ` of the JWT indicated in the JWT header MUST be `acdc+jwt`.
+The `typ` of the JWT indicated in the JWT header MUST be `authorization-grant+jwt`.
 
 An example JWT shown with expanded header and payload claims is below:
 
     {
-      "typ": "acdc+jwt"
+      "typ": "authorization-grant+jwt"
     }
     .
     {
@@ -233,11 +238,12 @@ Notes:
 
 # Token Request (JWT Assertion) {#token-request}
 
-The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Resource Application's token endpoint using the ACDC JWT previously obtained.
+The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Resource Application's token endpoint using the previously obtained JWT authorization grant.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
-* `assertion` - The ACDC obtained in the previous step
-* Client Authentication - the client authenticates with its credentials as registered with the Resource Application
+* `assertion` - The JWT authorization grant obtained in the previous step
+* Client Authentication - the client authenticates with its credentials as registered with the Resource Application's authorization server
+
 
     POST /oauth2/token HTTP/1.1
     Host: acme.chat.app
@@ -245,6 +251,7 @@ The Requesting Application makes a JWT Assertion {{RFC7523}} request to the Reso
 
     grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
     assertion=eyJhbGciOiJIUzI1NiIsI...
+
 
 ## Processing Rules
 
@@ -256,6 +263,7 @@ All of Section 5.2 of {{RFC7521}} applies, in addition to the following processi
 ## Response
 
 The Resource Application token endpoint responds with an OAuth 2.0 Token Response, e.g.:
+
 
     HTTP/1.1 200 OK
     Content-Type: application/json;charset=UTF-8
@@ -281,26 +289,26 @@ This specification SHOULD only be supported for confidential clients.  Public cl
 
 In the initial token exchange request, the IdP may require step-up authentication for the subject if the authentication context in the subject's assertion does not meet policy requirements. An `insufficient_user_authentication` OAuth error response may be returned to convey the authentication requirements back to the client similar to [OAuth 2.0 Step-up Authentication Challenge Protocol](https://www.ietf.org/archive/id/draft-ietf-oauth-step-up-authn-challenge-17.html)
 
-```
-HTTP/1.1 400 Bad Request
-Content-Type: application/json
-Cache-Control: no-store
 
-{
-  "error":"insufficient_user_authentication",
-  "error_description":"Subject doesn't meet authentication requirements",
-  "max_age: "5"
-}
-```
+    HTTP/1.1 400 Bad Request
+    Content-Type: application/json
+    Cache-Control: no-store
+
+    {
+      "error": "insufficient_user_authentication",
+      "error_description": "Subject doesn't meet authentication requirements",
+      "max_age: "5"
+    }
+
 
 The Requesting Application would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
 
-TBD: It may make more sense to request the ACDC as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
+TBD: It may make more sense to request the JWT authorization grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
 
 
 # IANA Considerations
 
-This document has no IANA actions.
+TBD
 
 
 --- back
