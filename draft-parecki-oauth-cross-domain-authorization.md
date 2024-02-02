@@ -176,7 +176,7 @@ If access is granted, the IdP will return a signed JWT authorization grant in th
       "expires_in": 300
     }
 
-* `access_token` - The authorization grant. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
+* `access_token` - The JWT authorization grant. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
 * `issued_token_type` - `urn:ietf:params:oauth:token-type:jwt-authorization-grant`
 * `token_type` - `N_A` (Required by the Token Exchange spec)
 * `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
