@@ -244,6 +244,7 @@ The Requesting Application makes an access token request to the Resource Applica
 * `assertion` - The JWT authorization grant obtained in the previous step
 * Client Authentication - the client authenticates with its credentials as registered with the Resource Application's authorization server
 
+For example:
 
     POST /oauth2/token HTTP/1.1
     Host: acme.chat.app
