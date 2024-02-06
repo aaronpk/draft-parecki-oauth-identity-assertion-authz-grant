@@ -240,7 +240,7 @@ Notes:
 
 The Requesting Application makes an access token request to the Resource Application's token endpoint using the previously obtained JWT authorization grant as a JWT Assertion {{RFC7523}}.
 
-* `grant_type=urn:ietf:params:oauth:grant-type:jwt-authorization-grant`
+* `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
 * `assertion` - The JWT authorization grant obtained in the previous step
 * Client Authentication - the client authenticates with its credentials as registered with the Resource Application's authorization server
 
@@ -250,7 +250,7 @@ For example:
     Host: acme.chat.app
     Authorization: Basic yZS1yYW5kb20tc2VjcmV0v3JOkF0XG5Qx2
 
-    grant_type=urn:ietf:params:oauth:grant-type:jwt-authorization-grant
+    grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
     assertion=eyJhbGciOiJIUzI1NiIsI...
 
 
