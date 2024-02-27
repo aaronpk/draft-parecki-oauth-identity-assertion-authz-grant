@@ -38,7 +38,12 @@ normative:
   RFC7521:
   RFC7523:
   RFC8693:
+  RFC8725:
   I-D.ietf-oauth-identity-chaining:
+  IANA.MediaTypes:
+  IANA.OAuth.Parameters:
+  RFC6838:
+  RFC2046:
 
 informative:
   RFC9470:
@@ -312,7 +317,7 @@ TBD: It may make more sense to request the JWT authorization grant as an additio
 
 ## Media Types
 
-This section registers `oauth-mtag+jwt`, a new media type [RFC2046] in the "Media Types" registry [IANA.MediaTypes] in the manner described in [RFC6838]. It can be used to indicate that the content is a mutually-trusted authorization grant JWT.
+This section registers `oauth-mtag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Mutually-Trusted Aauthorization Grant JWT.
 
 
 ## OAuth URI Registration
