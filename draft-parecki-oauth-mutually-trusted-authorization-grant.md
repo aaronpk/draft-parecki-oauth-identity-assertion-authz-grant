@@ -1,9 +1,9 @@
 ---
-title: "OAuth Cross-Domain Authorization"
-abbrev: "Cross-Domain Authz"
+title: "Cross-Domain Mutually Trusted Authorization"
+abbrev: "Mutually Trusted Authz"
 category: std
 
-docname: draft-parecki-oauth-cross-domain-authorization-latest
+docname: draft-parecki-oauth-mutually-trusted-authorization-grant-latest
 submissiontype: IETF
 number:
 date:
@@ -20,8 +20,8 @@ venue:
   type: "Working Group"
   mail: "oauth@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
-  github: "aaronpk/draft-parecki-oauth-cross-domain-authorization"
-  latest: "https://aaronpk.github.io/draft-parecki-oauth-cross-domain-authorization/draft-parecki-oauth-cross-domain-authorization.html"
+  github: "aaronpk/draft-parecki-oauth-mutually-trusted-authorization-grant"
+  latest: "https://aaronpk.github.io/draft-parecki-oauth-mutually-trusted-authorization-grant/draft-parecki-oauth-mutually-trusted-authorization-grant.html"
 
 author:
  -
@@ -69,13 +69,13 @@ This specification extends {{I-D.ietf-oauth-identity-chaining}}, enabling applic
 
 ## Roles
 
-Requesting Application (Client)
-: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Application below) that is managed by the same enterprise IdP. In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
+Client
+: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below) that is managed by the same enterprise IdP. In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
 
-Resource Application (Resource)
+Resource Application
 : Application that provides an OAuth 2.0 Protected Resource that is used across an enterprise's SaaS ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
 
-Identity Provider (IdP)
+Mutually-Trusted Authorization Server (IdP)
 : Organization's Identity Provider that is trusted by a set of applications in an enterprise's app ecosystem for identity and access management. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
 
 # Overview
@@ -85,36 +85,36 @@ The example flow is for an enterprise `acme`
 
     | Role     | App URL | Tenant URL   | Description |
     | -------- | -------- | -------- | ----------- |
-    | Requesting Application | `https://wiki.app` | `https://acme.wiki.app` | SaaS Wiki app that embeds content from best-of-breed SaaS apps |
+    | Client | `https://wiki.app` | `https://acme.wiki.app` | SaaS Wiki app that embeds content from best-of-breed SaaS apps |
     | Resource Application   | `https://chat.app` | `https://acme.chat.app` | SaaS chat and communication app |
     | Identity Provider      | `https//idp.cloud`   | `https://acme.idp.cloud` | Cloud Identity Provider |
 
 
-1. User logs in to the Requesting Application via SSO with the Enterprise IdP (SAML or OIDC)
-2. Requesting Application requests an JWT Authorization Grant for the Resource Application from the IdP
-3. Requesting Application exchange the JWT Authorization Grant for an access token at the Resource Application's token endpoint
+1. User logs in to the Client via SSO with the Enterprise IdP (SAML or OIDC)
+2. Client requests a JWT Authorization Grant for the Resource Application from the IdP
+3. Client exchanges the JWT Authorization Grant for an access token at the Resource Application's token endpoint
 
 ## Preconditions
 
-- Requesting Application has a registered OAuth 2.0 Client with the IdP Authorization Server
-- Requesting Application has a registered OAuth 2.0 Client with the Resource Application
-- Enterprise has established a trust relationship between their IdP and the Requesting Application for SSO and Cross-Application Authorization
-- Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Cross-Application Authorization
-- Enterprise has granted the Requesting Application to act on-behalf of users for the Resource Application with a set of scopes
+- Client has a registered OAuth 2.0 Client with the IdP Authorization Server
+- Client has a registered OAuth 2.0 Client with the Resource Applicaiton
+- Enterprise has established a trust relationship between their IdP and the Client for SSO and Mutually-Trusted Authorization Grant
+- Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Mutually-Trusted Authorization Grant
+- Enterprise has granted the Client to act on-behalf of users for the Resource Application with a set of scopes
 
 
 # User Authentication
 
-The Requesting Application initiates an authentication request with the tenant's trusted Enterprise IdP using SAML or OIDC.
+The Client initiates an authentication request with the tenant's trusted Enterprise IdP using SAML or OIDC.
 
 The following is an example using SAML 2.0
 
     302 Redirect
     Location: https://acme.idp.cloud/SAML2/SSO/Redirect?SAMLRequest={base64AuthnRequest}&RelayState=DyXvaJtZ1BqsURRC
 
-The user authenticates with the IdP and post backs an assertion to the Requesting Application
+The user authenticates with the IdP and post backs an assertion to the Client
 
-Note: The Enterprise IdP may enforce security controls such as multi-factor authentication before granting the user access to the Requesting Application.
+Note: The Enterprise IdP may enforce security controls such as multi-factor authentication before granting the user access to the Client.
 
 
     POST /SAML2/SSO/ACS HTTP/1.1
@@ -127,9 +127,9 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
 
 # Token Exchange
 
-The Requesting Application makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoint with the following parameters:
+The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoint with the following parameters:
 
-* `requested_token_type=urn:ietf:params:oauth:token-type:jwt-authorization-grant`
+* `requested_token_type=urn:ietf:params:oauth:token-type:mtag`
 * `resource` - The token endpoint of the Resource Application.
 * `scope` - The space-separated list of scopes at the Resource Application to include in the token
 * `subject_token` - The SSO assertion (SAML or OpenID Connect ID Token) for the target end-user
@@ -143,7 +143,7 @@ For example:
     Content-Type: application/x-www-form-urlencoded
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-    &requested_token_type=urn:ietf:params:oauth:token-type:TODO
+    &requested_token_type=urn:ietf:params:oauth:token-type:mtag-jwt
     &resource=https://acme.chat.app/oauth2/token
     &scope=chat.read+chat.history
     &subject_token=PHNhbWw6QXNzZXJ0aW9uCiAgeG1sbnM6c2FtbD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiIKICBJRD0iaWRlbnRpZmllcl8zIgogIFZlcnNpb249IjIuMCIKICBJc3N1ZUluc3RhbnQ9IjIwMjMtMDYtMDVUMDk6MjA6MDVaIj4KICA8c2FtbDpJc3N1ZXI-aHR0cHM6Ly9hY21lLmlkcC5jbG91ZDwvc2FtbDpJc3N1ZXI-CiAgPGRzOlNpZ25hdHVyZQogICAgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPi4uLjwvZHM6U2lnbmF0dXJlPgogIDxzYW1sOlN1YmplY3Q-CiAgICA8c2FtbDpOYW1lSUQKICAgICAgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjE6bmFtZWlkLWZvcm1hdDplbWFpbEFkZHJlc3MiPgogICAgICBrYXJsQGFjbWUuY29tCiAgICA8L3NhbWw6TmFtZUlEPgogICAgPHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbgogICAgICBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPgogICAgICA8c2FtbDpTdWJqZWN0Q29uZmlybWF0aW9uRGF0YQogICAgICAgIEluUmVzcG9uc2VUbz0iNmM5ODMwZTQtMTMzMi00ZjQ5LWFkZTAtZjI0ZjYxMTk2ZDdlIgogICAgICAgIFJlY2lwaWVudD0iaHR0cHM6Ly9hY21lLndpa2kuYXBwL1NBTUwyL0FDUyIKICAgICAgICBOb3RPbk9yQWZ0ZXI9IjIwMjMtMDYtMDVUMDk6MjU6MDVaIi8-CiAgICA8L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj4KICA8L3NhbWw6U3ViamVjdD4KICA8c2FtbDpDb25kaXRpb25zCiAgICBOb3RCZWZvcmU9IjIwMjMtMDYtMDVUMDk6MTU6MDVaIgogICAgTm90T25PckFmdGVyPSIyMDIzLTA2LTA1VDA5OjI1OjA1WiI-CiAgICA8c2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPgogICAgICA8c2FtbDpBdWRpZW5jZT5odHRwczovL2FjbWUud2lraS5hcHA8L3NhbWw6QXVkaWVuY2U-CiAgICA8L3NhbWw6QXVkaWVuY2VSZXN0cmljdGlvbj4KICA8L3NhbWw6Q29uZGl0aW9ucz4KICA8c2FtbDpBdXRoblN0YXRlbWVudAogICAgQXV0aG5JbnN0YW50PSIyMDIzLTA2LTA1VDA5OjIwOjAwWiIKICAgIFNlc3Npb25JbmRleD0iMzcxMWVjZDYtN2Y5NC00NWM3LTgxYzUtNDkyNjI1NDg0NWYzIj4KICAgIDxzYW1sOkF1dGhuQ29udGV4dD4KICAgICAgPHNhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICAgICAgdXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRUcmFuc3BvcnQKICAgICA8L3NhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICA8L3NhbWw6QXV0aG5Db250ZXh0PgogIDwvc2FtbDpBdXRoblN0YXRlbWVudD4KPC9zYW1sOkFzc2VydGlvbj4
@@ -161,7 +161,7 @@ IdP may also introspect the authentication context described in the SSO assertio
 
 ## Response
 
-If access is granted, the IdP will return a signed JWT authorization grant in the token exchange response defined in Section 2.2 of {{RFC8693}}:
+If access is granted, the IdP will return a signed Mutually-Trusted Authorization Grant JWT in the token exchange response defined in Section 2.2 of {{RFC8693}}:
 
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -170,14 +170,14 @@ If access is granted, the IdP will return a signed JWT authorization grant in th
 
     {
       "access_token": "eyJhbGciOiJIUzI1NiIsI...",
-      "issued_token_type": "urn:ietf:params:oauth:token-type:jwt-authorization-grant",
+      "issued_token_type": "urn:ietf:params:oauth:token-type:mtag-jwt",
       "token_type": "N_A",
       "scope": "chat.read chat.history",
       "expires_in": 300
     }
 
-* `access_token` - The JWT authorization grant. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
-* `issued_token_type` - `urn:ietf:params:oauth:token-type:jwt-authorization-grant`
+* `access_token` - The Mutually-Trusted Authorization Grant JWT. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
+* `issued_token_type` - `urn:ietf:params:oauth:token-type:mtag-jwt`
 * `token_type` - `N_A` (Required by the Token Exchange spec)
 * `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
 * `expires_in` - The lifetime in seconds of the authorization grant.
@@ -196,25 +196,25 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
     }
 
 
-## JWT Authorization Grant {#jwt-authorization-grant}
+## Mutually-Trusted Authorization Grant JWT {#jwt-authorization-grant}
 
-The JWT authorization grant is issued by the IdP `https://acme.idp.cloud` for the requested audience `https://acme.chat.app` and includes the following claims:
+The Mutually-Trusted Authorization Grant JWT is issued by the IdP `https://acme.idp.cloud` for the requested audience `https://acme.chat.app` and includes the following claims:
 
 * `iss` - The IdP `issuer` URL
 * `sub` - The User ID at the IdP
 * `aud` - Token endpoint of the Resource Application's authorization server
-* `azp` - Client ID of the Requesting Application as registered with the Resource Application's authorization server.
+* `azp` - Client ID as registered with the Resource Application's authorization server.
 * `exp` -
 * `iat` -
-* `scopes` - Array of scopes at the Resource Application granted to the Requesting Application
+* `scopes` - Array of scopes at the Resource Application granted to the Client
 * `jti` - Unique ID of this JWT
 
-The `typ` of the JWT indicated in the JWT header MUST be `authorization-grant+jwt`.
+The `typ` of the JWT indicated in the JWT header MUST be `oauth-mtag+jwt`.
 
 An example JWT shown with expanded header and payload claims is below:
 
     {
-      "typ": "authorization-grant+jwt"
+      "typ": "oauth-mtag+jwt"
     }
     .
     {
@@ -232,17 +232,17 @@ An example JWT shown with expanded header and payload claims is below:
 
 Notes:
 
-* If the IdP is multi-tenant, and uses the same `issuer` for all tenants, the Resource application will already have IdP-specific logic to determine the tenant from OIDC/SAML (e.g. hd in Google) and will need to use that if the IdP also has only one client registration for the Resource application
+* If the IdP is multi-tenant, and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC/SAML (e.g. `hd` in Google) and will need to use that if the IdP also has only one client registration for the Resource Application
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet
 
 
 # Access Token Request {#token-request}
 
-The Requesting Application makes an access token request to the Resource Application's token endpoint using the previously obtained JWT authorization grant as a JWT Assertion {{RFC7523}}.
+The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Mutually-Trusted Authorization Grant as a JWT Assertion {{RFC7523}}.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
 * `assertion` - The JWT authorization grant obtained in the previous step
-* Client Authentication - the client authenticates with its credentials as registered with the Resource Application's authorization server
+* Client Authentication - the Client authenticates with its credentials as registered with the Resource Application's authorization server
 
 For example:
 
@@ -258,6 +258,7 @@ For example:
 
 All of Section 5.2 of {{RFC7521}} applies, in addition to the following processing rules:
 
+* Validate the JWT `typ` is `oauth-mtag+jwt` (per {{RFC8725}})
 * The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
 
 
@@ -302,14 +303,27 @@ In the initial token exchange request, the IdP may require step-up authenticatio
     }
 
 
-The Requesting Application would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
+The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
 
 TBD: It may make more sense to request the JWT authorization grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
 
 
 # IANA Considerations
 
-TBD
+## Media Types
+
+This section registers `oauth-mtag+jwt`, a new media type [RFC2046] in the "Media Types" registry [IANA.MediaTypes] in the manner described in [RFC6838]. It can be used to indicate that the content is a mutually-trusted authorization grant JWT.
+
+
+## OAuth URI Registration
+
+This section registers `urn:ietf:params:oauth:token-type:mtag-jwt` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.OAuth.Parameters}}.
+
+* URN: urn:ietf:params:oauth:token-type:mtag-jwt
+* Common Name: Token type URI for a Mutually-Trusted Authorization Grant JWT
+* Change Controller: IESG
+* Specification Document: This document
+
 
 
 --- back
