@@ -91,13 +91,52 @@ The example flow is for an enterprise `acme`
 | -------- | -------- | -------- | ----------- |
 | Client | `https://wiki.example` | `https://acme.wiki.example` | SaaS Wiki app that embeds content from one or more resource applications |
 | Resource Application   | `https://chat.example` | `https://acme.chat.example` | Chat and communication app |
-| Identity Provider      | `https//idp.example`   | `https://acme.idp.example` | Cloud Identity Provider |
+| Identity Provider      | `https://idp.example`   | `https://acme.idp.example` | Cloud Identity Provider |
 
+Sequence Diagram
 
+    +---------+      +--------------+   +---------------+  +--------------+
+    |         |      |  Mutually    |   |   Resource    |  |              |
+    | Client  |      |  Trusted     |   |  Application  |  |  Resource    |
+    |         |      | Authorization|   | Authorization |  |  Server      |
+    |         |      |   Server     |   |    Server     |  |              |
+    +----+----+      +-------+------+   +-------+-------+  +------+-------+
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |  -------------->  |                  |                 |
+         |   1 User SSO      |                  |                 |
+         |                   |                  |                 |
+         |     ID Token      |                  |                 |
+         |  <--------------  |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         | 2 Token Exchange  |                  |                 |
+         | ----------------> |                  |                 |
+         |                   |                  |                 |
+         |   MTAG            |                  |                 |
+         | <---------------- |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |  3 Present Authorization Grant       |                 |
+         | ------------------+----------------> |                 |
+         |                   |                  |                 |
+         |    Access Token   |                  |                 |
+         | <----------------------------------- |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |  4 Resource Request                  |                 |
+         | -----------------------------------------------------> |
+         |                   |                  |                 |
+         |                   |                  |                 |
+         |                   |                  |                 |
 
 1. User logs in to the Client via SSO with the Enterprise IdP (SAML or OIDC)
-2. Client requests a JWT Authorization Grant for the Resource Application from the IdP
-3. Client exchanges the JWT Authorization Grant for an access token at the Resource Application's token endpoint
+2. Client requests a Mutually-Trusted Authorization Grant for the Resource Application from the IdP using the token obtained via SSO
+3. Client exchanges the Mutually-Trusted Authorization Grant JWT for an access token at the Resource Application's token endpoint
+4. Client makes an API request with the access token
 
 ## Preconditions
 
@@ -110,24 +149,33 @@ The example flow is for an enterprise `acme`
 
 # User Authentication
 
-The Client initiates an authentication request with the tenant's trusted Enterprise IdP using SAML or OIDC.
+The Client initiates an authentication request with the tenant's trusted Enterprise IdP using SAML or OpenID Connect.
 
-The following is an example using SAML 2.0
+The following is an example using OpenID Connect
 
     302 Redirect
-    Location: https://acme.idp.example/SAML2/SSO/Redirect?SAMLRequest={base64AuthnRequest}&RelayState=DyXvaJtZ1BqsURRC
+    Location: https://acme.idp.example/authorize?response_type=code&scope=openid&client_id=...
 
-The user authenticates with the IdP and post backs a SAML assertion to the Client
+The user authenticates with the IdP, and is redirected back to the Client with an authorization code, which it can then exchange for an ID Token.
 
 Note: The Enterprise IdP may enforce security controls such as multi-factor authentication before granting the user access to the Client.
 
-
-    POST /SAML2/SSO/ACS HTTP/1.1
-    Host: https://acme.wiki.example/SAML2/ACS
+    POST /token HTTP/1.1
+    Host: acme.idp.example
     Content-Type: application/x-www-form-urlencoded
-    Content-Length: nnn
 
-    SAMLResponse={AuthnResponse}&RelayState=DyXvaJtZ1BqsURRC
+    grant_type=authorization_code
+    &code=.....
+
+    HTTP/1.1 200 Ok
+    Content-Type: application/json
+
+    {
+      "id_token": "eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...",
+      "token_type": "Bearer",
+      "access_token": "7SliwCQP1brGdjBtsaMnXo",
+      "scope": "openid"
+    }
 
 
 # Token Exchange
@@ -141,7 +189,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 * `subject_token_type` - For SAML2 Assertion: `urn:ietf:params:oauth:token-type:saml2`, or OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
 * Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
-For example:
+For example, (tokens truncated for brevity):
 
     POST /oauth2/token HTTP/1.1
     Host: acme.idp.example
@@ -151,10 +199,10 @@ For example:
     &requested_token_type=urn:ietf:params:oauth:token-type:mtag-jwt
     &resource=https://acme.chat.example/oauth2/token
     &scope=chat.read+chat.history
-    &subject_token=PHNhbWw6QXNzZXJ0aW9uCiAgeG1sbnM6c2FtbD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFzc2VydGlvbiIKICBJRD0iaWRlbnRpZmllcl8zIgogIFZlcnNpb249IjIuMCIKICBJc3N1ZUluc3RhbnQ9IjIwMjMtMDYtMDVUMDk6MjA6MDVaIj4KICA8c2FtbDpJc3N1ZXI-aHR0cHM6Ly9hY21lLmlkcC5jbG91ZDwvc2FtbDpJc3N1ZXI-CiAgPGRzOlNpZ25hdHVyZQogICAgeG1sbnM6ZHM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyMiPi4uLjwvZHM6U2lnbmF0dXJlPgogIDxzYW1sOlN1YmplY3Q-CiAgICA8c2FtbDpOYW1lSUQKICAgICAgRm9ybWF0PSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjE6bmFtZWlkLWZvcm1hdDplbWFpbEFkZHJlc3MiPgogICAgICBrYXJsQGFjbWUuY29tCiAgICA8L3NhbWw6TmFtZUlEPgogICAgPHNhbWw6U3ViamVjdENvbmZpcm1hdGlvbgogICAgICBNZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDpjbTpiZWFyZXIiPgogICAgICA8c2FtbDpTdWJqZWN0Q29uZmlybWF0aW9uRGF0YQogICAgICAgIEluUmVzcG9uc2VUbz0iNmM5ODMwZTQtMTMzMi00ZjQ5LWFkZTAtZjI0ZjYxMTk2ZDdlIgogICAgICAgIFJlY2lwaWVudD0iaHR0cHM6Ly9hY21lLndpa2kuYXBwL1NBTUwyL0FDUyIKICAgICAgICBOb3RPbk9yQWZ0ZXI9IjIwMjMtMDYtMDVUMDk6MjU6MDVaIi8-CiAgICA8L3NhbWw6U3ViamVjdENvbmZpcm1hdGlvbj4KICA8L3NhbWw6U3ViamVjdD4KICA8c2FtbDpDb25kaXRpb25zCiAgICBOb3RCZWZvcmU9IjIwMjMtMDYtMDVUMDk6MTU6MDVaIgogICAgTm90T25PckFmdGVyPSIyMDIzLTA2LTA1VDA5OjI1OjA1WiI-CiAgICA8c2FtbDpBdWRpZW5jZVJlc3RyaWN0aW9uPgogICAgICA8c2FtbDpBdWRpZW5jZT5odHRwczovL2FjbWUud2lraS5hcHA8L3NhbWw6QXVkaWVuY2U-CiAgICA8L3NhbWw6QXVkaWVuY2VSZXN0cmljdGlvbj4KICA8L3NhbWw6Q29uZGl0aW9ucz4KICA8c2FtbDpBdXRoblN0YXRlbWVudAogICAgQXV0aG5JbnN0YW50PSIyMDIzLTA2LTA1VDA5OjIwOjAwWiIKICAgIFNlc3Npb25JbmRleD0iMzcxMWVjZDYtN2Y5NC00NWM3LTgxYzUtNDkyNjI1NDg0NWYzIj4KICAgIDxzYW1sOkF1dGhuQ29udGV4dD4KICAgICAgPHNhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICAgICAgdXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6Mi4wOmFjOmNsYXNzZXM6UGFzc3dvcmRQcm90ZWN0ZWRUcmFuc3BvcnQKICAgICA8L3NhbWw6QXV0aG5Db250ZXh0Q2xhc3NSZWY-CiAgICA8L3NhbWw6QXV0aG5Db250ZXh0PgogIDwvc2FtbDpBdXRoblN0YXRlbWVudD4KPC9zYW1sOkFzc2VydGlvbj4
-    &subject_token_type=urn:ietf:params:oauth:token-type:saml2
+    &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
+    &subject_token_type=urn:ietf:params:oauth:token-type:id_token
     &client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
-    &client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0.
+    &client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...
 
 ## Processing Rules
 
