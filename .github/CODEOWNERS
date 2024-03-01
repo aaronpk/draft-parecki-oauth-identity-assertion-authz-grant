@@ -1,3 +1,3 @@
 # Automatically generated CODEOWNERS
 # Regenerate with `make update-codeowners`
-draft-parecki-oauth-mutually-trusted-authorization-grant.md aaron@parecki.com public@karlmcguinness.com
+draft-parecki-oauth-identity-assertion-authorization-grant.md aaron@parecki.com public@karlmcguinness.com
