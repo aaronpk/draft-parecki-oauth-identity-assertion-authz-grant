@@ -256,7 +256,7 @@ The Mutually-Trusted Authorization Grant JWT is issued by the IdP `https://acme.
 * `iss` - The IdP `issuer` URL
 * `sub` - The User ID at the IdP
 * `aud` - Token endpoint of the Resource Application's authorization server
-* `azp` - Client ID as registered with the Resource Application's authorization server.
+* `client_id` - Client ID as registered with the Resource Application's authorization server.
 * `exp` -
 * `iat` -
 * `scopes` - Array of scopes at the Resource Application granted to the Client
@@ -275,7 +275,7 @@ An example JWT shown with expanded header and payload claims is below:
       "iss": "https://acme.idp.example",
       "sub": "U019488227",
       "aud": "https://acme.chat.example/oauth2/token",
-      "azp": "f53f191f9311af35",
+      "client_id": "f53f191f9311af35",
       "exp": 1311281970,
       "iat": 1311280970,
       "scopes" : [ "chat.read" , "chat.history" ]
