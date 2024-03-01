@@ -263,12 +263,12 @@ The Identity Assertion Authorization Grant JWT is issued by the IdP `https://acm
 * `scopes` - Array of scopes at the Resource Application granted to the Client
 * `jti` - Unique ID of this JWT
 
-The `typ` of the JWT indicated in the JWT header MUST be `oauth-itag+jwt`.
+The `typ` of the JWT indicated in the JWT header MUST be `oauth-id-jag+jwt`.
 
 An example JWT shown with expanded header and payload claims is below:
 
     {
-      "typ": "oauth-itag+jwt"
+      "typ": "oauth-id-jag+jwt"
     }
     .
     {
@@ -312,7 +312,7 @@ For example:
 
 All of Section 5.2 of {{RFC7521}} applies, in addition to the following processing rules:
 
-* Validate the JWT `typ` is `oauth-mtag+jwt` (per {{RFC8725}})
+* Validate the JWT `typ` is `oauth-id-jag+jwt` (per {{RFC8725}})
 * The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
 
 
