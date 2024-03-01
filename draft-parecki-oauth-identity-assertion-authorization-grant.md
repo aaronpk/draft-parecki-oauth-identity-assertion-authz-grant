@@ -312,7 +312,7 @@ For example:
 
 All of Section 5.2 of {{RFC7521}} applies, in addition to the following processing rules:
 
-* Validate the JWT `typ` is `oauth-mtag+jwt` (per {{RFC8725}})
+* Validate the JWT `typ` is `oauth-itag+jwt` (per {{RFC8725}})
 * The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
 
 
@@ -366,7 +366,7 @@ TBD: It may make more sense to request the Identity Assertion Authorization Gran
 
 ## Media Types
 
-This section registers `oauth-id-jag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
+This section registers `oauth-itag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
 
 
 ## OAuth URI Registration
