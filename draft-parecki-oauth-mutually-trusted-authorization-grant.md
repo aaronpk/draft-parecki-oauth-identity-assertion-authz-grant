@@ -1,6 +1,6 @@
 ---
-title: "Cross-Domain Mutually Trusted Authorization"
-abbrev: "Mutually Trusted Authz"
+title: "Identity Assertion Authorization Grant"
+abbrev: "ID Token Authz Grant"
 category: std
 
 docname: draft-parecki-oauth-mutually-trusted-authorization-grant-latest
@@ -80,7 +80,7 @@ Client
 Resource Application
 : Application that provides an OAuth 2.0 Protected Resource that is used across an enterprise's SaaS ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
 
-Mutually-Trusted Authorization Server (IdP)
+Authorization Server (IdP)
 : Organization's Identity Provider that is trusted by a set of applications in an enterprise's app ecosystem for identity and access management. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
 
 # Overview
@@ -96,8 +96,8 @@ The example flow is for an enterprise `acme`
 Sequence Diagram
 
     +---------+      +--------------+   +---------------+  +--------------+
-    |         |      |  Mutually    |   |   Resource    |  |              |
-    | Client  |      |  Trusted     |   |  Application  |  |  Resource    |
+    |         |      |              |   |   Resource    |  |              |
+    | Client  |      |              |   |  Application  |  |  Resource    |
     |         |      | Authorization|   | Authorization |  |  Server      |
     |         |      |   Server     |   |    Server     |  |              |
     +----+----+      +-------+------+   +-------+-------+  +------+-------+
@@ -134,16 +134,16 @@ Sequence Diagram
          |                   |                  |                 |
 
 1. User logs in to the Client via SSO with the Enterprise IdP (SAML or OIDC)
-2. Client requests a Mutually-Trusted Authorization Grant for the Resource Application from the IdP using the token obtained via SSO
-3. Client exchanges the Mutually-Trusted Authorization Grant JWT for an access token at the Resource Application's token endpoint
+2. Client requests a Identity Assertion Authorization Grant for the Resource Application from the IdP using the token obtained via SSO
+3. Client exchanges the Identity Assertion Authorization Grant JWT for an access token at the Resource Application's token endpoint
 4. Client makes an API request with the access token
 
 ## Preconditions
 
 - Client has a registered OAuth 2.0 Client with the IdP Authorization Server
 - Client has a registered OAuth 2.0 Client with the Resource Application
-- Enterprise has established a trust relationship between their IdP and the Client for SSO and Mutually-Trusted Authorization Grant
-- Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Mutually-Trusted Authorization Grant
+- Enterprise has established a trust relationship between their IdP and the Client for SSO and Identity Assertion Authorization Grant
+- Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Identity Assertion Authorization Grant
 - Enterprise has granted the Client permission to act on behalf of users for the Resource Application with a set of scopes
 
 
@@ -182,10 +182,10 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
 
 The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoint with the following parameters:
 
-* `requested_token_type=urn:ietf:params:oauth:token-type:mtag`
+* `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`
 * `resource` - The token endpoint of the Resource Application.
 * `scope` - The space-separated list of scopes at the Resource Application to include in the token
-* `subject_token` - The SSO assertion (SAML or OpenID Connect ID Token) for the target end-user
+* `subject_token` - The identity assertion (SAML Assertion or OpenID Connect ID Token) for the target end-user
 * `subject_token_type` - For SAML2 Assertion: `urn:ietf:params:oauth:token-type:saml2`, or OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
 * Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
@@ -196,7 +196,7 @@ For example, (tokens truncated for brevity):
     Content-Type: application/x-www-form-urlencoded
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
-    &requested_token_type=urn:ietf:params:oauth:token-type:mtag-jwt
+    &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
     &resource=https://acme.chat.example/oauth2/token
     &scope=chat.read+chat.history
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
@@ -214,7 +214,7 @@ The IdP may also introspect the authentication context described in the SSO asse
 
 ## Response
 
-If access is granted, the IdP will return a signed Mutually-Trusted Authorization Grant JWT in the token exchange response defined in Section 2.2 of {{RFC8693}}:
+If access is granted, the IdP will return a signed Identity Assertion Authorization Grant JWT in the token exchange response defined in Section 2.2 of {{RFC8693}}:
 
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -222,15 +222,15 @@ If access is granted, the IdP will return a signed Mutually-Trusted Authorizatio
     Pragma: no-cache
 
     {
-      "issued_token_type": "urn:ietf:params:oauth:token-type:mtag-jwt",
+      "issued_token_type": "urn:ietf:params:oauth:token-type:id-jag",
       "access_token": "eyJhbGciOiJIUzI1NiIsI...",
       "token_type": "N_A",
       "scope": "chat.read chat.history",
       "expires_in": 300
     }
 
-* `issued_token_type` - `urn:ietf:params:oauth:token-type:mtag-jwt`
-* `access_token` - The Mutually-Trusted Authorization Grant JWT. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
+* `issued_token_type` - `urn:ietf:params:oauth:token-type:id-jag`
+* `access_token` - The Identity Assertion Authorization Grant JWT. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
 * `token_type` - `N_A` (Required by the Token Exchange spec)
 * `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
 * `expires_in` - The lifetime in seconds of the authorization grant.
@@ -249,9 +249,9 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
     }
 
 
-## Mutually-Trusted Authorization Grant JWT {#jwt-authorization-grant}
+## Identity Assertion Authorization Grant JWT {#jwt-authorization-grant}
 
-The Mutually-Trusted Authorization Grant JWT is issued by the IdP `https://acme.idp.example` for the requested audience `https://acme.chat.example` and includes the following claims:
+The Identity Assertion Authorization Grant JWT is issued by the IdP `https://acme.idp.example` for the requested audience `https://acme.chat.example` and includes the following claims:
 
 * `iss` - The IdP `issuer` URL
 * `sub` - The User ID at the IdP
@@ -262,12 +262,12 @@ The Mutually-Trusted Authorization Grant JWT is issued by the IdP `https://acme.
 * `scopes` - Array of scopes at the Resource Application granted to the Client
 * `jti` - Unique ID of this JWT
 
-The `typ` of the JWT indicated in the JWT header MUST be `oauth-mtag+jwt`.
+The `typ` of the JWT indicated in the JWT header MUST be `oauth-itag+jwt`.
 
 An example JWT shown with expanded header and payload claims is below:
 
     {
-      "typ": "oauth-mtag+jwt"
+      "typ": "oauth-itag+jwt"
     }
     .
     {
@@ -291,7 +291,7 @@ Notes:
 
 # Access Token Request {#token-request}
 
-The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Mutually-Trusted Authorization Grant as a JWT Assertion {{RFC7523}}.
+The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion {{RFC7523}}.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
 * `assertion` - The JWT authorization grant obtained in the previous step
@@ -358,22 +358,27 @@ In the initial token exchange request, the IdP may require step-up authenticatio
 
 The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
 
-TBD: It may make more sense to request the Mutually-Trusted Authorization Grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
+TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
+
+
+## Relationship to SAML 2.0 Authorization Grant RFC7522
+
+
 
 
 # IANA Considerations
 
 ## Media Types
 
-This section registers `oauth-mtag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Mutually-Trusted Authorization Grant JWT.
+This section registers `oauth-itag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
 
 
 ## OAuth URI Registration
 
-This section registers `urn:ietf:params:oauth:token-type:mtag-jwt` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.OAuth.Parameters}}.
+This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.OAuth.Parameters}}.
 
-* URN: urn:ietf:params:oauth:token-type:mtag-jwt
-* Common Name: Token type URI for a Mutually-Trusted Authorization Grant JWT
+* URN: urn:ietf:params:oauth:token-type:id-jag
+* Common Name: Token type URI for a Identity Assertion Authorization Grant JWT
 * Change Controller: IESG
 * Specification Document: This document
 
