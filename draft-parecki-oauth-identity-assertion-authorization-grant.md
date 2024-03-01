@@ -52,22 +52,13 @@ informative:
 
 --- abstract
 
-This specification provides a mechanism for an application to obtain an access token for a third-party application through a mutually trusted identity provider using Token Exchange {{RFC8693}}.
+This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API using Token Exchange {{RFC8693}} and JWT Profile for OAuth 2.0 Authorization Grants {{RFC7523}}.
 
 --- middle
 
 # Introduction
 
-Enterprises often have hundreds of SaaS applications.  SaaS applications often have integrations to other SaaS applications that are critical to the application experience and jobs to be done.  When a SaaS app needs to request an access token on behalf of a user to a 3rd party SaaS integration's API, the end-user needs to complete an interactive delegated OAuth 2.0 ceremony and consent.  The SaaS application is not in the same security or policy domain as the 3rd party SaaS integration.
-
-It is industry best practice for an enterprise to connect their ecosystem of SaaS applications to their Identity Provider (IdP) to centralize identity and access management capabilites for the organization.  End-users get a better experience (SSO) and administrators get better security outcomes such multi-factor authentication and zero-trust.  SaaS applications today enable the administrator to establish trust with an IdP for user authentication but typically don't allow the administrator to trust the IdP for API authorization.
-
-The draft specification Identity Chaining Across Trust Domains ({{I-D.ietf-oauth-identity-chaining}}) defines how to request a JWT authorization grant from from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified. This specification defines the additional details necessary to support interoperable implementations for this specific use case.
-
-This specification enables federation for Authorization Servers across policy or administrative boundaries. The same enterprise IdP that is trusted by applications for SSO can be extended to broker access to APIs.  This enables the enterprise to centralize more access decisions across their SaaS ecosystem and provides better end-user experience for users that need to connect multiple applications via OAuth 2.0.
-
-This specification extends {{I-D.ietf-oauth-identity-chaining}}, enabling applications to request access to 3rd party applications using backchannel operations that don't interupt the end user's interactive application experience.  It is also useful for deployments where SSO is based on SAML and not using OpenID Connect.
-
+The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified. This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.
 
 # Conventions and Definitions
 
@@ -76,13 +67,13 @@ This specification extends {{I-D.ietf-oauth-identity-chaining}}, enabling applic
 ## Roles
 
 Client
-: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below) that is managed by the same enterprise IdP. In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
+: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below). In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
 
 Resource Application
-: Application that provides an OAuth 2.0 Protected Resource that is used across an enterprise's SaaS ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
+: Application that provides an OAuth 2.0 Protected Resource. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
 
 Authorization Server (IdP)
-: Organization's Identity Provider that is trusted by a set of applications in an enterprise's app ecosystem for identity and access management. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
+: The Identity Provider that is trusted by a set of applications in an organization's app ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
 
 # Overview
 
@@ -92,15 +83,15 @@ The example flow is for an enterprise `acme`
 | -------- | -------- | -------- | ----------- |
 | Client | `https://wiki.example` | `https://acme.wiki.example` | SaaS Wiki app that embeds content from one or more resource applications |
 | Resource Application   | `https://chat.example` | `https://acme.chat.example` | Chat and communication app |
-| Identity Provider      | `https://idp.example`   | `https://acme.idp.example` | Cloud Identity Provider |
+| Identity Provider      | `https://idp.example`   | `https://acme.idp.example` | Identity Provider |
 
 Sequence Diagram
 
     +---------+      +--------------+   +---------------+  +--------------+
-    |         |      |              |   |   Resource    |  |              |
-    | Client  |      |              |   |  Application  |  |  Resource    |
-    |         |      | Authorization|   | Authorization |  |  Server      |
-    |         |      |   Server     |   |    Server     |  |              |
+    |         |      |              |   |   Resource    |  |   Resource   |
+    |         |      |    IdP       |   |  Application  |  |  Application |
+    | Client  |      | Authorization|   | Authorization |  |   Resource   |
+    |         |      |   Server     |   |    Server     |  |    Server    |
     +----+----+      +-------+------+   +-------+-------+  +------+-------+
          |                   |                  |                 |
          |                   |                  |                 |
@@ -108,49 +99,41 @@ Sequence Diagram
          |   1 User SSO      |                  |                 |
          |                   |                  |                 |
          |     ID Token      |                  |                 |
-         |  <--------------  |                  |                 |
+         |  <- - - - - - - - |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
          | 2 Token Exchange  |                  |                 |
          | ----------------> |                  |                 |
          |                   |                  |                 |
-         |   MTAG            |                  |                 |
-         | <---------------- |                  |                 |
+         |   ID-JAG          |                  |                 |
+         | <- - - - - - - -  |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
-         |  3 Present Authorization Grant       |                 |
+         |  3 Present ID-JAG |                  |                 |
          | ------------------+----------------> |                 |
          |                   |                  |                 |
          |    Access Token   |                  |                 |
-         | <----------------------------------- |                 |
+         | <- - - - - - - - - - - - - - - - - - |                 |
          |                   |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
-         |  4 Resource Request                  |                 |
+         |  4 Resource Request with Access Token|                 |
          | -----------------------------------------------------> |
          |                   |                  |                 |
          |                   |                  |                 |
          |                   |                  |                 |
 
-1. User logs in to the Client via SSO with the Enterprise IdP (SAML or OIDC)
-2. Client requests a Identity Assertion Authorization Grant for the Resource Application from the IdP using the token obtained via SSO
-3. Client exchanges the Identity Assertion Authorization Grant JWT for an access token at the Resource Application's token endpoint
-4. Client makes an API request with the access token
-
-## Preconditions
-
-- Client has a registered OAuth 2.0 Client with the IdP Authorization Server
-- Client has a registered OAuth 2.0 Client with the Resource Application
-- Enterprise has established a trust relationship between their IdP and the Client for SSO and Identity Assertion Authorization Grant
-- Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Identity Assertion Authorization Grant
-- Enterprise has granted the Client permission to act on behalf of users for the Resource Application with a set of scopes
+1. User logs in to the Client, the Client obtains the Identity Assertion (e.g. SAML Assertion or OpenID Connect ID Token)
+2. Client uses the Identity Assertion to request an Identity Assertion Authorization Grant for the Resource Application from the IdP
+3. Client exchanges the Identity Assertion Authorization Grant JWT for an Access Token at the Resource Application's token endpoint
+4. Client makes an API request with the Access Token
 
 
 # User Authentication
 
-The Client initiates an authentication request with the tenant's trusted Enterprise IdP using SAML or OpenID Connect.
+The Client initiates an authentication request with the IdP using OpenID Connect or SAML.
 
 The following is an example using OpenID Connect
 
@@ -190,7 +173,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 * `subject_token_type` - For SAML2 Assertion: `urn:ietf:params:oauth:token-type:saml2`, or OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
 * Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
-For example, (tokens truncated for brevity):
+The example below uses an ID Token as the Identity Assertion, and uses `private_key_jwt` as the client authentication method, (tokens truncated for brevity):
 
     POST /oauth2/token HTTP/1.1
     Host: acme.idp.example
@@ -207,15 +190,15 @@ For example, (tokens truncated for brevity):
 
 ## Processing Rules
 
-The IdP validates the subject token, and checks that the audience of the subject token matches the `client_id` of the client authentication of the request.
+The IdP MUST validate the subject token, and MUST validate that the audience of the Subject Token (e.g. the `aud` claim of the ID Token) matches the `client_id` of the client authentication of the request.
 
-The IdP evaluates administrator-defined policy for the token exchange request and determines if the application (client) should be granted access to act on behalf of the subject for the target audience & scopes.
+The IdP evaluates administrator-defined policy for the token exchange request and determines if the client should be granted access to act on behalf of the subject for the target audience and scopes.
 
 The IdP may also introspect the authentication context described in the SSO assertion to determine if step-up authentication is required.
 
 ## Response
 
-If access is granted, the IdP will return a signed Identity Assertion Authorization Grant JWT in the token exchange response defined in Section 2.2 of {{RFC8693}}:
+If access is granted, the IdP creates a signed Identity Assertion Authorization Grant JWT and returns it in the token exchange response defined in Section 2.2 of {{RFC8693}}:
 
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -231,8 +214,8 @@ If access is granted, the IdP will return a signed Identity Assertion Authorizat
     }
 
 * `issued_token_type` - `urn:ietf:params:oauth:token-type:id-jag`
-* `access_token` - The Identity Assertion Authorization Grant JWT. Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an access token.
-* `token_type` - `N_A` (Required by the Token Exchange spec)
+* `access_token` - The Identity Assertion Authorization Grant JWT. (Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an OAuth access token.)
+* `token_type` - `N_A` (As defined by Token Exchange.)
 * `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
 * `expires_in` - The lifetime in seconds of the authorization grant.
 
@@ -252,16 +235,15 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
 
 ## Identity Assertion Authorization Grant JWT {#jwt-authorization-grant}
 
-The Identity Assertion Authorization Grant JWT is issued by the IdP `https://acme.idp.example` for the requested audience `https://acme.chat.example` and includes the following claims:
+The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the original identity assertion, using the following claims:
 
 * `iss` - The IdP `issuer` URL
 * `sub` - The User ID at the IdP
 * `aud` - Token endpoint of the Resource Application's authorization server
 * `client_id` - Client ID as registered with the Resource Application's authorization server.
-* `exp` -
-* `iat` -
 * `scopes` - Array of scopes at the Resource Application granted to the Client
 * `jti` - Unique ID of this JWT
+* `exp`, `iat` - as defined by JWT
 
 The `typ` of the JWT indicated in the JWT header MUST be `oauth-id-jag+jwt`.
 
@@ -284,9 +266,9 @@ An example JWT shown with expanded header and payload claims is below:
     .
     signature
 
-Notes:
+Implementation notes:
 
-* If the IdP is multi-tenant, and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC/SAML (e.g. `hd` in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.
+* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC/SAML (e.g. the `hd` claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.
 
 
@@ -295,7 +277,7 @@ Notes:
 The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion {{RFC7523}}.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
-* `assertion` - The Identity Assertion Authorization Grant JWT obtained in the previous step
+* `assertion` - The Identity Assertion Authorization Grant JWT obtained in the previous token exchange step
 * Client Authentication - the Client authenticates with its credentials as registered with the Resource Application's authorization server
 
 For example:
@@ -382,9 +364,43 @@ This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth U
 
 --- back
 
-# Relationship to RFC7522 SAML 2.0 Authorization Grant
+# Use Cases
 
-"SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants" ({{RFC7522}}) describes a mechanism for using a SAML assertion as an authorization grant to obtain an access token. Directly exchanging a SAML assertion for an access token is limited in the ways this can be securely deployed.
+## Enterprise Deployment
+
+Enterprises often have hundreds of SaaS applications.  SaaS applications often have integrations to other SaaS applications that are critical to the application experience and jobs to be done.  When a SaaS app needs to request an access token on behalf of a user to a 3rd party SaaS integration's API, the end-user typically needs to complete an interactive delegated OAuth 2.0 flow, as the SaaS application is not in the same security or policy domain as the 3rd party SaaS integration.
+
+It is industry best practice for an enterprise to connect their ecosystem of SaaS applications to their Identity Provider (IdP) to centralize identity and access management capabilites for the organization.  End-users get a better experience (SSO) and administrators get better security outcomes such multi-factor authentication and zero-trust.  SaaS applications today enable the administrator to establish trust with an IdP for user authentication.
+
+This specification can be used to extend the SSO relationship of multiple SaaS applications to include API access between these applications as well. This specification enables federation for Authorization Servers across policy or administrative boundaries. The same enterprise IdP that is trusted by applications for SSO can be extended to broker access to APIs.  This enables the enterprise to centralize more access decisions across their SaaS ecosystem and provides better end-user experience for users that need to connect multiple applications via OAuth 2.0.
+
+### Preconditions
+
+* The Client has a registered OAuth 2.0 Client with the IdP Authorization Server
+* The Client has a registered OAuth 2.0 Client with the Resource Application
+* Enterprise has established a trust relationship between their IdP and the Client for SSO and Identity Assertion Authorization Grant
+* Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Identity Assertion Authorization Grant
+* Enterprise has granted the Client permission to act on behalf of users for the Resource Application with a set of scopes
+
+
+## Email and Calendaring Applications
+
+Email clients can be used with arbitrary email servers, and cannot require pre-established relationships between each email client and each email server. When an email client uses OAuth to obtain an access token to an email server, this provides the security benefit of being able to use strong multi-factor authentication methods provided by the email server's authorization server, but does require that the user go through a web-based flow to log in to the email client. However, this web-based flow is often seen as distruptive to the user experience when initiated from a desktop or mobile native application, and so is often attempted to be minimized as much as possible.
+
+When the email client needs access to a separate API, such as a third-party calendaring application, traditionally this would require that the email client go through another web-based OAuth redirect flow to obtain authorization and ultimately an access token.
+
+To streamline the user experience, this specification can be used to enable the email client to use the identity assertion to obtain an access token for the third-party calendaring application without any user interaction.
+
+### Preconditions
+
+* The Client does not have a pre-registered OAuth 2.0 client at the IdP Authorization Server or the Resource Application
+* The Client has obtained an Identity Assertion (e.g. ID Token) from the IdP Authorization Server
+* The Resource Application is configured to allow the Identity Assertion Authorization Grant from unregistered clients
+
+
+# Relationship to RFC7522
+
+"SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants" {{RFC7522}} describes a mechanism for using a SAML assertion as an authorization grant to obtain an access token. Directly exchanging a SAML assertion for an access token is limited in the ways this can be securely deployed.
 
 This specification adds an intermediate step of exchanging a SAML assertion for the intermediate Identity Assertion Authorization Grant, which is then later exchanged for an access token. By adding this intermediate step, this provides the security benefit of being able to indicate which API the access token is being requested, enabling the authorization server to enforce policies before issuing the authorization grant. Without this step, policies must be enforced at each resource application's authorization server, which doesn't scale well and is impossible in some deployments.
 
@@ -392,5 +408,5 @@ This specification adds an intermediate step of exchanging a SAML assertion for 
 # Acknowledgments
 {:numbered="false"}
 
-TODO acknowledge.
+The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell.
 
