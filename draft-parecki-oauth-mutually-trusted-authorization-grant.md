@@ -47,6 +47,7 @@ normative:
 
 informative:
   RFC9470:
+  RFC7522:
 
 
 --- abstract
@@ -294,7 +295,7 @@ Notes:
 The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion {{RFC7523}}.
 
 * `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
-* `assertion` - The JWT authorization grant obtained in the previous step
+* `assertion` - The Identity Assertion Authorization Grant JWT obtained in the previous step
 * Client Authentication - the Client authenticates with its credentials as registered with the Resource Application's authorization server
 
 For example:
@@ -361,16 +362,11 @@ The Client would need to redirect the user back to the IdP to obtain a new asser
 TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
 
 
-## Relationship to SAML 2.0 Authorization Grant RFC7522
-
-
-
-
 # IANA Considerations
 
 ## Media Types
 
-This section registers `oauth-itag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
+This section registers `oauth-id-jag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
 
 
 ## OAuth URI Registration
@@ -378,13 +374,20 @@ This section registers `oauth-itag+jwt`, a new media type {{RFC2046}} in the "Me
 This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.OAuth.Parameters}}.
 
 * URN: urn:ietf:params:oauth:token-type:id-jag
-* Common Name: Token type URI for a Identity Assertion Authorization Grant JWT
+* Common Name: Token type URI for a Identity Assertion JWT Authorization Grant
 * Change Controller: IESG
 * Specification Document: This document
 
 
 
 --- back
+
+# Relationship to RFC7522 SAML 2.0 Authorization Grant
+
+"SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants" ({{RFC7522}}) describes a mechanism for using a SAML assertion as an authorization grant to obtain an access token. Directly exchanging a SAML assertion for an access token is limited in the ways this can be securely deployed.
+
+This specification adds an intermediate step of exchanging a SAML assertion for the intermediate Identity Assertion Authorization Grant, which is then later exchanged for an access token. By adding this intermediate step, this provides the security benefit of being able to indicate which API the access token is being requested, enabling the authorization server to enforce policies before issuing the authorization grant. Without this step, policies must be enforced at each resource application's authorization server, which doesn't scale well and is impossible in some deployments.
+
 
 # Acknowledgments
 {:numbered="false"}
