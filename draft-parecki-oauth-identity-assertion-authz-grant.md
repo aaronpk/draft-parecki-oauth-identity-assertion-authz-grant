@@ -23,7 +23,7 @@ venue:
   mail: "oauth@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/oauth/"
   github: "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant"
-  latest: "https://aaronpk.github.io/draft-parecki-oauth-identity-assertion-authz-grant/draft-parecki-oauth-identity-assertion-authz-grant.html"
+  latest: "https://drafts.aaronpk.com/draft-parecki-oauth-identity-assertion-authz-grant/draft-parecki-oauth-identity-assertion-authz-grant.html"
 
 author:
  -
