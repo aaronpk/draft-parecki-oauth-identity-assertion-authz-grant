@@ -1,7 +1,7 @@
 {
   "magic": "E!vIA5L86J2I",
   "timestamp": "2024-02-29T00:28:45.617204+00:00",
-  "repo": "aaronpk/draft-parecki-oauth-mutually-trusted-authorization-grant",
+  "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
       "name": "bug",
