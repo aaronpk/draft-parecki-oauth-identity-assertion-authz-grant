@@ -5,7 +5,7 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                             K. McGuinness
 Intended status: Standards Track                                    Okta
-Expires: 2 September 2024                                   1 March 2024
+Expires: 3 September 2024                                   2 March 2024
 
 
                  Identity Assertion Authorization Grant
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 September 2024.
+   This Internet-Draft will expire on 3 September 2024.
 
 Copyright Notice
 
@@ -517,7 +517,7 @@ Cache-Control: no-store
 
    This section registers urn:ietf:params:oauth:token-type:id-jag in the
    "OAuth URI" subregistry of the "OAuth Parameters" registry
-   [IANA.OAuth.Parameters].
+   [IANA.oauth-parameters].
 
    *  URN: urn:ietf:params:oauth:token-type:id-jag
 
@@ -543,8 +543,9 @@ Cache-Control: no-store
    [IANA.MediaTypes]
               "*** BROKEN REFERENCE ***".
 
-   [IANA.OAuth.Parameters]
-              "*** BROKEN REFERENCE ***".
+   [IANA.oauth-parameters]
+              IANA, "OAuth Parameters",
+              <http://www.iana.org/assignments/oauth-parameters>.
 
    [RFC2046]  Freed, N. and N. Borenstein, "Multipurpose Internet Mail
               Extensions (MIME) Part Two: Media Types", RFC 2046,
