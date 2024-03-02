@@ -41,7 +41,7 @@ normative:
   RFC8725:
   I-D.ietf-oauth-identity-chaining:
   IANA.MediaTypes:
-  IANA.OAuth.Parameters:
+  IANA.oauth-parameters:
   RFC6838:
   RFC2046:
 
@@ -353,7 +353,7 @@ This section registers `oauth-id-jag+jwt`, a new media type {{RFC2046}} in the "
 
 ## OAuth URI Registration
 
-This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.OAuth.Parameters}}.
+This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth URI" subregistry of the "OAuth Parameters" registry {{IANA.oauth-parameters}}.
 
 * URN: urn:ietf:params:oauth:token-type:id-jag
 * Common Name: Token type URI for a Identity Assertion JWT Authorization Grant
