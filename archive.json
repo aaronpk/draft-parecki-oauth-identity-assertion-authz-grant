@@ -1,0 +1,158 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-03-12T00:28:24.714370+00:00",
+  "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOKv5r-s5odQGI",
+      "title": "consistent oauth-itag+jwt",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/1",
+      "state": "CLOSED",
+      "author": "bc-pi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "while thinking about how to comment on https://github.com/oauth-wg/oauth-identity-chaining/issues/85 I came to look at what you were doing with typ in this draft and noticed three different media type values...",
+      "createdAt": "2024-03-01T22:24:35Z",
+      "updatedAt": "2024-03-02T01:07:21Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "4e997cd8520282b5318a48b4025c210d8587d78e",
+      "headRepository": "bc-pi/draft-parecki-oauth-identity-assertion-authorization-grant",
+      "headRefName": "patch-1",
+      "headRefOid": "4d012ec7b9885b314cdd8e0115ed196e1fec26ac",
+      "closedAt": "2024-03-01T22:29:06Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "haha thanks i'm in the middle of fixing it \ud83d\ude43 ",
+          "createdAt": "2024-03-01T22:25:21Z",
+          "updatedAt": "2024-03-01T22:25:21Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I fixed it up here, thanks https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authorization-grant/commit/bd15902dc052e0dea3b4483327ebbae84b72d4fa",
+          "createdAt": "2024-03-01T22:29:07Z",
+          "updatedAt": "2024-03-01T22:29:07Z"
+        },
+        {
+          "author": "bc-pi",
+          "authorAssociation": "NONE",
+          "body": "That works! Glad I could be (un)helpful. ",
+          "createdAt": "2024-03-01T22:31:13Z",
+          "updatedAt": "2024-03-01T22:31:13Z"
+        },
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "You caught us in the middle \ud83d\ude04! Thanks @aaronpk for getting that updated.",
+          "createdAt": "2024-03-01T22:32:12Z",
+          "updatedAt": "2024-03-02T01:07:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOKv5r-s5odT4C",
+      "title": "Fix grammar in intro",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/2",
+      "state": "CLOSED",
+      "author": "kamronbatman",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-03-01T22:41:53Z",
+      "updatedAt": "2024-03-01T23:16:26Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "bd15902dc052e0dea3b4483327ebbae84b72d4fa",
+      "headRepository": "kamronbatman/draft-parecki-oauth-identity-assertion-authorization-grant",
+      "headRefName": "patch-1",
+      "headRefOid": "d270099ed9e06f9f7c47ce70956e0c673c92c119",
+      "closedAt": "2024-03-01T23:16:26Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I changed too much and this conflicted. I fixed it in a separate commit!",
+          "createdAt": "2024-03-01T23:16:26Z",
+          "updatedAt": "2024-03-01T23:16:26Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s5x-dmz",
+          "commit": {
+            "abbreviatedOid": "d270099"
+          },
+          "author": "macyabbey",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-03-01T22:45:50Z",
+          "updatedAt": "2024-03-01T22:45:50Z",
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
