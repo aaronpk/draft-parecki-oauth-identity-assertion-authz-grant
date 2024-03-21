@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-03-19T00:28:52.752677+00:00",
+  "timestamp": "2024-03-21T00:29:48.474658+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -49,7 +49,40 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 3,
+      "id": "I_kwDOKv5r-s6C6zv7",
+      "title": "Pairwise identifiers",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/3",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "The subject identifier between apps doesn't need to be the same. Mention how the IdP can use a different subject identifier targeted at the AS. ",
+      "createdAt": "2024-03-20T01:38:36Z",
+      "updatedAt": "2024-03-20T01:38:37Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKv5r-s6C6z3D",
+      "title": "Mention that this profile assumes there is a single IdP that is trusted by both apps",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/4",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "This is mentioned in the appendix, but should be mentioned earlier. This also simplifies pairwise identifiers in #3.",
+      "createdAt": "2024-03-20T01:38:52Z",
+      "updatedAt": "2024-03-20T01:38:52Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": [
     {
       "number": 1,
@@ -153,6 +186,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOKv5r-s5qLOn0",
+      "title": "Update draft-parecki-oauth-identity-assertion-authz-grant.md",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/5",
+      "state": "OPEN",
+      "author": "gffletch",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Text to address issue #4\r\n\r\nThis needs careful review and may go to far or be too detailed for the Overview section.\r\n\r\nFeedback appreciated!",
+      "createdAt": "2024-03-20T04:57:36Z",
+      "updatedAt": "2024-03-20T04:57:36Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
+      "headRepository": "gffletch/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "Issue_4",
+      "headRefOid": "25f15eba488626f3971ab3d1500f5332e960ca19",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
