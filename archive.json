@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-05-09T00:30:23.824099+00:00",
+  "timestamp": "2024-05-12T00:33:46.681573+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -127,6 +127,22 @@
       "body": "Input to token exchange is:\r\n\r\n* `subject_token=<refresh token>`\r\n* `subject_token_type=urn:ietf:params:oauth:token-type:refresh_token`\r\n\r\nResponse includes a JWT as well as optional new refresh token\r\n",
       "createdAt": "2024-05-07T18:22:53Z",
       "updatedAt": "2024-05-07T18:22:53Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOKv5r-s6IhbRH",
+      "title": "Note about SAML user identifiers",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/9",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Add a note:\r\n\r\nThe IdP needs to ensure there is an IdP-recognizable value to identify the user in the SAML assertion. For example if the IdP transforms the user ID to something specific to the app as the nameID, it needs to also include the actual unique user ID as a custom claim that it can use to identify the user when the SAML assertion is passed back to the IdP.",
+      "createdAt": "2024-05-10T22:02:06Z",
+      "updatedAt": "2024-05-10T22:02:06Z",
       "closedAt": null,
       "comments": []
     }
