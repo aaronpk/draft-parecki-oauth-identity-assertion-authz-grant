@@ -163,9 +163,6 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
       "scope": "openid"
     }
 
-## SAML
-
-If the Client authenticated using SAML, the Client may exchange the SAML assertion for an OpenID Connect ID Token using Token Exchange {{RFC8693}}. The same 
 
 # Token Exchange
 
@@ -401,13 +398,6 @@ To streamline the user experience, this specification can be used to enable the 
 * The Client does not have a pre-registered OAuth 2.0 client at the IdP Authorization Server or the Resource Application
 * The Client has obtained an Identity Assertion (e.g. ID Token) from the IdP Authorization Server
 * The Resource Application is configured to allow the Identity Assertion Authorization Grant from unregistered clients
-
-
-# Relationship to RFC7522
-
-"SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants" {{RFC7522}} describes a mechanism for using a SAML assertion as an authorization grant to obtain an access token. Directly exchanging a SAML assertion for an access token is limited in the ways this can be securely deployed.
-
-This specification adds an intermediate step of exchanging a SAML assertion for the intermediate Identity Assertion Authorization Grant, which is then later exchanged for an access token. By adding this intermediate step, this provides the security benefit of being able to indicate which API the access token is being requested, enabling the authorization server to enforce policies before issuing the authorization grant. Without this step, policies must be enforced at each resource application's authorization server, which doesn't scale well and is impossible in some deployments.
 
 
 # Acknowledgments
