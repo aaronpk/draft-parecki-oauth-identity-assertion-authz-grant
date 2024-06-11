@@ -1394,6 +1394,7 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
           <p id="section-3-5.4.1">Client makes an API request with the Access Token<a href="#section-3-5.4.1" class="pilcrow">¶</a></p>
 </li>
       </ol>
+<p id="section-3-6">This specification is constrained to deployments where all Resource Application Resource Servers are leveraging the same IDP Authorization Server for Single-Sign-On (SSO) and session management services. The IDP provides a consistent trust boundary enabling the set of Resource Application Authorization Servers to honor the JWT Authorization Grant (ID-JAG) issued by the IDP. This specification also assumes that the Resource Server Authorization Servers delegate user authorization authority to the IDP (e.g. the IDP is trusted to ensure the scopes identified in the ID-JAG have been correctly authorized before issuing the ID-JAG token).<a href="#section-3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="user-authentication">
