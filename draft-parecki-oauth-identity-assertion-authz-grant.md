@@ -49,7 +49,6 @@ normative:
 
 informative:
   RFC9470:
-  RFC7522:
 
 
 --- abstract
