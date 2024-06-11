@@ -5,7 +5,7 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                             K. McGuinness
 Intended status: Standards Track                                    Okta
-Expires: 3 September 2024                                   2 March 2024
+Expires: 13 December 2024                                   11 June 2024
 
 
                  Identity Assertion Authorization Grant
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 September 2024.
+   This Internet-Draft will expire on 13 December 2024.
 
 Copyright Notice
 
@@ -98,7 +98,6 @@ Table of Contents
        A.1.1.  Preconditions
      A.2.  Email and Calendaring Applications
        A.2.1.  Preconditions
-   Appendix B.  Relationship to RFC7522
    Acknowledgments
    Authors' Addresses
 
@@ -209,7 +208,7 @@ Table of Contents
       |                   |                  |                 |
 
    1.  User logs in to the Client, the Client obtains the Identity
-       Assertion (e.g.  SAML Assertion or OpenID Connect ID Token)
+       Assertion (e.g.  OpenID Connect ID Token)
 
    2.  Client uses the Identity Assertion to request an Identity
        Assertion Authorization Grant for the Resource Application from
@@ -266,12 +265,11 @@ Location: https://acme.idp.example/authorize?response_type=code&scope=openid&cli
    *  scope - The space-separated list of scopes at the Resource
       Application to include in the token
 
-   *  subject_token - The identity assertion (SAML Assertion or OpenID
-      Connect ID Token) for the target end-user
+   *  subject_token - The identity assertion (OpenID Connect ID Token)
+      for the target end-user
 
-   *  subject_token_type - For SAML2 Assertion:
-      urn:ietf:params:oauth:token-type:saml2, or OpenID Connect ID
-      Token: urn:ietf:params:oauth:token-type:id_token
+   *  subject_token_type - For OpenID Connect ID Token:
+      urn:ietf:params:oauth:token-type:id_token
 
    *  Client authentication (e.g. client_id and client_secret, or the
       more secure private_key_jwt method using client_assertion and
@@ -407,7 +405,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 
    *  If the IdP is multi-tenant and uses the same issuer for all
       tenants, the Resource Application will already have IdP-specific
-      logic to determine the tenant from OIDC/SAML (e.g. the hd claim in
+      logic to determine the tenant from OIDC (e.g. the hd claim in
       Google) and will need to use that if the IdP also has only one
       client registration for the Resource Application.
 
@@ -592,12 +590,6 @@ Cache-Control: no-store
 
 9.2.  Informative References
 
-   [RFC7522]  Campbell, B., Mortimore, C., and M. Jones, "Security
-              Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0
-              Client Authentication and Authorization Grants", RFC 7522,
-              DOI 10.17487/RFC7522, May 2015,
-              <https://www.rfc-editor.org/rfc/rfc7522>.
-
    [RFC9470]  Bertocci, V. and B. Campbell, "OAuth 2.0 Step Up
               Authentication Challenge Protocol", RFC 9470,
               DOI 10.17487/RFC9470, September 2023,
@@ -686,24 +678,6 @@ A.2.1.  Preconditions
 
    *  The Resource Application is configured to allow the Identity
       Assertion Authorization Grant from unregistered clients
-
-Appendix B.  Relationship to RFC7522
-
-   "SAML 2.0 Profile for OAuth 2.0 Client Authentication and
-   Authorization Grants" [RFC7522] describes a mechanism for using a
-   SAML assertion as an authorization grant to obtain an access token.
-   Directly exchanging a SAML assertion for an access token is limited
-   in the ways this can be securely deployed.
-
-   This specification adds an intermediate step of exchanging a SAML
-   assertion for the intermediate Identity Assertion Authorization
-   Grant, which is then later exchanged for an access token.  By adding
-   this intermediate step, this provides the security benefit of being
-   able to indicate which API the access token is being requested,
-   enabling the authorization server to enforce policies before issuing
-   the authorization grant.  Without this step, policies must be
-   enforced at each resource application's authorization server, which
-   doesn't scale well and is impossible in some deployments.
 
 Acknowledgments
 
