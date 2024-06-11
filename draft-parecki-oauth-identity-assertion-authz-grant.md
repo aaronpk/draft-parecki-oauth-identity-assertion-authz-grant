@@ -171,7 +171,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 * `resource` - The token endpoint of the Resource Application.
 * `scope` - The space-separated list of scopes at the Resource Application to include in the token
 * `subject_token` - The identity assertion (OpenID Connect ID Token) for the target end-user
-* `subject_token_type=urn:ietf:params:oauth:token-type:id_token`
+* `subject_token_type` - For OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
 * Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
 The example below uses an ID Token as the Identity Assertion, and uses `private_key_jwt` as the client authentication method, (tokens truncated for brevity):
