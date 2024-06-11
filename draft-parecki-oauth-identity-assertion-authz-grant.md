@@ -127,7 +127,7 @@ Sequence Diagram
          |                   |                  |                 |
          |                   |                  |                 |
 
-1. User logs in to the Client, the Client obtains the Identity Assertion (e.g. SAML Assertion or OpenID Connect ID Token)
+1. User logs in to the Client, the Client obtains the Identity Assertion (e.g. OpenID Connect ID Token)
 2. Client uses the Identity Assertion to request an Identity Assertion Authorization Grant for the Resource Application from the IdP
 3. Client exchanges the Identity Assertion Authorization Grant JWT for an Access Token at the Resource Application's token endpoint
 4. Client makes an API request with the Access Token
@@ -163,6 +163,9 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
       "scope": "openid"
     }
 
+## SAML
+
+If the Client authenticated using SAML, the Client may exchange the SAML assertion for an OpenID Connect ID Token using Token Exchange {{RFC8693}}. The same 
 
 # Token Exchange
 
@@ -171,8 +174,8 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 * `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`
 * `resource` - The token endpoint of the Resource Application.
 * `scope` - The space-separated list of scopes at the Resource Application to include in the token
-* `subject_token` - The identity assertion (SAML Assertion or OpenID Connect ID Token) for the target end-user
-* `subject_token_type` - For SAML2 Assertion: `urn:ietf:params:oauth:token-type:saml2`, or OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
+* `subject_token` - The identity assertion (OpenID Connect ID Token) for the target end-user
+* `subject_token_type=urn:ietf:params:oauth:token-type:id_token`
 * Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
 
 The example below uses an ID Token as the Identity Assertion, and uses `private_key_jwt` as the client authentication method, (tokens truncated for brevity):
@@ -270,7 +273,7 @@ An example JWT shown with expanded header and payload claims is below:
 
 Implementation notes:
 
-* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC/SAML (e.g. the `hd` claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.
+* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC (e.g. the `hd` claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.
 
 
