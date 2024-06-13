@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-11T00:32:08.583017+00:00",
+  "timestamp": "2024-06-13T00:32:14.772473+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -62,9 +62,17 @@
       "labels": [],
       "body": "The subject identifier between apps doesn't need to be the same. Mention how the IdP can use a different subject identifier targeted at the AS. ",
       "createdAt": "2024-03-20T01:38:36Z",
-      "updatedAt": "2024-03-20T01:38:37Z",
+      "updatedAt": "2024-06-11T19:10:48Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS",
+          "createdAt": "2024-06-11T19:10:47Z",
+          "updatedAt": "2024-06-11T19:10:47Z"
+        }
+      ]
     },
     {
       "number": 4,
@@ -111,46 +119,102 @@
       "id": "I_kwDOKv5r-s6IIlrx",
       "title": "Add mention of refresh_token field in token response",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/7",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Token Exchange already defines the refresh_token field in the token response, mention why that is useful and when someone might want to do that.",
       "createdAt": "2024-05-07T18:15:40Z",
-      "updatedAt": "2024-05-07T18:15:40Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-06-11T19:07:26Z",
+      "closedAt": "2024-06-11T19:07:26Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "we aren't planning on returning a refresh token here anymore",
+          "createdAt": "2024-06-11T19:07:26Z",
+          "updatedAt": "2024-06-11T19:07:26Z"
+        }
+      ]
     },
     {
       "number": 8,
       "id": "I_kwDOKv5r-s6IIoUj",
       "title": "Give an example of the refresh token flow",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/8",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Input to token exchange is:\r\n\r\n* `subject_token=<refresh token>`\r\n* `subject_token_type=urn:ietf:params:oauth:token-type:refresh_token`\r\n\r\nResponse includes a JWT as well as optional new refresh token\r\n",
       "createdAt": "2024-05-07T18:22:53Z",
-      "updatedAt": "2024-05-07T18:22:53Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2024-06-11T19:06:14Z",
+      "closedAt": "2024-06-11T19:06:14Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Instead we'll recommend using the refresh token to get a new ID token.",
+          "createdAt": "2024-06-11T19:06:14Z",
+          "updatedAt": "2024-06-11T19:06:14Z"
+        }
+      ]
     },
     {
       "number": 9,
       "id": "I_kwDOKv5r-s6IhbRH",
       "title": "Note about SAML user identifiers",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/9",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Add a note:\r\n\r\nThe IdP needs to ensure there is an IdP-recognizable value to identify the user in the SAML assertion. For example if the IdP transforms the user ID to something specific to the app as the nameID, it needs to also include the actual unique user ID as a custom claim that it can use to identify the user when the SAML assertion is passed back to the IdP.",
       "createdAt": "2024-05-10T22:02:06Z",
-      "updatedAt": "2024-06-10T15:17:46Z",
+      "updatedAt": "2024-06-11T19:05:57Z",
+      "closedAt": "2024-06-11T19:05:57Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Going to do this a different way, recommending exchanging the SAML assertion for an ID token first.",
+          "createdAt": "2024-06-11T19:05:57Z",
+          "updatedAt": "2024-06-11T19:05:57Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOKv5r-s6L38zs",
+      "title": "Update based on decisions about SAML and refresh token usage",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/10",
+      "state": "CLOSED",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "- Close #9 \r\n- Close #8 \r\n- Close #7 \r\n- Remove option to use SAML assertion as the subject_token in the exchange\r\n- Make a note about obtaining ID tokens from token exchange after authenticating with SAML",
+      "createdAt": "2024-06-11T15:17:31Z",
+      "updatedAt": "2024-06-11T19:07:33Z",
+      "closedAt": "2024-06-11T19:07:33Z",
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOKv5r-s6L5g5t",
+      "title": "Add to security concerns section",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/12",
+      "state": "OPEN",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "- #6 \r\n- and other threat models considerations\r\n- extra considerations for scopes and scope validation",
+      "createdAt": "2024-06-11T19:12:41Z",
+      "updatedAt": "2024-06-11T19:14:07Z",
       "closedAt": null,
       "comments": []
     }
@@ -264,24 +328,26 @@
       "id": "PR_kwDOKv5r-s5qLOn0",
       "title": "Update draft-parecki-oauth-identity-assertion-authz-grant.md",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/5",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "gffletch",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Text to address issue #4\r\n\r\nThis needs careful review and may go to far or be too detailed for the Overview section.\r\n\r\nFeedback appreciated!",
       "createdAt": "2024-03-20T04:57:36Z",
-      "updatedAt": "2024-06-10T15:01:50Z",
+      "updatedAt": "2024-06-11T19:12:24Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
       "headRepository": "gffletch/draft-parecki-oauth-identity-assertion-authz-grant",
       "headRefName": "Issue_4",
       "headRefOid": "25f15eba488626f3971ab3d1500f5332e960ca19",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2024-06-11T19:12:24Z",
+      "mergedAt": "2024-06-11T19:12:24Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "932f96951616edea3d015ee30c47ad93e43277cc"
+      },
       "comments": [],
       "reviews": [
         {
@@ -298,6 +364,34 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKv5r-s5yJAM5",
+      "title": "Update for changes to SAML implementation",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/11",
+      "state": "MERGED",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Address #10 \r\n\r\nMaybe section \"Relationship to RFC7522\" should be removed but I believe we still add an extra secure step as described in the section, so opt to keep it in.\r\n\r\nThe new SAML section added in this PR is an idea for mentioning the SAML implementation. I am not sure how the authors want to approach this which is why this is a draft PR for now.",
+      "createdAt": "2024-06-11T17:39:41Z",
+      "updatedAt": "2024-06-11T19:05:20Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
+      "headRepository": "sdesen/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "Issue_10",
+      "headRefOid": "1945666640c9acd1c9a909f12ee825ed162d1286",
+      "closedAt": "2024-06-11T19:05:20Z",
+      "mergedAt": "2024-06-11T19:05:20Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "e4034b48067d8a063efa1e128cb2d3161f8d7267"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
