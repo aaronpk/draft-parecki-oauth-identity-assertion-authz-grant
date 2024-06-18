@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-16T00:35:32.108473+00:00",
+  "timestamp": "2024-06-18T00:32:51.226778+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -62,7 +62,7 @@
       "labels": [],
       "body": "The subject identifier between apps doesn't need to be the same. Mention how the IdP can use a different subject identifier targeted at the AS. ",
       "createdAt": "2024-03-20T01:38:36Z",
-      "updatedAt": "2024-06-11T19:10:48Z",
+      "updatedAt": "2024-06-17T21:36:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -71,6 +71,13 @@
           "body": "sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS",
           "createdAt": "2024-06-11T19:10:47Z",
           "updatedAt": "2024-06-11T19:10:47Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "> sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS\r\n\r\nIt might be worth discussing how the IdP could do this mapping.",
+          "createdAt": "2024-06-17T21:36:18Z",
+          "updatedAt": "2024-06-17T21:36:18Z"
         }
       ]
     },
@@ -215,6 +222,38 @@
       "body": "- #6 \r\n- and other threat models considerations\r\n- extra considerations for scopes and scope validation",
       "createdAt": "2024-06-11T19:12:41Z",
       "updatedAt": "2024-06-11T19:14:07Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOKv5r-s6MkWCT",
+      "title": "Why don't the IdP requests the access token from the AS?",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/13",
+      "state": "OPEN",
+      "author": "randomstuff",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The scenario described works as follows:\r\n\r\n1. client obtains ID token;\r\n2. client exchanges ID token with IdP against JAG;\r\n3. client requests AT from AS using JAG as an assertion;\r\n4. client uses AT on the RS.\r\n\r\nA downside of this approach is that in step 3, the client must be registered on the AS.\r\n\r\nWhy wouldn't/couldn't the AS take care of step 3?\r\n\r\nThis would make the process simpler for the client:\r\n\r\n* the client does not need to know that the RS is associated with another domain;\r\n* the client does not need to know that the AS exists at all;\r\n* the client therefore does not need to have credentials for the AS.\r\n\r\nThe fact that the RS is in another domain would be transparent for the client. You could have one deployment where the RS in in the same domain and another deployment where is is in another domain without having to change the client logic.\r\n\r\nModified scenario:\r\n\r\n1. client obtains ID token;\r\n2. client exchange ID token with IdP against AT;\r\n  a. in order to obtain the AT, the AS might need to generate an assertion and send it to the AS\r\n4. client uses AT on the RS.\r\n\r\nOne downside is that from the point of view, the token are issued to the IdP but surely this can be worked-around with some extension.\r\n",
+      "createdAt": "2024-06-17T21:58:37Z",
+      "updatedAt": "2024-06-17T22:13:08Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 14,
+      "id": "I_kwDOKv5r-s6MkdcS",
+      "title": "Discuss the need for client_id mapping",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/14",
+      "state": "OPEN",
+      "author": "randomstuff",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 5.3 [Identity Assertion Authorization Grant JWT](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant#name-identity-assertion-authoriz) says that the IdP should generate a Identity Assertion Authorization Grant JWT with:\r\n\r\n> client_id - Client ID as registered with the Resource Application's authorization server\r\n\r\nThis means that the IdP must use a mapping between the `client_id` at the IdP and the `client_id` at the AS. I don't believe this requirement is explicitly mentioned. Maybe this should be discussed.",
+      "createdAt": "2024-06-17T22:19:13Z",
+      "updatedAt": "2024-06-17T22:19:13Z",
       "closedAt": null,
       "comments": []
     }
