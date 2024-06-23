@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-20T00:31:54.826423+00:00",
+  "timestamp": "2024-06-23T00:35:03.162346+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -62,15 +62,15 @@
       "labels": [],
       "body": "The subject identifier between apps doesn't need to be the same. Mention how the IdP can use a different subject identifier targeted at the AS. ",
       "createdAt": "2024-03-20T01:38:36Z",
-      "updatedAt": "2024-06-17T21:36:20Z",
+      "updatedAt": "2024-06-20T17:05:37Z",
       "closedAt": null,
       "comments": [
         {
           "author": "sdesen",
           "authorAssociation": "NONE",
-          "body": "sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS",
+          "body": "sub - The \"User ID at the IdP\" can be changed to \"subject identifier\" recognized by AS",
           "createdAt": "2024-06-11T19:10:47Z",
-          "updatedAt": "2024-06-11T19:10:47Z"
+          "updatedAt": "2024-06-20T17:01:54Z"
         },
         {
           "author": "randomstuff",
@@ -78,6 +78,20 @@
           "body": "> sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS\r\n\r\nIt might be worth discussing how the IdP could do this mapping.",
           "createdAt": "2024-06-17T21:36:18Z",
           "updatedAt": "2024-06-17T21:36:18Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "I think this is an implementation detail, but because the IdP is used by both RS and Client, it should understand the sub claims that the Resource Server's AS expects. ",
+          "createdAt": "2024-06-20T17:02:04Z",
+          "updatedAt": "2024-06-20T17:02:04Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "In typical SSO, an enterprise IdP might already send different subject identifiers for the same user to different apps that are signing in. This note is just to add a sentence that describes this, and also to make it clear that we are *not* trying to change this behavior to require that all user IDs are identical across both apps in this flow.",
+          "createdAt": "2024-06-20T17:05:35Z",
+          "updatedAt": "2024-06-20T17:05:35Z"
         }
       ]
     },
@@ -237,7 +251,7 @@
       "labels": [],
       "body": "The scenario described works as follows:\r\n\r\n1. client obtains ID token;\r\n2. client exchanges ID token with IdP against JAG;\r\n3. client requests AT from AS using JAG as an assertion;\r\n4. client uses AT on the RS.\r\n\r\nA downside of this approach is that in step 3, the client must be registered on the AS.\r\n\r\nWhy wouldn't/couldn't the AS take care of step 3?\r\n\r\nThis would make the process simpler for the client:\r\n\r\n* the client does not need to know that the RS is associated with another domain;\r\n* the client does not need to know that the AS exists at all;\r\n* the client therefore does not need to have credentials for the AS.\r\n\r\nThe fact that the RS is in another domain would be transparent for the client. You could have one deployment where the RS in in the same domain and another deployment where is is in another domain without having to change the client logic.\r\n\r\nModified scenario:\r\n\r\n1. client obtains ID token;\r\n2. client exchange ID token with IdP against AT;\r\n  a. in order to obtain the AT, the AS might need to generate an assertion and send it to the AS\r\n4. client uses AT on the RS.\r\n\r\nOne downside is that from the point of view, the token are issued to the IdP but surely this can be worked-around with some extension.\r\n",
       "createdAt": "2024-06-17T21:58:37Z",
-      "updatedAt": "2024-06-18T19:02:53Z",
+      "updatedAt": "2024-06-20T15:08:10Z",
       "closedAt": null,
       "comments": [
         {
@@ -246,6 +260,20 @@
           "body": "The approach we took (which is malleable, as we want to build a simple and reusable flow with the least assumptions), is to have the least amount of burden on both the client (requesting application) and the RS AS. In doing that,  step 3 is fine because right now clients already are registered with the RS AS to request tokens directly and facilitate SSO flows. We wanted to lean into that by shifting as much of the burden to the identity provider, especially since the identity provider has all of the information about the user/organization and their relationships.\r\n\r\nI do like the simplicity of the proposed modified scenario and I think we should continue hammering out details to see if this kind of approach could work.\r\n\r\nI think we also agree that front loading the `client_id` and `resource` identifiers for mapping on the identity provider is not ideal. Unfortunately, I also believe requiring the IdP to register a client on every RS AS to do a new on-behalf exchange is not ideal either, especially since that is technically 3rd party to the existing client and AS oAuth registration/trust relationship.",
           "createdAt": "2024-06-18T19:00:54Z",
           "updatedAt": "2024-06-18T19:02:53Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "So I've been thinking (more/better) about my modified scenario. Some drawbacks are:\r\n\r\n* If a refresh_token was issued, the IdP now would be responsible for handling the token refresh request and forwarding it to the AS. I guess the IdP would have to store the original refresh token and send a new refresh token to the client.\r\n* The IdP would now be responsible for handling token revocations requests from the client. For the refresh token, the the approach from the previous point could be used but this is more complex for the access token.\r\n* The IdP would have to forward (and possibly filter/translate) many parameters such as scope, etc.\r\n* The client would not have the AS server metadata as it would not have a direct relationship with the AS.\r\n* DPoP forwarding would not work.",
+          "createdAt": "2024-06-20T06:32:19Z",
+          "updatedAt": "2024-06-20T06:35:12Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "If all AS responsibilities required for a typical OAuth consent flow were shifted to the IdP, then the IdP would become the AS for an intents and purposes, and then the Client would just make a typical request for an access token. No other steps would be needed. This spec is intended to leverage the common scenario where OAuth relationships exist and the AS may be independent of the IdP.\r\n\r\nHowever, I agree it makes sense to think about where changes can be made for the scenario where the relationship might not already exist, so very much appreciate this comment.\r\n\r\nFor this point:\r\n> the client does not need to know that the RS is associated with another domain;\r\n\r\nI am not sure I understand if this is true, because the client needs to make the resource request regardless from the RS.",
+          "createdAt": "2024-06-20T15:04:17Z",
+          "updatedAt": "2024-06-20T15:08:10Z"
         }
       ]
     },
