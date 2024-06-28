@@ -1556,12 +1556,14 @@ Cache-Control: no-store
         </h3>
 <p id="section-5.3-1">The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the resource owner, using the following claims:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-5.3-2">
-          <dt id="section-5.3-2.1">"iss":</dt>
+          <dt id="section-5.3-2.1">
+<code>iss</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.2">
             <p id="section-5.3-2.2.1"><span class="bcp14">REQUIRED</span> - The IdP <code>issuer</code> URL as defined in Section 4.1.1 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-5.3-2.3">"sub":</dt>
+<dt id="section-5.3-2.3">
+<code>sub</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.4">
             <p id="section-5.3-2.4.1"><span class="bcp14">REQUIRED</span> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
