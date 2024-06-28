@@ -1555,32 +1555,38 @@ Cache-Control: no-store
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-identity-assertion-authoriz" class="section-name selfRef">Identity Assertion Authorization Grant JWT</a>
         </h3>
 <p id="section-5.3-1">The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the resource owner, using the following claims:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-5.3-2">
+          <dt id="section-5.3-2.1">"iss":</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1"><span class="bcp14">REQUIRED</span> - The IdP <code>issuer</code> URL as defined in Section 4.1.1 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.3">"sub":</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.4">
+            <p id="section-5.3-2.4.1"><span class="bcp14">REQUIRED</span> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 <ul class="normal">
-<li class="normal" id="section-5.3-2.1">
-            <p id="section-5.3-2.1.1"><code>iss</code> - The IdP <code>issuer</code> URL<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.3-3.1">
+            <p id="section-5.3-3.1.1"><code>aud</code> - Token endpoint of the Resource Application's authorization server<a href="#section-5.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.3-2.2">
-            <p id="section-5.3-2.2.1"><code>sub</code> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.3-3.2">
+            <p id="section-5.3-3.2.1"><code>client_id</code> - The identifier of the client that this JWT was issued to<a href="#section-5.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.3-2.3">
-            <p id="section-5.3-2.3.1"><code>aud</code> - Token endpoint of the Resource Application's authorization server<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.3-3.3">
+            <p id="section-5.3-3.3.1"><code>scopes</code> - Array of scopes at the Resource Application granted to the Client<a href="#section-5.3-3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.3-2.4">
-            <p id="section-5.3-2.4.1"><code>client_id</code> - The identifier of the client that this JWT was issued to<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.3-3.4">
+            <p id="section-5.3-3.4.1"><code>jti</code> - Unique ID of this JWT<a href="#section-5.3-3.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.3-2.5">
-            <p id="section-5.3-2.5.1"><code>scopes</code> - Array of scopes at the Resource Application granted to the Client<a href="#section-5.3-2.5.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-2.6">
-            <p id="section-5.3-2.6.1"><code>jti</code> - Unique ID of this JWT<a href="#section-5.3-2.6.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-2.7">
-            <p id="section-5.3-2.7.1"><code>exp</code>, <code>iat</code> - as defined by JWT<a href="#section-5.3-2.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.3-3.5">
+            <p id="section-5.3-3.5.1"><code>exp</code>, <code>iat</code> - as defined by JWT<a href="#section-5.3-3.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-5.3-3">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
-<p id="section-5.3-4">An example JWT shown with expanded header and payload claims is below:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-5">
+<p id="section-5.3-4">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<p id="section-5.3-5">An example JWT shown with expanded header and payload claims is below:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-6">
 <pre>
 {
   "typ": "oauth-id-jag+jwt"
@@ -1598,15 +1604,15 @@ Cache-Control: no-store
 }
 .
 signature
-</pre><a href="#section-5.3-5" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-6" class="pilcrow">¶</a>
 </div>
-<p id="section-5.3-6">Implementation notes:<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<p id="section-5.3-7">Implementation notes:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.3-7.1">
-            <p id="section-5.3-7.1.1">If the IdP is multi-tenant and uses the same <code>issuer</code> for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC (e.g. the <code>hd</code> claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.<a href="#section-5.3-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-5.3-8.1">
+            <p id="section-5.3-8.1.1">If the IdP is multi-tenant and uses the same <code>issuer</code> for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC (e.g. the <code>hd</code> claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.3-7.2">
-            <p id="section-5.3-7.2.1"><code>sub</code> should be an opaque ID, as <code>iss</code>+<code>sub</code> is unique. The IdP might want to also include the user's email here, which it should do as a new <code>email</code> claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.<a href="#section-5.3-7.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-5.3-8.2">
+            <p id="section-5.3-8.2.1"><code>sub</code> should be an opaque ID, as <code>iss</code>+<code>sub</code> is unique. The IdP might want to also include the user's email here, which it should do as a new <code>email</code> claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1794,6 +1800,10 @@ Cache-Control: no-store
 <dt id="RFC6838">[RFC6838]</dt>
         <dd>
 <span class="refAuthor">Freed, N.</span>, <span class="refAuthor">Klensin, J.</span>, and <span class="refAuthor">T. Hansen</span>, <span class="refTitle">"Media Type Specifications and Registration Procedures"</span>, <span class="seriesInfo">BCP 13</span>, <span class="seriesInfo">RFC 6838</span>, <span class="seriesInfo">DOI 10.17487/RFC6838</span>, <time datetime="2013-01" class="refDate">January 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6838">https://www.rfc-editor.org/rfc/rfc6838</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7519">[RFC7519]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">N. Sakimura</span>, <span class="refTitle">"JSON Web Token (JWT)"</span>, <span class="seriesInfo">RFC 7519</span>, <span class="seriesInfo">DOI 10.17487/RFC7519</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7519">https://www.rfc-editor.org/rfc/rfc7519</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7521">[RFC7521]</dt>
         <dd>
