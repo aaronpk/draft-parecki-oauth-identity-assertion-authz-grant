@@ -173,14 +173,29 @@ Note: The Enterprise IdP may enforce security controls such as multi-factor auth
 
 The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoint with the following parameters:
 
-* `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`
-* `resource` - The token endpoint of the Resource Application.
-* `scope` - The space-separated list of scopes at the Resource Application to include in the token
-* `subject_token` - The identity assertion (OpenID Connect ID Token) for the target end-user
-* `subject_token_type` - For OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`
-* Client authentication (e.g. `client_id` and `client_secret`, or the more secure `private_key_jwt` method using `client_assertion` and `client_assertion_type`)
+`requested_token_type`:
+: REQUIRED - The value `urn:ietf:params:oauth:token-type:id-jag` indicates that an ID Assertion JWT is being requested.
 
-The example below uses an ID Token as the Identity Assertion, and uses `private_key_jwt` as the client authentication method, (tokens truncated for brevity):
+`resource`:
+: REQUIRED - The token endpoint of the Resource Application.
+
+`audience`:
+: The audience parameter MUST NOT be used.
+
+`scope`:
+: OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
+
+`subject_token`:
+: REQUIRED - The identity assertion (e.g. the OpenID Connect ID Token) for the target end-user.
+
+`subject_token_type`:
+: REQUIRED - An identifier, as described in Section 3 of {{RFC8693}}, that indicates the type of the security token in the `subject_token` parameter. For an OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`.
+
+The additional parameters defined in Section 2.1 of {{RFC8693}} `actor_token` and `actor_token_type` are not used in this specification.
+
+Client authentication to the authorization server is done using the normal mechanisms provided by OAuth 2.0. Section 2.3.1 of {{RFC6749}} defines password-based authentication of the client (`client_id` and `client_secret`), however, client authentication is extensible and other mechanisms are possible. For example, {{RFC7523}} defines client authentication using bearer JSON Web Tokens using `client_assertion` and `client_assertion_type`.
+
+The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion ({{RFC7523}}) as the client authentication method, (tokens truncated for brevity):
 
     POST /oauth2/token HTTP/1.1
     Host: acme.idp.example
@@ -220,11 +235,24 @@ If access is granted, the IdP creates a signed Identity Assertion Authorization 
       "expires_in": 300
     }
 
-* `issued_token_type` - `urn:ietf:params:oauth:token-type:id-jag`
-* `access_token` - The Identity Assertion Authorization Grant JWT. (Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an OAuth access token.)
-* `token_type` - `N_A` (As defined by Token Exchange.)
-* `scope` - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.
-* `expires_in` - The lifetime in seconds of the authorization grant.
+`issued_token_type`:
+: REQUIRED - `urn:ietf:params:oauth:token-type:id-jag`
+
+`access_token`:
+: REQUIRED - The Identity Assertion Authorization Grant JWT. (Note: Token Exchange requires the `access_token` response parameter for historical reasons, even though this is not an OAuth access token.)
+
+`token_type`:
+: REQUIRED - `N_A` (because this is not an OAuth access token.)
+
+`scope`:
+: OPTIONAL if the scope of the issued token is identical to the scope requested by the client; otherwise, it is REQUIRED. This may be fewer scopes than the application requested based on various policies in the IdP.
+
+`expires_in`:
+: RECOMMENDED - The lifetime in seconds of the authorization grant.
+
+`refresh_token`:
+: OPTIONAL according to Section 2.2 of {{RFC8693}}. In the context of this specification, this parameter SHOULD NOT be used.
+
 
 ### Error Response
 
@@ -250,11 +278,23 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 `sub`:
 : REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of {{RFC7519}}
 
-* `aud` - Token endpoint of the Resource Application's authorization server
-* `client_id` - The identifier of the client that this JWT was issued to
-* `scopes` - Array of scopes at the Resource Application granted to the Client
-* `jti` - Unique ID of this JWT
-* `exp`, `iat` - as defined by JWT
+`aud`:
+: REQUIRED - The token endpoint of the Resource Application's authorization server as defined in Section 4.1.3 of {{RFC7519}}
+
+`client_id`:
+: REQUIRED - The identifier of the client that this JWT was issued to as defined in Section 4.3 of {{RFC8693}}
+
+`jti`:
+: REQUIRED - Unique ID of this JWT as defined in Section 4.1.7 of {{RFC7519}}
+
+`exp`:
+: REQUIRED - as defined in Section 4.1.4 of {{RFC7519}}
+
+`iat`:
+: REQUIRED - as defined in Section 4.1.6 of {{RFC7519}}
+
+`scope`:
+: OPTIONAL - a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of {{RFC6749}}
 
 The `typ` of the JWT indicated in the JWT header MUST be `oauth-id-jag+jwt`.
 
@@ -272,10 +312,12 @@ An example JWT shown with expanded header and payload claims is below:
       "client_id": "f53f191f9311af35",
       "exp": 1311281970,
       "iat": 1311280970,
-      "scopes" : [ "chat.read" , "chat.history" ]
+      "scope": "chat.read chat.history"
     }
     .
     signature
+
+The authorization server MAY add additional claims as necessary.
 
 Implementation notes:
 
@@ -285,11 +327,15 @@ Implementation notes:
 
 # Access Token Request {#token-request}
 
-The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion {{RFC7523}}.
+The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion as defined by {{RFC7523}}.
 
-* `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer`
-* `assertion` - The Identity Assertion Authorization Grant JWT obtained in the previous token exchange step
-* Client Authentication - the Client authenticates with its credentials as registered with the Resource Application's authorization server
+`grant_type`:
+: REQUIRED - The value of `grant_type` is `urn:ietf:params:oauth:grant-type:jwt-bearer`
+
+`assertion`:
+: REQUIRED - The Identity Assertion Authorization Grant JWT obtained in the previous token exchange step
+
+The Client authenticates with its credentials as registered with the Resource Application's authorization server.
 
 For example:
 
@@ -307,12 +353,12 @@ All of Section 5.2 of {{RFC7521}} applies, in addition to the following processi
 
 * Validate the JWT `typ` is `oauth-id-jag+jwt` (per {{RFC8725}})
 * The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
+* The `client_id` claim MUST identify the same client as the client authentication in the request.
 
 
 ## Response
 
 The Resource Application token endpoint responds with an OAuth 2.0 Token Response, e.g.:
-
 
     HTTP/1.1 200 OK
     Content-Type: application/json;charset=UTF-8
@@ -323,9 +369,9 @@ The Resource Application token endpoint responds with an OAuth 2.0 Token Respons
       "token_type": "Bearer",
       "access_token": "2YotnFZFEjr1zCsicMWpAA",
       "expires_in": 86400,
+      "scope": "chat.read chat.history",
       "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
     }
-
 
 
 # Security Considerations
@@ -412,5 +458,5 @@ To streamline the user experience, this specification can be used to enable the 
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell.
+The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich.
 
