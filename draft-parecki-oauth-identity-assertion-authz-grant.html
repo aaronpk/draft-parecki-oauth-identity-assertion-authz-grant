@@ -1240,7 +1240,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-document-history" class="internal xref">Document History</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1441,28 +1444,48 @@ Content-Type: application/json
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-token-exchange" class="section-name selfRef">Token Exchange</a>
       </h2>
 <p id="section-5-1">The Client makes a Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> request to the IdP's Token Endpoint with the following parameters:<a href="#section-5-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-5-2.1">
-          <p id="section-5-2.1.1"><code>requested_token_type=urn:ietf:params:oauth:token-type:id-jag</code><a href="#section-5-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-2.2">
-          <p id="section-5-2.2.1"><code>resource</code> - The token endpoint of the Resource Application.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-2.3">
-          <p id="section-5-2.3.1"><code>scope</code> - The space-separated list of scopes at the Resource Application to include in the token<a href="#section-5-2.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-2.4">
-          <p id="section-5-2.4.1"><code>subject_token</code> - The identity assertion (OpenID Connect ID Token) for the target end-user<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-2.5">
-          <p id="section-5-2.5.1"><code>subject_token_type</code> - For OpenID Connect ID Token: <code>urn:ietf:params:oauth:token-type:id_token</code><a href="#section-5-2.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-5-2.6">
-          <p id="section-5-2.6.1">Client authentication (e.g. <code>client_id</code> and <code>client_secret</code>, or the more secure <code>private_key_jwt</code> method using <code>client_assertion</code> and <code>client_assertion_type</code>)<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-5-3">The example below uses an ID Token as the Identity Assertion, and uses <code>private_key_jwt</code> as the client authentication method, (tokens truncated for brevity):<a href="#section-5-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5-4">
+<span class="break"></span><dl class="dlParallel" id="section-5-2">
+        <dt id="section-5-2.1">
+<code>requested_token_type</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.2">
+          <p id="section-5-2.2.1"><span class="bcp14">REQUIRED</span> - The value <code>urn:ietf:params:oauth:token-type:id-jag</code> indicates that an ID Assertion JWT is being requested.<a href="#section-5-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.3">
+<code>resource</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.4">
+          <p id="section-5-2.4.1"><span class="bcp14">REQUIRED</span> - The token endpoint of the Resource Application.<a href="#section-5-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.5">
+<code>audience</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.6">
+          <p id="section-5-2.6.1">The audience parameter <span class="bcp14">MUST NOT</span> be used.<a href="#section-5-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.7">
+<code>scope</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.8">
+          <p id="section-5-2.8.1"><span class="bcp14">OPTIONAL</span> - The space-separated list of scopes at the Resource Application that is being requested.<a href="#section-5-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.9">
+<code>subject_token</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.10">
+          <p id="section-5-2.10.1"><span class="bcp14">REQUIRED</span> - The identity assertion (e.g. the OpenID Connect ID Token) for the target end-user.<a href="#section-5-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-5-2.11">
+<code>subject_token_type</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-5-2.12">
+          <p id="section-5-2.12.1"><span class="bcp14">REQUIRED</span> - An identifier, as described in Section 3 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>, that indicates the type of the security token in the <code>subject_token</code> parameter. For an OpenID Connect ID Token: <code>urn:ietf:params:oauth:token-type:id_token</code>.<a href="#section-5-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-5-3">The additional parameters defined in Section 2.1 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> <code>actor_token</code> and <code>actor_token_type</code> are not used in this specification.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">Client authentication to the authorization server is done using the normal mechanisms provided by OAuth 2.0. Section 2.3.1 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> defines password-based authentication of the client (<code>client_id</code> and <code>client_secret</code>), however, client authentication is extensible and other mechanisms are possible. For example, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> defines client authentication using bearer JSON Web Tokens using <code>client_assertion</code> and <code>client_assertion_type</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-5">The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion (<span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>) as the client authentication method, (tokens truncated for brevity):<a href="#section-5-5" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5-6">
 <pre>
 POST /oauth2/token HTTP/1.1
 Host: acme.idp.example
@@ -1476,7 +1499,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &amp;subject_token_type=urn:ietf:params:oauth:token-type:id_token
 &amp;client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
 &amp;client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...
-</pre><a href="#section-5-4" class="pilcrow">¶</a>
+</pre><a href="#section-5-6" class="pilcrow">¶</a>
 </div>
 <div id="processing-rules">
 <section id="section-5.1">
@@ -1510,23 +1533,44 @@ Pragma: no-cache
 }
 </pre><a href="#section-5.2-2" class="pilcrow">¶</a>
 </div>
-<ul class="normal">
-<li class="normal" id="section-5.2-3.1">
-            <p id="section-5.2-3.1.1"><code>issued_token_type</code> - <code>urn:ietf:params:oauth:token-type:id-jag</code><a href="#section-5.2-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.2-3.2">
-            <p id="section-5.2-3.2.1"><code>access_token</code> - The Identity Assertion Authorization Grant JWT. (Token Exchange requires the <code>access_token</code> response parameter for historical reasons, even though this is not an OAuth access token.)<a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.2-3.3">
-            <p id="section-5.2-3.3.1"><code>token_type</code> - <code>N_A</code> (As defined by Token Exchange.)<a href="#section-5.2-3.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.2-3.4">
-            <p id="section-5.2-3.4.1"><code>scope</code> - The list of scopes granted by the IdP. This may be fewer scopes than the application requested based on various policies in the IdP.<a href="#section-5.2-3.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.2-3.5">
-            <p id="section-5.2-3.5.1"><code>expires_in</code> - The lifetime in seconds of the authorization grant.<a href="#section-5.2-3.5.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<span class="break"></span><dl class="dlParallel" id="section-5.2-3">
+          <dt id="section-5.2-3.1">
+<code>issued_token_type</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.2">
+            <p id="section-5.2-3.2.1"><span class="bcp14">REQUIRED</span> - <code>urn:ietf:params:oauth:token-type:id-jag</code><a href="#section-5.2-3.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.2-3.3">
+<code>access_token</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.4">
+            <p id="section-5.2-3.4.1"><span class="bcp14">REQUIRED</span> - The Identity Assertion Authorization Grant JWT. (Note: Token Exchange requires the <code>access_token</code> response parameter for historical reasons, even though this is not an OAuth access token.)<a href="#section-5.2-3.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.2-3.5">
+<code>token_type</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.6">
+            <p id="section-5.2-3.6.1"><span class="bcp14">REQUIRED</span> - <code>N_A</code> (because this is not an OAuth access token.)<a href="#section-5.2-3.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.2-3.7">
+<code>scope</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.8">
+            <p id="section-5.2-3.8.1"><span class="bcp14">OPTIONAL</span> if the scope of the issued token is identical to the scope requested by the client; otherwise, it is <span class="bcp14">REQUIRED</span>. This may be fewer scopes than the application requested based on various policies in the IdP.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.2-3.9">
+<code>expires_in</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.10">
+            <p id="section-5.2-3.10.1"><span class="bcp14">RECOMMENDED</span> - The lifetime in seconds of the authorization grant.<a href="#section-5.2-3.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.2-3.11">
+<code>refresh_token</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.2-3.12">
+            <p id="section-5.2-3.12.1"><span class="bcp14">OPTIONAL</span> according to Section 2.2 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>. In the context of this specification, this parameter <span class="bcp14">SHOULD NOT</span> be used.<a href="#section-5.2-3.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
 <div id="error-response">
 <section id="section-5.2.1">
           <h4 id="name-error-response">
@@ -1567,28 +1611,47 @@ Cache-Control: no-store
           <dd style="margin-left: 1.5em" id="section-5.3-2.4">
             <p id="section-5.3-2.4.1"><span class="bcp14">REQUIRED</span> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.5">
+<code>aud</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.6">
+            <p id="section-5.3-2.6.1"><span class="bcp14">REQUIRED</span> - The token endpoint of the Resource Application's authorization server as defined in Section 4.1.3 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.7">
+<code>client_id</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.8">
+            <p id="section-5.3-2.8.1"><span class="bcp14">REQUIRED</span> - The identifier of the client that this JWT was issued to as defined in Section 4.3 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span><a href="#section-5.3-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.9">
+<code>jti</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.10">
+            <p id="section-5.3-2.10.1"><span class="bcp14">REQUIRED</span> - Unique ID of this JWT as defined in Section 4.1.7 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.11">
+<code>exp</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.12">
+            <p id="section-5.3-2.12.1"><span class="bcp14">REQUIRED</span> - as defined in Section 4.1.4 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.13">
+<code>iat</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.14">
+            <p id="section-5.3-2.14.1"><span class="bcp14">REQUIRED</span> - as defined in Section 4.1.6 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-5.3-2.15">
+<code>scope</code>:</dt>
+          <dd style="margin-left: 1.5em" id="section-5.3-2.16">
+            <p id="section-5.3-2.16.1"><span class="bcp14">OPTIONAL</span> - a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span><a href="#section-5.3-2.16.1" class="pilcrow">¶</a></p>
+</dd>
         <dd class="break"></dd>
 </dl>
-<ul class="normal">
-<li class="normal" id="section-5.3-3.1">
-            <p id="section-5.3-3.1.1"><code>aud</code> - Token endpoint of the Resource Application's authorization server<a href="#section-5.3-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-3.2">
-            <p id="section-5.3-3.2.1"><code>client_id</code> - The identifier of the client that this JWT was issued to<a href="#section-5.3-3.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-3.3">
-            <p id="section-5.3-3.3.1"><code>scopes</code> - Array of scopes at the Resource Application granted to the Client<a href="#section-5.3-3.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-3.4">
-            <p id="section-5.3-3.4.1"><code>jti</code> - Unique ID of this JWT<a href="#section-5.3-3.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-5.3-3.5">
-            <p id="section-5.3-3.5.1"><code>exp</code>, <code>iat</code> - as defined by JWT<a href="#section-5.3-3.5.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-5.3-4">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
-<p id="section-5.3-5">An example JWT shown with expanded header and payload claims is below:<a href="#section-5.3-5" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-5.3-6">
+<p id="section-5.3-3">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">An example JWT shown with expanded header and payload claims is below:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-5.3-5">
 <pre>
 {
   "typ": "oauth-id-jag+jwt"
@@ -1602,12 +1665,13 @@ Cache-Control: no-store
   "client_id": "f53f191f9311af35",
   "exp": 1311281970,
   "iat": 1311280970,
-  "scopes" : [ "chat.read" , "chat.history" ]
+  "scope": "chat.read chat.history"
 }
 .
 signature
-</pre><a href="#section-5.3-6" class="pilcrow">¶</a>
+</pre><a href="#section-5.3-5" class="pilcrow">¶</a>
 </div>
+<p id="section-5.3-6">The authorization server <span class="bcp14">MAY</span> add additional claims as necessary.<a href="#section-5.3-6" class="pilcrow">¶</a></p>
 <p id="section-5.3-7">Implementation notes:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-8.1">
@@ -1626,20 +1690,24 @@ signature
       <h2 id="name-access-token-request">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-access-token-request" class="section-name selfRef">Access Token Request</a>
       </h2>
-<p id="section-6-1">The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-6-2.1">
-          <p id="section-6-2.1.1"><code>grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer</code><a href="#section-6-2.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.2">
-          <p id="section-6-2.2.1"><code>assertion</code> - The Identity Assertion Authorization Grant JWT obtained in the previous token exchange step<a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="section-6-2.3">
-          <p id="section-6-2.3.1">Client Authentication - the Client authenticates with its credentials as registered with the Resource Application's authorization server<a href="#section-6-2.3.1" class="pilcrow">¶</a></p>
-</li>
-      </ul>
-<p id="section-6-3">For example:<a href="#section-6-3" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-6-4">
+<p id="section-6-1">The Client makes an access token request to the Resource Application's token endpoint using the previously obtained Identity Assertion Authorization Grant as a JWT Assertion as defined by <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-6-2">
+        <dt id="section-6-2.1">
+<code>grant_type</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-6-2.2">
+          <p id="section-6-2.2.1"><span class="bcp14">REQUIRED</span> - The value of <code>grant_type</code> is <code>urn:ietf:params:oauth:grant-type:jwt-bearer</code><a href="#section-6-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-6-2.3">
+<code>assertion</code>:</dt>
+        <dd style="margin-left: 1.5em" id="section-6-2.4">
+          <p id="section-6-2.4.1"><span class="bcp14">REQUIRED</span> - The Identity Assertion Authorization Grant JWT obtained in the previous token exchange step<a href="#section-6-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
+<p id="section-6-3">The Client authenticates with its credentials as registered with the Resource Application's authorization server.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">For example:<a href="#section-6-4" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6-5">
 <pre>
 POST /oauth2/token HTTP/1.1
 Host: acme.chat.example
@@ -1647,7 +1715,7 @@ Authorization: Basic yZS1yYW5kb20tc2VjcmV0v3JOkF0XG5Qx2
 
 grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
 assertion=eyJhbGciOiJIUzI1NiIsI...
-</pre><a href="#section-6-4" class="pilcrow">¶</a>
+</pre><a href="#section-6-5" class="pilcrow">¶</a>
 </div>
 <div id="processing-rules-1">
 <section id="section-6.1">
@@ -1661,6 +1729,9 @@ assertion=eyJhbGciOiJIUzI1NiIsI...
 </li>
           <li class="normal" id="section-6.1-2.2">
             <p id="section-6.1-2.2.1">The <code>aud</code> claim <span class="bcp14">MUST</span> identify the token endpoint of the Resource Application as the intended audience of the JWT.<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-6.1-2.3">
+            <p id="section-6.1-2.3.1">The <code>client_id</code> claim <span class="bcp14">MUST</span> identify the same client as the client authentication in the request.<a href="#section-6.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -1682,6 +1753,7 @@ Pragma: no-cache
   "token_type": "Bearer",
   "access_token": "2YotnFZFEjr1zCsicMWpAA",
   "expires_in": 86400,
+  "scope": "chat.read chat.history",
   "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
 }
 </pre><a href="#section-6.2-2" class="pilcrow">¶</a>
@@ -1918,11 +1990,39 @@ Cache-Control: no-store
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="document-history">
+<section id="appendix-C">
+      <h2 id="name-document-history">
+<a href="#name-document-history" class="section-name selfRef">Document History</a>
+      </h2>
+<p id="appendix-C-1">[[ To be removed from the final specification ]]<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C-2.1">
+          <p id="appendix-C-2.1.1">01<a href="#appendix-C-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-2.2">
+          <p id="appendix-C-2.2.1">Corrected the <code>scope</code> property in the JWT to match token exchange and JWT access token profile<a href="#appendix-C-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-2.3">
+          <p id="appendix-C-2.3.1">Formatting and editorial fixes<a href="#appendix-C-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-2.4">
+          <p id="appendix-C-2.4.1">Removed SAML as an identity assertion input format, in favor of first turning the SAML assertion into an ID token using SAML Bearer Assertion Grant or Token Exchange<a href="#appendix-C-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-2.5">
+          <p id="appendix-C-2.5.1">00<a href="#appendix-C-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-2.6">
+          <p id="appendix-C-2.6.1">Initial revision<a href="#appendix-C-2.6.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
