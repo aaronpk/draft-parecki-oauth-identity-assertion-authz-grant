@@ -461,6 +461,7 @@ To streamline the user experience, this specification can be used to enable the 
 The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich.
 
 # Document History
+{:numbered="false"}
 
 [[ To be removed from the final specification ]]
 
