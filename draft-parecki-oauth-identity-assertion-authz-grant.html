@@ -1034,7 +1034,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Parecki &amp; McGuinness</td>
-<td class="center">Expires 13 December 2024</td>
+<td class="center">Expires 30 December 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1047,12 +1047,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-parecki-oauth-identity-assertion-authz-grant-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-06-11" class="published">11 June 2024</time>
+<time datetime="2024-06-28" class="published">28 June 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-12-13">13 December 2024</time></dd>
+<dd class="expires"><time datetime="2024-12-30">30 December 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1106,7 +1106,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 December 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1251,7 +1251,8 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The draft specification Identity Chaining Across Trust Domains <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span> defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified. This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-1">The draft specification Identity Chaining Across Trust Domains <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span> defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.<a href="#section-1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1553,19 +1554,19 @@ Cache-Control: no-store
         <h3 id="name-identity-assertion-authoriz">
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-identity-assertion-authoriz" class="section-name selfRef">Identity Assertion Authorization Grant JWT</a>
         </h3>
-<p id="section-5.3-1">The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the original identity assertion, using the following claims:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-1">The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the resource owner, using the following claims:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-2.1">
             <p id="section-5.3-2.1.1"><code>iss</code> - The IdP <code>issuer</code> URL<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-2.2">
-            <p id="section-5.3-2.2.1"><code>sub</code> - The User ID at the IdP<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.2.1"><code>sub</code> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-2.3">
             <p id="section-5.3-2.3.1"><code>aud</code> - Token endpoint of the Resource Application's authorization server<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-2.4">
-            <p id="section-5.3-2.4.1"><code>client_id</code> - Client ID as registered with the Resource Application's authorization server.<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.4.1"><code>client_id</code> - The identifier of the client that this JWT was issued to<a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-2.5">
             <p id="section-5.3-2.5.1"><code>scopes</code> - Array of scopes at the Resource Application granted to the Client<a href="#section-5.3-2.5.1" class="pilcrow">¶</a></p>

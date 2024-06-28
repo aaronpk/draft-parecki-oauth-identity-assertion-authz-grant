@@ -5,7 +5,7 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                             K. McGuinness
 Intended status: Standards Track                                    Okta
-Expires: 13 December 2024                                   11 June 2024
+Expires: 30 December 2024                                   28 June 2024
 
 
                  Identity Assertion Authorization Grant
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 December 2024.
+   This Internet-Draft will expire on 30 December 2024.
 
 Copyright Notice
 
@@ -112,10 +112,11 @@ Table of Contents
    for OAuth 2.0 Client Authentication and Authorization Grants
    [RFC7523].  The draft supports multiple different use cases by
    leaving many details of the token exchange request and JWT
-   authorization grant unspecified.  This specification defines the
-   additional details necessary to support interoperable implementations
-   when using identity tokens as the input to the token exchange
-   request.
+   authorization grant unspecified.
+
+   This specification defines the additional details necessary to
+   support interoperable implementations when using identity tokens as
+   the input to the token exchange request.
 
 2.  Conventions and Definitions
 
@@ -369,18 +370,18 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
    The Identity Assertion Authorization Grant JWT is issued and signed
    by the IdP, and describes the intended audience of the authorization
    grant as well as the client to which it was issued and the subject
-   identifier of the original identity assertion, using the following
-   claims:
+   identifier of the resource owner, using the following claims:
 
    *  iss - The IdP issuer URL
 
-   *  sub - The User ID at the IdP
+   *  sub - The subject identifier (e.g. user ID) of the resource owner
+      at the Resource Application
 
    *  aud - Token endpoint of the Resource Application's authorization
       server
 
-   *  client_id - Client ID as registered with the Resource
-      Application's authorization server.
+   *  client_id - The identifier of the client that this JWT was issued
+      to
 
    *  scopes - Array of scopes at the Resource Application granted to
       the Client
