@@ -244,10 +244,10 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
 
 The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the resource owner, using the following claims:
 
-"iss":
+`iss`:
 : REQUIRED - The IdP `issuer` URL as defined in Section 4.1.1 of {{RFC7519}}
 
-"sub":
+`sub`:
 : REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of {{RFC7519}}
 
 * `aud` - Token endpoint of the Resource Application's authorization server
