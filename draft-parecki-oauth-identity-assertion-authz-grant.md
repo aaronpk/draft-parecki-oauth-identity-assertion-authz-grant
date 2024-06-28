@@ -59,7 +59,9 @@ This specification provides a mechanism for an application to use an identity as
 
 # Introduction
 
-The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified. This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.
+The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.
+
+This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.
 
 
 # Conventions and Definitions
@@ -239,12 +241,12 @@ On an error condition, the IdP returns an OAuth 2.0 Token Error response as defi
 
 ## Identity Assertion Authorization Grant JWT {#jwt-authorization-grant}
 
-The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the original identity assertion, using the following claims:
+The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, and describes the intended audience of the authorization grant as well as the client to which it was issued and the subject identifier of the resource owner, using the following claims:
 
 * `iss` - The IdP `issuer` URL
-* `sub` - The User ID at the IdP
+* `sub` - The subject identifier (e.g. user ID) of the resource owner at the Resource Application
 * `aud` - Token endpoint of the Resource Application's authorization server
-* `client_id` - Client ID as registered with the Resource Application's authorization server.
+* `client_id` - The identifier of the client that this JWT was issued to
 * `scopes` - Array of scopes at the Resource Application granted to the Client
 * `jti` - Unique ID of this JWT
 * `exp`, `iat` - as defined by JWT
