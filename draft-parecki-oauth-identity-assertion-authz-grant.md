@@ -460,3 +460,16 @@ To streamline the user experience, this specification can be used to enable the 
 
 The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich.
 
+# Document History
+
+[[ To be removed from the final specification ]]
+
+- 01
+
+* Corrected the `scope` property in the JWT to match token exchange and JWT access token profile
+* Formatting and editorial fixes
+* Removed SAML as an identity assertion input format, in favor of first turning the SAML assertion into an ID token using SAML Bearer Assertion Grant or Token Exchange
+
+- 00
+
+* Initial revision
