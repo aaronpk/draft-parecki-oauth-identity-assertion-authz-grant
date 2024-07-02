@@ -3,9 +3,10 @@
 
 
 Web Authorization Protocol                                    A. Parecki
-Internet-Draft                                             K. McGuinness
-Intended status: Standards Track                                    Okta
-Expires: 30 December 2024                                   28 June 2024
+Internet-Draft                                                      Okta
+Intended status: Standards Track                           K. McGuinness
+Expires: 3 January 2025                                      Independent
+                                                             2 July 2024
 
 
                  Identity Assertion Authorization Grant
@@ -53,7 +54,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 December 2024.
+   This Internet-Draft will expire on 3 January 2025.
 
 Copyright Notice
 
@@ -147,13 +148,15 @@ Table of Contents
 
 3.  Overview
 
-   The example flow is for an enterprise acme
+   The example flow is for an enterprise acme, which uses a wiki app and
+   chat app from different vendors, both of which are integrated into
+   the enterprise's Identity Provider using OpenID Connect.
 
    +===========+====================+=========================+=============+
    |Role       |App URL             |Tenant URL               |Description  |
    +===========+====================+=========================+=============+
-   |Client     |https://wiki.example|https://acme.wiki.example|SaaS Wiki app|
-   |           |                    |                         |that embeds  |
+   |Client     |https://wiki.example|https://acme.wiki.example|Wiki app that|
+   |           |                    |                         |embeds       |
    |           |                    |                         |content from |
    |           |                    |                         |one or more  |
    |           |                    |                         |resource     |
@@ -210,7 +213,7 @@ Table of Contents
       |                   |                  |                 |
 
    1.  User logs in to the Client, the Client obtains the Identity
-       Assertion (e.g.  OpenID Connect ID Token)
+       Assertion (e.g.  OpenID Connect ID Token or SAML assertion)
 
    2.  Client uses the Identity Assertion to request an Identity
        Assertion Authorization Grant for the Resource Application from
@@ -222,13 +225,13 @@ Table of Contents
    4.  Client makes an API request with the Access Token
 
    This specification is constrained to deployments where all Resource
-   Application Resource Servers are leveraging the same IDP
+   Application Resource Servers are leveraging the same IdP
    Authorization Server for Single-Sign-On (SSO) and session management
-   services.  The IDP provides a consistent trust boundary enabling the
+   services.  The IdP provides a consistent trust boundary enabling the
    set of Resource Application Authorization Servers to honor the JWT
-   Authorization Grant (ID-JAG) issued by the IDP.  This specification
+   Authorization Grant (ID-JAG) issued by the IdP.  This specification
    also assumes that the Resource Server Authorization Servers delegate
-   user authorization authority to the IDP (e.g. the IDP is trusted to
+   user authorization authority to the IdP (e.g. the IdP is trusted to
    ensure the scopes identified in the ID-JAG have been correctly
    authorized before issuing the ID-JAG token).
 
@@ -283,12 +286,13 @@ Location: https://acme.idp.example/authorize?response_type=code&scope=openid&cli
       Application that is being requested.
 
    subject_token:  REQUIRED - The identity assertion (e.g. the OpenID
-      Connect ID Token) for the target end-user.
+      Connect ID Token or SAML assertion) for the target end-user.
 
    subject_token_type:  REQUIRED - An identifier, as described in
       Section 3 of [RFC8693], that indicates the type of the security
       token in the subject_token parameter.  For an OpenID Connect ID
-      Token: urn:ietf:params:oauth:token-type:id_token.
+      Token: urn:ietf:params:oauth:token-type:id_token, or for a SAML
+      assertion: urn:ietf:params:oauth:token-type:saml2.
 
    The additional parameters defined in Section 2.1 of [RFC8693]
    actor_token and actor_token_type are not used in this specification.
@@ -447,9 +451,10 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 
    *  If the IdP is multi-tenant and uses the same issuer for all
       tenants, the Resource Application will already have IdP-specific
-      logic to determine the tenant from OIDC (e.g. the hd claim in
-      Google) and will need to use that if the IdP also has only one
-      client registration for the Resource Application.
+      logic to determine the tenant from the OpenID Connect ID Token
+      (e.g. the hd claim in Google) or SAML assertion, and will need to
+      use that if the IdP also has only one client registration for the
+      Resource Application.
 
    *  sub should be an opaque ID, as iss+sub is unique.  The IdP might
       want to also include the user's email here, which it should do as
@@ -734,7 +739,7 @@ Acknowledgments
 
    The authors would like to thank the following people for their
    contributions and reviews of this specification: Brian Campbell,
-   Kamron Batmanghelich.
+   Kamron Batmanghelich, Sofia Desenberg.
 
 Document History
 
@@ -746,10 +751,6 @@ Document History
       and JWT access token profile
 
    *  Formatting and editorial fixes
-
-   *  Removed SAML as an identity assertion input format, in favor of
-      first turning the SAML assertion into an ID token using SAML
-      Bearer Assertion Grant or Token Exchange
 
    *  00
 
@@ -763,5 +764,5 @@ Authors' Addresses
 
 
    Karl McGuinness
-   Okta
+   Independent
    Email: public@karlmcguinness.com
