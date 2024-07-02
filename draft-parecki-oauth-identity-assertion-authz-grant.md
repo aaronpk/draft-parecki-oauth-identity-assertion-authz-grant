@@ -32,7 +32,7 @@ author:
     email: aaron@parecki.com
  -
     fullname: Karl McGuinness
-    organization: Okta
+    organization: Independent
     email: public@karlmcguinness.com
 
 normative:
@@ -82,11 +82,11 @@ Authorization Server (IdP)
 
 # Overview
 
-The example flow is for an enterprise `acme`
+The example flow is for an enterprise `acme`, which uses a wiki app and chat app from different vendors, both of which are integrated into the enterprise's Identity Provider using OpenID Connect.
 
 | Role     | App URL | Tenant URL   | Description |
 | -------- | -------- | -------- | ----------- |
-| Client | `https://wiki.example` | `https://acme.wiki.example` | SaaS Wiki app that embeds content from one or more resource applications |
+| Client | `https://wiki.example` | `https://acme.wiki.example` | Wiki app that embeds content from one or more resource applications |
 | Resource Application   | `https://chat.example` | `https://acme.chat.example` | Chat and communication app |
 | Identity Provider      | `https://idp.example`   | `https://acme.idp.example` | Identity Provider |
 
@@ -130,12 +130,12 @@ Sequence Diagram
          |                   |                  |                 |
          |                   |                  |                 |
 
-1. User logs in to the Client, the Client obtains the Identity Assertion (e.g. OpenID Connect ID Token)
+1. User logs in to the Client, the Client obtains the Identity Assertion (e.g. OpenID Connect ID Token or SAML assertion)
 2. Client uses the Identity Assertion to request an Identity Assertion Authorization Grant for the Resource Application from the IdP
 3. Client exchanges the Identity Assertion Authorization Grant JWT for an Access Token at the Resource Application's token endpoint
 4. Client makes an API request with the Access Token
 
-This specification is constrained to deployments where all Resource Application Resource Servers are leveraging the same IDP Authorization Server for Single-Sign-On (SSO) and session management services. The IDP provides a consistent trust boundary enabling the set of Resource Application Authorization Servers to honor the JWT Authorization Grant (ID-JAG) issued by the IDP. This specification also assumes that the Resource Server Authorization Servers delegate user authorization authority to the IDP (e.g. the IDP is trusted to ensure the scopes identified in the ID-JAG have been correctly authorized before issuing the ID-JAG token).
+This specification is constrained to deployments where all Resource Application Resource Servers are leveraging the same IdP Authorization Server for Single-Sign-On (SSO) and session management services. The IdP provides a consistent trust boundary enabling the set of Resource Application Authorization Servers to honor the JWT Authorization Grant (ID-JAG) issued by the IdP. This specification also assumes that the Resource Server Authorization Servers delegate user authorization authority to the IdP (e.g. the IdP is trusted to ensure the scopes identified in the ID-JAG have been correctly authorized before issuing the ID-JAG token).
 
 
 # User Authentication
@@ -186,10 +186,10 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 : OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
 
 `subject_token`:
-: REQUIRED - The identity assertion (e.g. the OpenID Connect ID Token) for the target end-user.
+: REQUIRED - The identity assertion (e.g. the OpenID Connect ID Token or SAML assertion) for the target end-user.
 
 `subject_token_type`:
-: REQUIRED - An identifier, as described in Section 3 of {{RFC8693}}, that indicates the type of the security token in the `subject_token` parameter. For an OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`.
+: REQUIRED - An identifier, as described in Section 3 of {{RFC8693}}, that indicates the type of the security token in the `subject_token` parameter. For an OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`, or for a SAML assertion: `urn:ietf:params:oauth:token-type:saml2`.
 
 The additional parameters defined in Section 2.1 of {{RFC8693}} `actor_token` and `actor_token_type` are not used in this specification.
 
@@ -321,7 +321,7 @@ The authorization server MAY add additional claims as necessary.
 
 Implementation notes:
 
-* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from OIDC (e.g. the `hd` claim in Google) and will need to use that if the IdP also has only one client registration for the Resource Application.
+* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from the OpenID Connect ID Token (e.g. the `hd` claim in Google) or SAML assertion, and will need to use that if the IdP also has only one client registration for the Resource Application.
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.
 
 
@@ -458,7 +458,7 @@ To streamline the user experience, this specification can be used to enable the 
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich.
+The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich, Sofia Desenberg.
 
 # Document History
 {:numbered="false"}
@@ -469,7 +469,6 @@ The authors would like to thank the following people for their contributions and
 
 * Corrected the `scope` property in the JWT to match token exchange and JWT access token profile
 * Formatting and editorial fixes
-* Removed SAML as an identity assertion input format, in favor of first turning the SAML assertion into an ID token using SAML Bearer Assertion Grant or Token Exchange
 
 - 00
 
