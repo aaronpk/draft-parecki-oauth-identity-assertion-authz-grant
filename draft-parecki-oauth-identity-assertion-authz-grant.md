@@ -282,7 +282,7 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 : REQUIRED - The token endpoint of the Resource Application's authorization server as defined in Section 4.1.3 of {{RFC7519}}
 
 `client_id`:
-: REQUIRED - The identifier of the client that this JWT was issued to as defined in Section 4.3 of {{RFC8693}}
+: REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in Section 4.3 {{RFC8693}}.
 
 `jti`:
 : REQUIRED - Unique ID of this JWT as defined in Section 4.1.7 of {{RFC7519}}
