@@ -1191,6 +1191,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
                 <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-step-up-authentication" class="internal xref">Step-Up Authentication</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-cross-domain-use" class="internal xref">Cross-Domain Use</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
@@ -1483,7 +1486,7 @@ Content-Type: application/json
       <dd class="break"></dd>
 </dl>
 <p id="section-5-3">The additional parameters defined in Section 2.1 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> <code>actor_token</code> and <code>actor_token_type</code> are not used in this specification.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">Client authentication to the authorization server is done using the normal mechanisms provided by OAuth 2.0. Section 2.3.1 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> defines password-based authentication of the client (<code>client_id</code> and <code>client_secret</code>), however, client authentication is extensible and other mechanisms are possible. For example, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> defines client authentication using bearer JSON Web Tokens using <code>client_assertion</code> and <code>client_assertion_type</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-4">Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. Section 2.3.1 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> defines password-based authentication of the client (<code>client_id</code> and <code>client_secret</code>), however, client authentication is extensible and other mechanisms are possible. For example, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> defines client authentication using bearer JSON Web Tokens using <code>client_assertion</code> and <code>client_assertion_type</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <p id="section-5-5">The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion (<span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>) as the client authentication method, (tokens truncated for brevity):<a href="#section-5-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-6">
 <pre>
@@ -1796,6 +1799,14 @@ Cache-Control: no-store
 </div>
 <p id="section-7.2-3">The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
 <p id="section-7.2-4">TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional <code>response_type</code> on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="cross-domain-use">
+<section id="section-7.3">
+        <h3 id="name-cross-domain-use">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-cross-domain-use" class="section-name selfRef">Cross-Domain Use</a>
+        </h3>
+<p id="section-7.3-1">This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider <span class="bcp14">SHOULD NOT</span> issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
