@@ -62,7 +62,7 @@ This specification provides a mechanism for an application to use an identity as
 
 The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.
 
-This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request.
+This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request. This specification assumes that there is a single authorization server that is trusted by two applications in different trust domains, as typically found in an enterprise scenario where the two applications allow users to log in using the same enterprise identity provider. The same enterprise identity provider that is trusted by applications for single sign-on can be extended to broker access to APIs as well.
 
 
 # Conventions and Definitions
