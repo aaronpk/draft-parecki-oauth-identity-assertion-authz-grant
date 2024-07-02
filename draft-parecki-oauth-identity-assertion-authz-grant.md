@@ -193,7 +193,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 
 The additional parameters defined in Section 2.1 of {{RFC8693}} `actor_token` and `actor_token_type` are not used in this specification.
 
-Client authentication to the authorization server is done using the normal mechanisms provided by OAuth 2.0. Section 2.3.1 of {{RFC6749}} defines password-based authentication of the client (`client_id` and `client_secret`), however, client authentication is extensible and other mechanisms are possible. For example, {{RFC7523}} defines client authentication using bearer JSON Web Tokens using `client_assertion` and `client_assertion_type`.
+Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. Section 2.3.1 of {{RFC6749}} defines password-based authentication of the client (`client_id` and `client_secret`), however, client authentication is extensible and other mechanisms are possible. For example, {{RFC7523}} defines client authentication using bearer JSON Web Tokens using `client_assertion` and `client_assertion_type`.
 
 The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion ({{RFC7523}}) as the client authentication method, (tokens truncated for brevity):
 
@@ -399,6 +399,10 @@ In the initial token exchange request, the IdP may require step-up authenticatio
 The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
 
 TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
+
+## Cross-Domain Use
+
+This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider SHOULD NOT issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.
 
 
 # IANA Considerations
