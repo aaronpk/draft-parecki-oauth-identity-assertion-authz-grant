@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-06-30T00:36:18.280692+00:00",
+  "timestamp": "2024-07-02T00:32:40.910617+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -460,7 +460,7 @@
       "labels": [],
       "body": "Address #10 \r\n\r\nMaybe section \"Relationship to RFC7522\" should be removed but I believe we still add an extra secure step as described in the section, so opt to keep it in.\r\n\r\nThe new SAML section added in this PR is an idea for mentioning the SAML implementation. I am not sure how the authors want to approach this which is why this is a draft PR for now.",
       "createdAt": "2024-06-11T17:39:41Z",
-      "updatedAt": "2024-06-11T19:05:20Z",
+      "updatedAt": "2024-06-30T14:54:27Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
