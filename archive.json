@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2024-07-09T00:33:01.900973+00:00",
+  "timestamp": "2024-07-11T00:33:51.101022+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -249,9 +249,17 @@
       "labels": [],
       "body": "- #6 \r\n- and other threat models considerations\r\n- extra considerations for scopes and scope validation",
       "createdAt": "2024-06-11T19:12:41Z",
-      "updatedAt": "2024-06-11T19:14:07Z",
+      "updatedAt": "2024-07-09T18:46:40Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "* We should add some kind of verbiage similar to [RFC 9470 Section 9](https://www.rfc-editor.org/rfc/rfc9470.html#section-9) regarding authentication/sessions.\r\n* We should probably add some recommendation about the lifetime of the jag token to the effect of that the token should only live as long as necessary to exchange. This is reinforced by the idea that an oauth id-token refresh token can be used to get an unexpired id token to exchange for another id jag. ",
+          "createdAt": "2024-07-09T18:45:32Z",
+          "updatedAt": "2024-07-09T18:46:40Z"
+        }
+      ]
     },
     {
       "number": 13,
