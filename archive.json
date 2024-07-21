@@ -1,0 +1,502 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-07-21T00:37:00.715472+00:00",
+  "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 3,
+      "id": "I_kwDOKv5r-s6C6zv7",
+      "title": "Pairwise identifiers",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/3",
+      "state": "CLOSED",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "The subject identifier between apps doesn't need to be the same. Mention how the IdP can use a different subject identifier targeted at the AS. ",
+      "createdAt": "2024-03-20T01:38:36Z",
+      "updatedAt": "2024-07-02T20:27:31Z",
+      "closedAt": "2024-07-02T20:27:31Z",
+      "comments": [
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "sub - The \"User ID at the IdP\" can be changed to \"subject identifier\" recognized by AS",
+          "createdAt": "2024-06-11T19:10:47Z",
+          "updatedAt": "2024-06-20T17:01:54Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "> sub - The User ID at the IdP can be cahnged to subject identifier recognized by AS\r\n\r\nIt might be worth discussing how the IdP could do this mapping.",
+          "createdAt": "2024-06-17T21:36:18Z",
+          "updatedAt": "2024-06-17T21:36:18Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "I think this is an implementation detail, but because the IdP is used by both RS and Client, it should understand the sub claims that the Resource Server's AS expects. ",
+          "createdAt": "2024-06-20T17:02:04Z",
+          "updatedAt": "2024-06-20T17:02:04Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "In typical SSO, an enterprise IdP might already send different subject identifiers for the same user to different apps that are signing in. This note is just to add a sentence that describes this, and also to make it clear that we are *not* trying to change this behavior to require that all user IDs are identical across both apps in this flow.",
+          "createdAt": "2024-06-20T17:05:35Z",
+          "updatedAt": "2024-06-20T17:05:35Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "This was updated here and now no longer makes it sound like the `sub` value is the same across everything: https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/commit/66a511fbd7695e214433ff4f5c0ec7b87c6af461",
+          "createdAt": "2024-07-02T20:27:31Z",
+          "updatedAt": "2024-07-02T20:27:31Z"
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOKv5r-s6C6z3D",
+      "title": "Mention that this profile assumes there is a single IdP that is trusted by both apps",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/4",
+      "state": "CLOSED",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "This is mentioned in the appendix, but should be mentioned earlier. This also simplifies pairwise identifiers in #3.",
+      "createdAt": "2024-03-20T01:38:52Z",
+      "updatedAt": "2024-07-02T20:18:29Z",
+      "closedAt": "2024-07-02T20:18:29Z",
+      "comments": []
+    },
+    {
+      "number": 6,
+      "id": "I_kwDOKv5r-s6Dbsyk",
+      "title": "Identity Assertion Authz Grant allows broadening the scope",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/6",
+      "state": "OPEN",
+      "author": "obfuscoder",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I followed the presentation at the IETF 119 for this topic. The profile describes how an ID Token is used to get a JWT Authorization Grant and then to get an Access Token for that JWT Authorization Grant. The scope can be defined by the client when requesting the access token.\r\n\r\nAs the JWT Authorization Grant profile is designed to allow interop across several domains, each AS in the participating domain will support creating authorization grant JWTs as well as accepting authorization grant JWTs to issue access tokens.\r\n\r\nUsually a client receives an access token alongside the ID Token and the client can use Token Exchange to get additional access tokens with equal or narrowed down scope.\r\n\r\nThe ID Token does not contain any scope. So even if a client only received an Access Token with a specific narrow scope, the client could abuse this grant by asking AS of domain A for an authorization grant JWT based on the Id Token and then use this authz grant JWT at the AS of domain A again to obtain a new access token with arbitrary scope (up to what is allowed for the client as per policy).\r\n\r\nAlthough this could be prohibited by the AS not accepting authorization grant JWTs it issued itself, the client could request the authorization grant JWT from the AS of domain B with just a couple more steps.\r\n\r\nGranted, this may not be relevant for the enterprise environment the JWT authorization grant profile is meant for as the End-User is usually not asked for giving consent to the scope requested by clients and instead the allowed scope in defined by policies within the AS configs. However, I'd like to ask if this is something worth to consider.",
+      "createdAt": "2024-03-25T07:25:11Z",
+      "updatedAt": "2024-07-02T20:12:06Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "I agree there should be a reiteration that this draft is intended for cross-domain use cases only, or an explicit mention that the IDP Authorization Server should not accept ID-JAGs issued from itself (or where the `resource` in the request is the requesting Client's token endpoint, although as you mentioned, in the enterprise use case some policies should prevent this)",
+          "createdAt": "2024-06-10T15:06:05Z",
+          "updatedAt": "2024-06-10T15:06:05Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I added a brief section in the security considerations about this. It could probably use some more filling out.",
+          "createdAt": "2024-07-02T20:12:05Z",
+          "updatedAt": "2024-07-02T20:12:05Z"
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOKv5r-s6IIlrx",
+      "title": "Add mention of refresh_token field in token response",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/7",
+      "state": "CLOSED",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Token Exchange already defines the refresh_token field in the token response, mention why that is useful and when someone might want to do that.",
+      "createdAt": "2024-05-07T18:15:40Z",
+      "updatedAt": "2024-06-11T19:07:26Z",
+      "closedAt": "2024-06-11T19:07:26Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "we aren't planning on returning a refresh token here anymore",
+          "createdAt": "2024-06-11T19:07:26Z",
+          "updatedAt": "2024-06-11T19:07:26Z"
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOKv5r-s6IIoUj",
+      "title": "Give an example of the refresh token flow",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/8",
+      "state": "CLOSED",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Input to token exchange is:\r\n\r\n* `subject_token=<refresh token>`\r\n* `subject_token_type=urn:ietf:params:oauth:token-type:refresh_token`\r\n\r\nResponse includes a JWT as well as optional new refresh token\r\n",
+      "createdAt": "2024-05-07T18:22:53Z",
+      "updatedAt": "2024-06-11T19:06:14Z",
+      "closedAt": "2024-06-11T19:06:14Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Instead we'll recommend using the refresh token to get a new ID token.",
+          "createdAt": "2024-06-11T19:06:14Z",
+          "updatedAt": "2024-06-11T19:06:14Z"
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "id": "I_kwDOKv5r-s6IhbRH",
+      "title": "Note about SAML user identifiers",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/9",
+      "state": "CLOSED",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Add a note:\r\n\r\nThe IdP needs to ensure there is an IdP-recognizable value to identify the user in the SAML assertion. For example if the IdP transforms the user ID to something specific to the app as the nameID, it needs to also include the actual unique user ID as a custom claim that it can use to identify the user when the SAML assertion is passed back to the IdP.",
+      "createdAt": "2024-05-10T22:02:06Z",
+      "updatedAt": "2024-06-11T19:05:57Z",
+      "closedAt": "2024-06-11T19:05:57Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Going to do this a different way, recommending exchanging the SAML assertion for an ID token first.",
+          "createdAt": "2024-06-11T19:05:57Z",
+          "updatedAt": "2024-06-11T19:05:57Z"
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "I_kwDOKv5r-s6L38zs",
+      "title": "Update based on decisions about SAML and refresh token usage",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/10",
+      "state": "CLOSED",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "- Close #9 \r\n- Close #8 \r\n- Close #7 \r\n- Remove option to use SAML assertion as the subject_token in the exchange\r\n- Make a note about obtaining ID tokens from token exchange after authenticating with SAML",
+      "createdAt": "2024-06-11T15:17:31Z",
+      "updatedAt": "2024-06-11T19:07:33Z",
+      "closedAt": "2024-06-11T19:07:33Z",
+      "comments": []
+    },
+    {
+      "number": 12,
+      "id": "I_kwDOKv5r-s6L5g5t",
+      "title": "Add to security concerns section",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/12",
+      "state": "OPEN",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "- #6 \r\n- and other threat models considerations\r\n- extra considerations for scopes and scope validation",
+      "createdAt": "2024-06-11T19:12:41Z",
+      "updatedAt": "2024-07-09T18:46:40Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "* We should add some kind of verbiage similar to [RFC 9470 Section 9](https://www.rfc-editor.org/rfc/rfc9470.html#section-9) regarding authentication/sessions.\r\n* We should probably add some recommendation about the lifetime of the jag token to the effect of that the token should only live as long as necessary to exchange. This is reinforced by the idea that an oauth id-token refresh token can be used to get an unexpired id token to exchange for another id jag. ",
+          "createdAt": "2024-07-09T18:45:32Z",
+          "updatedAt": "2024-07-09T18:46:40Z"
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "I_kwDOKv5r-s6MkWCT",
+      "title": "Why don't the IdP requests the access token from the AS?",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/13",
+      "state": "OPEN",
+      "author": "randomstuff",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "The scenario described works as follows:\r\n\r\n1. client obtains ID token;\r\n2. client exchanges ID token with IdP against JAG;\r\n3. client requests AT from AS using JAG as an assertion;\r\n4. client uses AT on the RS.\r\n\r\nA downside of this approach is that in step 3, the client must be registered on the AS.\r\n\r\nWhy wouldn't/couldn't the AS take care of step 3?\r\n\r\nThis would make the process simpler for the client:\r\n\r\n* the client does not need to know that the RS is associated with another domain;\r\n* the client does not need to know that the AS exists at all;\r\n* the client therefore does not need to have credentials for the AS.\r\n\r\nThe fact that the RS is in another domain would be transparent for the client. You could have one deployment where the RS in in the same domain and another deployment where is is in another domain without having to change the client logic.\r\n\r\nModified scenario:\r\n\r\n1. client obtains ID token;\r\n2. client exchange ID token with IdP against AT;\r\n  a. in order to obtain the AT, the AS might need to generate an assertion and send it to the AS\r\n4. client uses AT on the RS.\r\n\r\nOne downside is that from the point of view, the token are issued to the IdP but surely this can be worked-around with some extension.\r\n",
+      "createdAt": "2024-06-17T21:58:37Z",
+      "updatedAt": "2024-06-20T15:08:10Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "The approach we took (which is malleable, as we want to build a simple and reusable flow with the least assumptions), is to have the least amount of burden on both the client (requesting application) and the RS AS. In doing that,  step 3 is fine because right now clients already are registered with the RS AS to request tokens directly and facilitate SSO flows. We wanted to lean into that by shifting as much of the burden to the identity provider, especially since the identity provider has all of the information about the user/organization and their relationships.\r\n\r\nI do like the simplicity of the proposed modified scenario and I think we should continue hammering out details to see if this kind of approach could work.\r\n\r\nI think we also agree that front loading the `client_id` and `resource` identifiers for mapping on the identity provider is not ideal. Unfortunately, I also believe requiring the IdP to register a client on every RS AS to do a new on-behalf exchange is not ideal either, especially since that is technically 3rd party to the existing client and AS oAuth registration/trust relationship.",
+          "createdAt": "2024-06-18T19:00:54Z",
+          "updatedAt": "2024-06-18T19:02:53Z"
+        },
+        {
+          "author": "randomstuff",
+          "authorAssociation": "NONE",
+          "body": "So I've been thinking (more/better) about my modified scenario. Some drawbacks are:\r\n\r\n* If a refresh_token was issued, the IdP now would be responsible for handling the token refresh request and forwarding it to the AS. I guess the IdP would have to store the original refresh token and send a new refresh token to the client.\r\n* The IdP would now be responsible for handling token revocations requests from the client. For the refresh token, the the approach from the previous point could be used but this is more complex for the access token.\r\n* The IdP would have to forward (and possibly filter/translate) many parameters such as scope, etc.\r\n* The client would not have the AS server metadata as it would not have a direct relationship with the AS.\r\n* DPoP forwarding would not work.",
+          "createdAt": "2024-06-20T06:32:19Z",
+          "updatedAt": "2024-06-20T06:35:12Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "If all AS responsibilities required for a typical OAuth consent flow were shifted to the IdP, then the IdP would become the AS for an intents and purposes, and then the Client would just make a typical request for an access token. No other steps would be needed. This spec is intended to leverage the common scenario where OAuth relationships exist and the AS may be independent of the IdP.\r\n\r\nHowever, I agree it makes sense to think about where changes can be made for the scenario where the relationship might not already exist, so very much appreciate this comment.\r\n\r\nFor this point:\r\n> the client does not need to know that the RS is associated with another domain;\r\n\r\nI am not sure I understand if this is true, because the client needs to make the resource request regardless from the RS.",
+          "createdAt": "2024-06-20T15:04:17Z",
+          "updatedAt": "2024-06-20T15:08:10Z"
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "I_kwDOKv5r-s6MkdcS",
+      "title": "Discuss the need for client_id mapping",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/14",
+      "state": "OPEN",
+      "author": "randomstuff",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 5.3 [Identity Assertion Authorization Grant JWT](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant#name-identity-assertion-authoriz) says that the IdP should generate a Identity Assertion Authorization Grant JWT with:\r\n\r\n> client_id - Client ID as registered with the Resource Application's authorization server\r\n\r\nThis means that the IdP must use a mapping between the `client_id` at the IdP and the `client_id` at the AS. I don't believe this requirement is explicitly mentioned. Maybe this should be discussed.",
+      "createdAt": "2024-06-17T22:19:13Z",
+      "updatedAt": "2024-06-18T18:22:45Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "Hey @randomstuff - you are right and this is on the docket to add explicitly as part of the formatting rewrite we will be doing soon. Specifically, the IdP will need to map the client authentication and `resource` (token endpoint) to the client's `client_id` at the Resource Server AS.",
+          "createdAt": "2024-06-18T18:22:43Z",
+          "updatedAt": "2024-06-18T18:22:43Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOKv5r-s5odQGI",
+      "title": "consistent oauth-itag+jwt",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/1",
+      "state": "CLOSED",
+      "author": "bc-pi",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "while thinking about how to comment on https://github.com/oauth-wg/oauth-identity-chaining/issues/85 I came to look at what you were doing with typ in this draft and noticed three different media type values...",
+      "createdAt": "2024-03-01T22:24:35Z",
+      "updatedAt": "2024-03-02T01:07:21Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "4e997cd8520282b5318a48b4025c210d8587d78e",
+      "headRepository": "bc-pi/draft-parecki-oauth-identity-assertion-authorization-grant",
+      "headRefName": "patch-1",
+      "headRefOid": "4d012ec7b9885b314cdd8e0115ed196e1fec26ac",
+      "closedAt": "2024-03-01T22:29:06Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "haha thanks i'm in the middle of fixing it \ud83d\ude43 ",
+          "createdAt": "2024-03-01T22:25:21Z",
+          "updatedAt": "2024-03-01T22:25:21Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I fixed it up here, thanks https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authorization-grant/commit/bd15902dc052e0dea3b4483327ebbae84b72d4fa",
+          "createdAt": "2024-03-01T22:29:07Z",
+          "updatedAt": "2024-03-01T22:29:07Z"
+        },
+        {
+          "author": "bc-pi",
+          "authorAssociation": "NONE",
+          "body": "That works! Glad I could be (un)helpful. ",
+          "createdAt": "2024-03-01T22:31:13Z",
+          "updatedAt": "2024-03-01T22:31:13Z"
+        },
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "You caught us in the middle \ud83d\ude04! Thanks @aaronpk for getting that updated.",
+          "createdAt": "2024-03-01T22:32:12Z",
+          "updatedAt": "2024-03-02T01:07:21Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOKv5r-s5odT4C",
+      "title": "Fix grammar in intro",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/2",
+      "state": "CLOSED",
+      "author": "kamronbatman",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-03-01T22:41:53Z",
+      "updatedAt": "2024-03-01T23:16:26Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "bd15902dc052e0dea3b4483327ebbae84b72d4fa",
+      "headRepository": "kamronbatman/draft-parecki-oauth-identity-assertion-authorization-grant",
+      "headRefName": "patch-1",
+      "headRefOid": "d270099ed9e06f9f7c47ce70956e0c673c92c119",
+      "closedAt": "2024-03-01T23:16:26Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I changed too much and this conflicted. I fixed it in a separate commit!",
+          "createdAt": "2024-03-01T23:16:26Z",
+          "updatedAt": "2024-03-01T23:16:26Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s5x-dmz",
+          "commit": {
+            "abbreviatedOid": "d270099"
+          },
+          "author": "macyabbey",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-03-01T22:45:50Z",
+          "updatedAt": "2024-03-01T22:45:50Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOKv5r-s5qLOn0",
+      "title": "Update draft-parecki-oauth-identity-assertion-authz-grant.md",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/5",
+      "state": "MERGED",
+      "author": "gffletch",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Text to address issue #4\r\n\r\nThis needs careful review and may go to far or be too detailed for the Overview section.\r\n\r\nFeedback appreciated!",
+      "createdAt": "2024-03-20T04:57:36Z",
+      "updatedAt": "2024-06-11T19:12:24Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
+      "headRepository": "gffletch/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "Issue_4",
+      "headRefOid": "25f15eba488626f3971ab3d1500f5332e960ca19",
+      "closedAt": "2024-06-11T19:12:24Z",
+      "mergedAt": "2024-06-11T19:12:24Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "932f96951616edea3d015ee30c47ad93e43277cc"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s59pnzW",
+          "commit": {
+            "abbreviatedOid": "25f15eb"
+          },
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "> the IDP is trusted to ensure the scopes identified in the ID-JAG have been correctly authorized before issuing the ID-JAG token\r\n\r\nHow the IDP ensures the scopes may vary, for instance, in section A.1.1 there is no mention of how the IDP should be aware of the scopes Resource Application's allowed scopes for this exchange.\r\n\r\nSo although this is a true statement, I might suggest adding that Resource Application Authorization Servers _may_ also validate the JAG scopes against its own policies in section 6.1 of this draft. Curious on other's thoughts there.\r\n\r\n",
+          "createdAt": "2024-06-10T15:01:50Z",
+          "updatedAt": "2024-06-10T15:01:50Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOKv5r-s5yJAM5",
+      "title": "Update for changes to SAML implementation",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/11",
+      "state": "MERGED",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Address #10 \r\n\r\nMaybe section \"Relationship to RFC7522\" should be removed but I believe we still add an extra secure step as described in the section, so opt to keep it in.\r\n\r\nThe new SAML section added in this PR is an idea for mentioning the SAML implementation. I am not sure how the authors want to approach this which is why this is a draft PR for now.",
+      "createdAt": "2024-06-11T17:39:41Z",
+      "updatedAt": "2024-06-30T14:54:27Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "e806cbecb993c6ee9a6bab1678cf2aa278a3e3b1",
+      "headRepository": "sdesen/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "Issue_10",
+      "headRefOid": "1945666640c9acd1c9a909f12ee825ed162d1286",
+      "closedAt": "2024-06-11T19:05:20Z",
+      "mergedAt": "2024-06-11T19:05:20Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "e4034b48067d8a063efa1e128cb2d3161f8d7267"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
