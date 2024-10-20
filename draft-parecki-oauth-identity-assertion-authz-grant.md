@@ -177,7 +177,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 : REQUIRED - The value `urn:ietf:params:oauth:token-type:id-jag` indicates that an ID Assertion JWT is being requested.
 
 `resource`:
-: REQUIRED - The token endpoint of the Resource Application.
+: REQUIRED - The Issuer URL of the Resource Application's authorization server.
 
 `audience`:
 : The audience parameter MUST NOT be used.
@@ -203,7 +203,7 @@ The example below uses an ID Token as the Identity Assertion, and uses a JWT Bea
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-    &resource=https://acme.chat.example/oauth2/token
+    &resource=https://acme.chat.example/
     &scope=chat.read+chat.history
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -279,7 +279,7 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 : REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of {{RFC7519}}
 
 `aud`:
-: REQUIRED - The token endpoint of the Resource Application's authorization server as defined in Section 4.1.3 of {{RFC7519}}
+: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in Section 4.1.3 of {{RFC7519}}
 
 `client_id`:
 : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in Section 4.3 {{RFC8693}}.
@@ -308,7 +308,7 @@ An example JWT shown with expanded header and payload claims is below:
       "jti": "9e43f81b64a33f20116179",
       "iss": "https://acme.idp.example",
       "sub": "U019488227",
-      "aud": "https://acme.chat.example/oauth2/token",
+      "aud": "https://acme.chat.example/",
       "client_id": "f53f191f9311af35",
       "exp": 1311281970,
       "iat": 1311280970,
@@ -352,7 +352,7 @@ For example:
 All of Section 5.2 of {{RFC7521}} applies, in addition to the following processing rules:
 
 * Validate the JWT `typ` is `oauth-id-jag+jwt` (per {{RFC8725}})
-* The `aud` claim MUST identify the token endpoint of the Resource Application as the intended audience of the JWT.
+* The `aud` claim MUST identify the Issuer URL of the Resource Application's authorization server as the intended audience of the JWT.
 * The `client_id` claim MUST identify the same client as the client authentication in the request.
 
 
@@ -468,6 +468,10 @@ The authors would like to thank the following people for their contributions and
 {:numbered="false"}
 
 [[ To be removed from the final specification ]]
+
+- 02
+
+* Changed the `aud` property to the Issuer URL instead of the token endpoint
 
 - 01
 
