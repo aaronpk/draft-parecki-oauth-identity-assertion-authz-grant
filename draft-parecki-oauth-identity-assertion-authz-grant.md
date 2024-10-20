@@ -469,15 +469,15 @@ The authors would like to thank the following people for their contributions and
 
 [[ To be removed from the final specification ]]
 
-- 02
+-02
 
 * Changed the `aud` property to the Issuer URL instead of the token endpoint
 
-- 01
+-01
 
 * Corrected the `scope` property in the JWT to match token exchange and JWT access token profile
 * Formatting and editorial fixes
 
-- 00
+-00
 
 * Initial revision
