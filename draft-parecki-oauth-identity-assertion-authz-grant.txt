@@ -5,8 +5,8 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 23 April 2025                                       Independent
-                                                         20 October 2024
+Expires: 14 August 2025                                      Independent
+                                                        10 February 2025
 
 
                  Identity Assertion Authorization Grant
@@ -54,11 +54,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 April 2025.
+   This Internet-Draft will expire on 14 August 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -220,7 +220,7 @@ Table of Contents
       |                   |                  |                 |
 
    1.  User logs in to the Client, the Client obtains the Identity
-       Assertion (e.g.  OpenID Connect ID Token or SAML assertion)
+       Assertion (e.g. OpenID Connect ID Token or SAML assertion)
 
    2.  Client uses the Identity Assertion to request an Identity
        Assertion Authorization Grant for the Resource Application from
@@ -605,9 +605,9 @@ Cache-Control: no-store
               Schwenkschuster, A., Kasselman, P., Burgin, K., Jenkins,
               M. J., and B. Campbell, "OAuth Identity and Authorization
               Chaining Across Domains", Work in Progress, Internet-
-              Draft, draft-ietf-oauth-identity-chaining-02, 8 July 2024,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-
-              identity-chaining-02>.
+              Draft, draft-ietf-oauth-identity-chaining-03, 21 December
+              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
+              oauth-identity-chaining-03>.
 
    [IANA.MediaTypes]
               "*** BROKEN REFERENCE ***".
@@ -748,8 +748,8 @@ A.2.1.  Preconditions
    *  The Client does not have a pre-registered OAuth 2.0 client at the
       IdP Authorization Server or the Resource Application
 
-   *  The Client has obtained an Identity Assertion (e.g.  ID Token)
-      from the IdP Authorization Server
+   *  The Client has obtained an Identity Assertion (e.g. ID Token) from
+      the IdP Authorization Server
 
    *  The Resource Application is configured to allow the Identity
       Assertion Authorization Grant from unregistered clients
