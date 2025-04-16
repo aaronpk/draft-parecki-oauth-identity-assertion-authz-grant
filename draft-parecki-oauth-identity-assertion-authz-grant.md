@@ -47,6 +47,7 @@ normative:
   IANA.oauth-parameters:
   RFC6838:
   RFC2046:
+  I-D.ietf-oauth-resource-metadata:
 
 informative:
   RFC9470:
@@ -461,6 +462,14 @@ To streamline the user experience, this specification can be used to enable the 
 
 AI systems especially Large Language Models (LLMs) need to manage user context, memory, and interaction state across conversations.  These systems often leverage external tools during interactions such as context and data from existing enterprise resources such as a SaaS application to accomplish complex workflows.  The LLM Agent needs to "act as the user" when interacting with an enterprise resources as the authorized set of actions and data will be scoped to what the enterprise has granted the end-user.
 
+### Preconditions
+
+* The Client has a registered OAuth 2.0 Client with the IdP Authorization Server
+* The Client has a registered OAuth 2.0 Client with the External Tool Resource Application
+* Enterprise has established a trust relationship between their IdP and the Client for SSO and Identity Assertion Authorization Grant
+* Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Identity Assertion Authorization Grant
+* Enterprise has granted the Client permission to act on behalf of users for the External Tool Resource Application with a set of scopes
+
 ### LLM Agent establishes a User identity with Enteprise IdP
 
 > Note: IdP discovery where an agent discovers which IdP the agent should use to authenticate a given user is out-of-scope of this specification.
@@ -683,7 +692,7 @@ LLM Agent requests an external tool provided by an enterprise SaaS Application R
     Content-Type: application/json
 
     {
-    	...
+      ...
     }
 
 # Acknowledgments
@@ -695,6 +704,10 @@ The authors would like to thank the following people for their contributions and
 {:numbered="false"}
 
 [[ To be removed from the final specification ]]
+
+-03
+
+* Added example for AI Agent
 
 -02
 
