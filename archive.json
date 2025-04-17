@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-01T00:50:01.284956+00:00",
+  "timestamp": "2025-04-17T00:43:11.904785+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -495,6 +495,32 @@
       "mergeCommit": {
         "oid": "e4034b48067d8a063efa1e128cb2d3161f8d7267"
       },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOKv5r-s6Sy-Z7",
+      "title": "Added example for an AI Agent based flow",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/15",
+      "state": "OPEN",
+      "author": "mcguinness",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Initial draft for an AI Agent based flow (e.g MCP)",
+      "createdAt": "2025-04-16T08:03:46Z",
+      "updatedAt": "2025-04-16T08:03:46Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "afd78c007d3705cd7a0fa7cb87f35aded3944e87",
+      "headRepository": "mcguinness/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "agent-example",
+      "headRefOid": "292834a045f5d0f794011d58e2e128733cb76740",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
       "comments": [],
       "reviews": []
     }
