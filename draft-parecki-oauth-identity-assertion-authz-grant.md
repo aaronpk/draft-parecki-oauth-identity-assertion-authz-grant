@@ -47,11 +47,11 @@ normative:
   IANA.oauth-parameters:
   RFC6838:
   RFC2046:
-  I-D.ietf-oauth-resource-metadata:
 
 informative:
   RFC9470:
-
+  I-D.ietf-oauth-resource-metadata:
+  RFC8414
 
 --- abstract
 
@@ -460,36 +460,36 @@ To streamline the user experience, this specification can be used to enable the 
 
 ## LLM Agent using Enterprise Tools
 
-AI systems especially Large Language Models (LLMs) need to manage user context, memory, and interaction state across conversations.  These systems often leverage external tools during interactions such as context and data from existing enterprise resources such as a SaaS application to accomplish complex workflows.  The LLM Agent needs to "act as the user" when interacting with an enterprise resources as the authorized set of actions and data will be scoped to what the enterprise has granted the end-user.
+AI agents, including those based on large language models (LLMs), are designed to manage user context, memory, and interaction state across multi-turn conversations. To perform complex tasks, these agents often integrate with external systems such as SaaS applications, internal services, or enterprise data sources. When accessing these systems, the agent operates on behalf of the end user, and its actions are constrained by the user’s identity, role, and permissions as defined by the enterprise. This ensures that all data access and operations are properly scoped and compliant with organizational access controls.
 
 ### Preconditions
 
-* The Client has a registered OAuth 2.0 Client with the IdP Authorization Server
-* The Client has a registered OAuth 2.0 Client with the External Tool Resource Application
-* Enterprise has established a trust relationship between their IdP and the Client for SSO and Identity Assertion Authorization Grant
-* Enterprise has established a trust relationship between their IdP and the Resource Application for SSO and Identity Assertion Authorization Grant
-* Enterprise has granted the Client permission to act on behalf of users for the External Tool Resource Application with a set of scopes
+* The LLM Agent has a registered OAuth 2.0 Client (`com.example.ai-agent`) with the Enterprise IdP (`cyberdyne.idp.example`)
+* The LLM Agent has a registered OAuth 2.0 Client (`com.example.ai-agent`) with the External Tool Application (`saas.example.com`)
+* Enterprise has established a trust relationship between their IdP and the LLM Agent for SSO
+* Enterprise has established a trust relationship between their IdP and the External Tool Application for SSO and Identity Assertion Authorization Grant
+* Enterprise has granted the LLM Agent permission to act on behalf of users for the External Tool Application with a specific set of scopes
 
-### LLM Agent establishes a User identity with Enteprise IdP
+### LLM Agent establishes a User Identity with Enteprise IdP
+
+LLM Agent discovers the Enterprise IdP's OpenID Connect Provider configuration based on a configured `issuer` that was previously establshed.
 
 > Note: IdP discovery where an agent discovers which IdP the agent should use to authenticate a given user is out-of-scope of this specification.
 
-LLM Agent discovers the end-user's enterprise OpenID Connect IdP's configuration
-
     GET /.well-known/openid-configuration
-    Host: my-tenant.idp.example
+    Host: cyberdyne.idp.example
     Accept: application/json
 
     HTTP/1.1 200 OK
     Content-Type: application/json
 
     {
-      "issuer": "https://my-tenant.idp.example",
-      "authorization_endpoint": "https://my-tenant.idp.example/oauth2/authorize",
-      "token_endpoint": "https://my-tenant.idp.example/oauth2/token",
-      "userinfo_endpoint": "https://my-tenant.idp.example/oauth2/userinfo",
-      "jwks_uri": "https://my-tenant.idp.example/oauth2/keys",
-      "registration_endpoint": "https://my-tenant.idp.example/oauth2/register",
+      "issuer": "https://cyberdyne.idp.example",
+      "authorization_endpoint": "https://cyberdyne.idp.example/oauth2/authorize",
+      "token_endpoint": "https://cyberdyne.idp.example/oauth2/token",
+      "userinfo_endpoint": "https://cyberdyne.idp.example/oauth2/userinfo",
+      "jwks_uri": "https://cyberdyne.idp.example/oauth2/keys",
+      "registration_endpoint": "https://cyberdyne.idp.example/oauth2/register",
       "scopes_supported": [
         "openid", "email", "profile"
       ],
@@ -504,32 +504,32 @@ LLM Agent discovers the end-user's enterprise OpenID Connect IdP's configuration
 
 LLM Agent discovers all necessary endpoints for authentication as well as support for the Token Exchange grant type `urn:ietf:params:oauth:grant-type:token-exchange`
 
-> Note: Unfortunately Token Exchange {{RFC8693}} doesn't define an authorization server metadata parameter for `requested_token_types_supported` to discover if `urn:ietf:params:oauth:token-type:id-jag` is specifically supported so the LLM Agent needs to attempt Token Exchange to learn if the specific enteprise supports issuing an Identity Assertion Grant.
+> Note: Unfortunately Token Exchange {{RFC8693}} doesn't define an authorization server metadata parameter for `requested_token_types_supported` to discover if `urn:ietf:params:oauth:token-type:id-jag` is specifically supported so the LLM Agent needs to first attempt Token Exchange to learn if the specific Enterprise IdP supports issuing an Identity Assertion Grant.
 
 ### IdP Authorization Request (with PKCE)
 
-LLM Agent generates a `code_verifier` and a `code_challenge` (usually a SHA256 hash of the verifier, base64url-encoded) and redirects the end-user to the enterprise IdP with an authorization request
+LLM Agent generates a `code_verifier` and a `code_challenge` (usually a SHA256 hash of the verifier, base64url-encoded) and redirects the end-user to the Enterprise IdP with an authorization request
 
     GET /authorize?
       response_type=code
       &client_id=com.example.ai-agent
       &redirect_uri=https://ai-agent.example.com/oauth2/callback
-      &scope=openid
+      &scope=openid+profile+email
       &state=xyzABC123
       &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM
       &code_challenge_method=S256
-    Host: my-tenant.idp.example
+    Host: cyberdyne.idp.example
 
 ### User authenticates and authorizes LLM Agent
 
-The enterprise IdP authenticates the end-user and redirects back to the LLM Agent's registered client redirect URI with an authorization code:
+Enterprise IdP authenticates the end-user and redirects back to the LLM Agent's registered client redirect URI with an authorization code:
 
     https://ai-agent.example.com/oauth2/callback?code=SplxlOBeZQQYbYS6WxSbIA&state=xyzABC123
 
 LLM Agent exchanges the `code` with PKCE `code_verifier` to obtain an ID Token and Access Token for the IdP's UserInfo endpoint
 
     POST /oauth2/token
-    Host: my-tenant.idp.example
+    Host: cyberdyne.idp.example
     Content-Type: application/x-www-form-urlencoded
 
     grant_type=authorization_code
@@ -545,31 +545,45 @@ LLM Agent exchanges the `code` with PKCE `code_verifier` to obtain an ID Token a
       "id_token": "eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...",
       "token_type": "Bearer",
       "access_token": "7SliwCQP1brGdjBtsaMnXo",
-      "scope": "openid"
+      "scope": "openid profile email"
+    }
+
+LLM Agent validates the ID Token using the published JWKS for the IdP
+
+    {
+      "iss": "https://cyberdyne.idp.example",
+      "sub": "1997e829-2029-41d4-a716-446655440000",
+      "aud": "com.example.ai-agent",
+      "exp": 1984444800,
+      "iat": 1684441200,
+      "auth_time": 1684440000,
+      "name": "John Connor",
+      "email": "john.connor@cyberdyne.example",
+      "email_verified": true
     }
 
 LLM Agent now has an identity binding for context
 
-### LLM Agent connects to an External Tool managed by Enterprise
+### LLM Agent calls Enterprise External Tool
 
-> Note:  How agents discover available tools & tenants is out-of-scope of this specification
+LLM Agent tool calls an external tool provided by an Enterprise SaaS Application(Resource Server) without a valid access token and is issued an authentication challenge using {{I-D.ietf-oauth-resource-metadata:}}
 
-LLM Agent attempts to connect to an external tool provided by an enterprise SaaS Application Resource Server (RS) and issued an authentication challenge
+> Note:  How agents discover available tools is out-of-scope of this specification
 
     GET /tools
-    Host: resource-server.saas.com
+    Host: saas.example.com
     Accept: application/json
 
     HTTP/1.1 400 Bad Request
     WWW-Authenticate: Bearer error="invalid_request",
       error_description="No access token was provided in this request",
       resource_metadata=
-      "https://resource-server.saas.com/tools/.well-known/oauth-protected-resource"
+      "https://saas.example.com/tools/.well-known/oauth-protected-resource"
 
-LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Metadata`
+LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Metadata` per {{I-D.ietf-oauth-resource-metadata:}} to dynamically discover an authorization server that can issue an access token for the resource.
 
     GET /tools/.well-known/oauth-protected-resource
-    Host: resource-server.saas.com
+    Host: saas.example.com
     Accept: application/json
 
     HTTP/1.1 200 Ok
@@ -577,7 +591,7 @@ LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Met
 
     {
        "resource":
-         "https://resource-server.saas.com/tools",
+         "https://saas.example.com/tools",
        "authorization_servers":
          [ "https://authorization-server.saas.com" ],
        "bearer_methods_supported":
@@ -585,15 +599,14 @@ LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Met
        "scopes_supported":
          ["agent.tools.read", "agent.tools.write"],
        "resource_documentation":
-         "https://resource-server.saas.com/tools/resource_documentation.html"
+         "https://saas.example.com/tools/resource_documentation.html"
      }
 
-LLM Agent then discovers the external tool's Authorization Server configuration
+LLM Agent discovers the Authorization Server configuration per {{RFC8414}}
 
     GET /.well-known/oauth-authorization-server
     Host: authorization-server.saas.com
     Accept: application/json
-
 
     HTTP/1.1 200 Ok
     Content-Type: application/json
@@ -602,7 +615,6 @@ LLM Agent then discovers the external tool's Authorization Server configuration
       "issuer": "https://authorization-server.saas.com",
       "authorization_endpoint": "https://authorization-server.saas.com/oauth2/authorize",
       "token_endpoint": "https://authorization-server.saas.com/oauth2/token",
-      "userinfo_endpoint": "https://authorization-server.saas.com/oauth2/userinfo",
       "jwks_uri": "https://authorization-server.saas.com/oauth2/keys",
       "registration_endpoint": "authorization-server.saas.com/oauth2/register",
       "scopes_supported": [
@@ -617,26 +629,28 @@ LLM Agent then discovers the external tool's Authorization Server configuration
       ...
     }
 
-LLM Agent learns all necessary endpoints to obtain an access token for the external tool. If the `urn:ietf:params:oauth:grant-type:jwt-bearer` grant type is supported the LLM can attempt to silently obtain an access token using an Identity Assertion Grant from the enterprise's IdP otherwise it can fallback to interactively obtaining a standard `authorization_code`
+LLM Agent has learned all necessary endpoints and supported capabilites to obtain an access token for the external tool.
 
-### LLM Agent obtains an Identity Assertion Grant for external tool from the Enterprise IdP
+If the `urn:ietf:params:oauth:grant-type:jwt-bearer` grant type is supported the LLM can first attempt to silently obtain an access token using an Identity Assertion Authorization Grant from the Enterprise's IdP otherwise it can fallback to interactively obtaining a standard `authorization_code` from the SaaS Application's Authorization Server
 
-The LLM Agent makes an Identity Assertion Grant Token Exchange {{RFC8693}} request for the external tool resource from the user's enterprise IdP using the ID Token the LLM Agent obtained when establishing an identity binding context along with scopes and the resource identifier for the external tool that was returned in the tool's `OAuth 2.0 Protected Resource Metadata`
+### LLM Agent obtains an Identity Assertion Grant for Enterprise External Tool from the Enterprise IdP
+
+LLM Agent makes an Identity Assertion Grant Token Exchange {{RFC8693}} request for the external tool's resource from the user's Enterprise IdP using the ID Token the LLM Agent obtained when establishing an identity binding context along with scopes and the resource identifier for the external tool that was returned in the tool's `OAuth 2.0 Protected Resource Metadata`
 
     POST /oauth2/token HTTP/1.1
-    Host: acme.idp.example
+    Host: cyberdyne.idp.example
     Content-Type: application/x-www-form-urlencoded
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-    &resource=https://resource-server.saas.com/tools"
+    &resource=https://saas.example.com/tools"
     &scope=agent.read+agent.write
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
     &client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
     &client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...
 
-If access is granted, the enterprise IdP creates a signed Identity Assertion Authorization Grant JWT and returns it in the token exchange response defined in Section 2.2 of {{RFC8693}}:
+If access is granted, the Enterprise IdP creates a signed Identity Assertion Authorization Grant JWT and returns it in the token exchange response defined in Section 2.2 of {{RFC8693}}:
 
     HTTP/1.1 200 OK
     Content-Type: application/json
@@ -651,11 +665,31 @@ If access is granted, the enterprise IdP creates a signed Identity Assertion Aut
       "expires_in": 300
     }
 
-### LLM Agent obtains an Access Token for external tool
+Identity Assertion Authorization Grant
 
-LLM Agent makes a token request to the previously discovered external tools's SaaS Authorization Server token endpoint using the Identity Assertion Authorization Grant obtained from the Enterprise IdP as a JWT Assertion as defined by {{RFC7523}}.
+    {
+      "alg": "ES256",
+      "typ": "oauth-id-jag+jwt"
+    }
+    .
+    {
+      "jti": "9e43f81b64a33f20116179",
+      "iss": "https://cyberdyne.idp.example",
+      "sub": "1llb-b4c0-0000-8000-t800b4ck0000",
+      "aud": "https://authorization-server.saas.com",
+      "client_id": "com.example.ai-agent",
+      "exp": 1984445160,
+      "iat": 1984445100,
+      "scope": "agent.read agent.write"
+    }
+    .
+    signature
 
-The LLM Agent authenticates with client's credentials it registered with the external tools's SaaS Authorization Server
+### LLM Agent obtains an Access Token for Enterprise External Tool
+
+LLM Agent makes a token request to the previously discovered external tool's  Authorization Server token endpoint using the Identity Assertion Authorization Grant obtained from the Enterprise IdP as a JWT Assertion as defined by {{RFC7523}}.
+
+The LLM Agent authenticates with it's client credentials that were registered with the SaaS Authorization Server
 
 > Note: How the LLM Agent registers with the Authorization Server (e.g static or dynamic client registration) is out-of-scope of this specification
 
@@ -665,6 +699,8 @@ The LLM Agent authenticates with client's credentials it registered with the ext
 
     grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer
     assertion=eyJhbGciOiJIUzI1NiIsI...
+
+SaaS Authorization Server validates the Identity Assertion Authorization Grant using the published JWKS for the trusted Enterprise IdP
 
     HTTP/1.1 200 OK
     Content-Type: application/json;charset=UTF-8
@@ -681,10 +717,10 @@ The LLM Agent authenticates with client's credentials it registered with the ext
 
 ### LLM Agent makes an authorized External Tool request
 
-LLM Agent requests an external tool provided by an enterprise SaaS Application Resource Server (RS) with an Access Token
+LLM Agent tool calls an external tool provided by the Enterprise SaaS Application (Resource Server) with a valid access token
 
     GET /tools
-    Host: resource-server.saas.com
+    Host: saas.example.com
     Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA"
     Accept: application/json
 
