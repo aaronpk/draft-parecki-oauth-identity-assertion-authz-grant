@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-17T00:43:11.904785+00:00",
+  "timestamp": "2025-04-20T00:48:03.136521+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -322,6 +322,22 @@
           "updatedAt": "2024-06-18T18:22:43Z"
         }
       ]
+    },
+    {
+      "number": 16,
+      "id": "I_kwDOKv5r-s6zDlEk",
+      "title": "Add Authorization Server metadata to enable discovery of grant/token type.",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16",
+      "state": "OPEN",
+      "author": "mcguinness",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "[OAuth 2.0 Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414) enables a client to discover capabilities of a given authorization server.   For example a client can fetch AS metadata to determine what endpoints, grant types, and scopes the AS supports and then dynamically construct a valid request for a supported granted type.  This enables the client to negotiate the right capabilities at runtime with an Authorization Server vs hard-coding assumptions for a given AS.\n\nA given client currently as no mechanism to discover\n\n- Whether an AS supports issuing `urn:ietf:params:oauth:token-type:id-jag` token type with Token Exchange\n- Whether an AS supports `oauth-id-jag+jwt` JWT as a valid JWT bearer grant type (`urn:ietf:params:oauth:grant-type:jwt-bearer`)\n\nUnfortunately [Token Exchange](https://www.rfc-editor.org/rfc/rfc8693)  doesn't define an authorization server metadata parameter for `requested_token_types_supported`  that could publish `urn:ietf:params:oauth:token-type:id-jag` as supported token type.  Adding the registration would enable clients to discover what token types they could request from a given AS\n\nSimilarly, the new draft revision of [JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants](https://www.ietf.org/archive/id/draft-jones-oauth-rfc7523bis-00.html)  also doesn't define an authorization server metadata parameter for what profiles are supported.  A new parameter such as `jwt_assertion_token_types_supported` would enable a client to know what assertion profiles an Authorization Supports such as `urn:ietf:params:oauth:token-type:id-jag`. \n\nWithout these additional values a client would need to hard-code support for this profile for a given Authorization Server.\n\n\n\n",
+      "createdAt": "2025-04-18T05:53:52Z",
+      "updatedAt": "2025-04-18T05:53:52Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -510,13 +526,13 @@
       "labels": [],
       "body": "Initial draft for an AI Agent based flow (e.g MCP)",
       "createdAt": "2025-04-16T08:03:46Z",
-      "updatedAt": "2025-04-16T08:03:46Z",
+      "updatedAt": "2025-04-17T05:54:22Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "afd78c007d3705cd7a0fa7cb87f35aded3944e87",
       "headRepository": "mcguinness/draft-parecki-oauth-identity-assertion-authz-grant",
       "headRefName": "agent-example",
-      "headRefOid": "292834a045f5d0f794011d58e2e128733cb76740",
+      "headRefOid": "b6e821a80817152506ea34b7e03807f8d464606d",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
