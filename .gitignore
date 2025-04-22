@@ -21,3 +21,4 @@ draft-parecki-oauth-identity-assertion-authorization-grant.xml
 package-lock.json
 report.xml
 !requirements.txt
+.DS_Store
