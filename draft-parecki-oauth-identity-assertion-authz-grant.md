@@ -51,7 +51,7 @@ normative:
 informative:
   RFC9470:
   I-D.ietf-oauth-resource-metadata:
-  RFC8414
+  RFC8414:
 
 --- abstract
 
