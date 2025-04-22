@@ -566,7 +566,7 @@ LLM Agent now has an identity binding for context
 
 ### LLM Agent calls Enterprise External Tool
 
-LLM Agent tool calls an external tool provided by an Enterprise SaaS Application(Resource Server) without a valid access token and is issued an authentication challenge using {{I-D.ietf-oauth-resource-metadata:}}
+LLM Agent tool calls an external tool provided by an Enterprise SaaS Application(Resource Server) without a valid access token and is issued an authentication challenge using {{I-D.ietf-oauth-resource-metadata}}
 
 > Note:  How agents discover available tools is out-of-scope of this specification
 
@@ -580,7 +580,7 @@ LLM Agent tool calls an external tool provided by an Enterprise SaaS Application
       resource_metadata=
       "https://saas.example.com/tools/.well-known/oauth-protected-resource"
 
-LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Metadata` per {{I-D.ietf-oauth-resource-metadata:}} to dynamically discover an authorization server that can issue an access token for the resource.
+LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Metadata` per {{I-D.ietf-oauth-resource-metadata}} to dynamically discover an authorization server that can issue an access token for the resource.
 
     GET /tools/.well-known/oauth-protected-resource
     Host: saas.example.com
