@@ -1263,7 +1263,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.10.2.3.2.1.1"><a href="#appendix-A.3.1" class="auto internal xref">A.3.1</a>.  <a href="#name-preconditions-3" class="internal xref">Preconditions</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3.2.2">
-                    <p id="section-toc.1-1.10.2.3.2.2.1"><a href="#appendix-A.3.2" class="auto internal xref">A.3.2</a>.  <a href="#name-llm-agent-establishes-a-use" class="internal xref">LLM Agent establishes a User Identity with Enteprise IdP</a></p>
+                    <p id="section-toc.1-1.10.2.3.2.2.1"><a href="#appendix-A.3.2" class="auto internal xref">A.3.2</a>.  <a href="#name-llm-agent-establishes-a-use" class="internal xref">LLM Agent establishes a User Identity with Enterprise IdP</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.3.2.3">
                     <p id="section-toc.1-1.10.2.3.2.3.1"><a href="#appendix-A.3.3" class="auto internal xref">A.3.3</a>.  <a href="#name-idp-authorization-request-w" class="internal xref">IdP Authorization Request (with PKCE)</a></p>
@@ -2068,7 +2068,7 @@ Cache-Control: no-store
               <p id="appendix-A.3.1-1.1.1">The LLM Agent has a registered OAuth 2.0 Client (<code>com.example.ai-agent</code>) with the Enterprise IdP (<code>cyberdyne.idp.example</code>)<a href="#appendix-A.3.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-A.3.1-1.2">
-              <p id="appendix-A.3.1-1.2.1">The LLM Agent has a registered OAuth 2.0 Client (<code>com.example.ai-agent</code>) with the External Tool Application (<code>saas.example.com</code>)<a href="#appendix-A.3.1-1.2.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A.3.1-1.2.1">The LLM Agent has a registered OAuth 2.0 Client (<code>4960880b83dc9</code>) with the External Tool Application (<code>saas.example.net</code>)<a href="#appendix-A.3.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-A.3.1-1.3">
               <p id="appendix-A.3.1-1.3.1">Enterprise has established a trust relationship between their IdP and the LLM Agent for SSO<a href="#appendix-A.3.1-1.3.1" class="pilcrow">¶</a></p>
@@ -2082,15 +2082,15 @@ Cache-Control: no-store
           </ul>
 </section>
 </div>
-<div id="llm-agent-establishes-a-user-identity-with-enteprise-idp">
+<div id="llm-agent-establishes-a-user-identity-with-enterprise-idp">
 <section id="appendix-A.3.2">
           <h4 id="name-llm-agent-establishes-a-use">
-<a href="#appendix-A.3.2" class="section-number selfRef">A.3.2. </a><a href="#name-llm-agent-establishes-a-use" class="section-name selfRef">LLM Agent establishes a User Identity with Enteprise IdP</a>
+<a href="#appendix-A.3.2" class="section-number selfRef">A.3.2. </a><a href="#name-llm-agent-establishes-a-use" class="section-name selfRef">LLM Agent establishes a User Identity with Enterprise IdP</a>
           </h4>
 <p id="appendix-A.3.2-1">LLM Agent discovers the Enterprise IdP's OpenID Connect Provider configuration based on a configured <code>issuer</code> that was previously establshed.<a href="#appendix-A.3.2-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A.3.2-2.1">
-              <p id="appendix-A.3.2-2.1.1">Note: IdP discovery where an agent discovers which IdP the agent should use to authenticate a given user is out-of-scope of this specification.<a href="#appendix-A.3.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A.3.2-2.1.1">Note: IdP discovery where an agent discovers which IdP the agent should use to authenticate a given user is out of scope of this specification.<a href="#appendix-A.3.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div class="alignLeft art-text artwork" id="appendix-A.3.2-3">
@@ -2125,7 +2125,7 @@ Content-Type: application/json
 <p id="appendix-A.3.2-4">LLM Agent discovers all necessary endpoints for authentication as well as support for the Token Exchange grant type <code>urn:ietf:params:oauth:grant-type:token-exchange</code><a href="#appendix-A.3.2-4" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A.3.2-5.1">
-              <p id="appendix-A.3.2-5.1.1">Note: Unfortunately Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> doesn't define an authorization server metadata parameter for <code>requested_token_types_supported</code> to discover if <code>urn:ietf:params:oauth:token-type:id-jag</code> is specifically supported so the LLM Agent needs to first attempt Token Exchange to learn if the specific Enterprise IdP supports issuing an Identity Assertion Grant.<a href="#appendix-A.3.2-5.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A.3.2-5.1.1">Note: Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> doesn't define an authorization server metadata parameter for <code>requested_token_types_supported</code> to discover if <code>urn:ietf:params:oauth:token-type:id-jag</code> is specifically supported. Currently, the LLM Agent needs to first attempt Token Exchange to learn if the specific Enterprise IdP supports issuing an Identity Assertion Grant. This specification could define an Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> parameter to enable the agent to discover if this request is supported. See <a href="https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16">issue #16</a>.<a href="#appendix-A.3.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -2135,7 +2135,7 @@ Content-Type: application/json
           <h4 id="name-idp-authorization-request-w">
 <a href="#appendix-A.3.3" class="section-number selfRef">A.3.3. </a><a href="#name-idp-authorization-request-w" class="section-name selfRef">IdP Authorization Request (with PKCE)</a>
           </h4>
-<p id="appendix-A.3.3-1">LLM Agent generates a <code>code_verifier</code> and a <code>code_challenge</code> (usually a SHA256 hash of the verifier, base64url-encoded) and redirects the end-user to the Enterprise IdP with an authorization request<a href="#appendix-A.3.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.3-1">LLM Agent generates a PKCE <code>code_verifier</code> and a <code>code_challenge</code> (usually a SHA256 hash of the verifier, base64url-encoded) and redirects the end-user to the Enterprise IdP with an authorization request<a href="#appendix-A.3.3-1" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.3-2">
 <pre>
 GET /authorize?
@@ -2162,7 +2162,7 @@ Host: cyberdyne.idp.example
 https://ai-agent.example.com/oauth2/callback?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyzABC123
 </pre><a href="#appendix-A.3.4-2" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.4-3">LLM Agent exchanges the <code>code</code> with PKCE <code>code_verifier</code> to obtain an ID Token and Access Token for the IdP's UserInfo endpoint<a href="#appendix-A.3.4-3" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.4-3">LLM Agent exchanges the <code>code</code> and PKCE <code>code_verifier</code> to obtain an ID Token and Access Token for the IdP's UserInfo endpoint<a href="#appendix-A.3.4-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.4-4">
 <pre>
 POST /oauth2/token
@@ -2210,30 +2210,28 @@ Content-Type: application/json
           <h4 id="name-llm-agent-calls-enterprise-">
 <a href="#appendix-A.3.5" class="section-number selfRef">A.3.5. </a><a href="#name-llm-agent-calls-enterprise-" class="section-name selfRef">LLM Agent calls Enterprise External Tool</a>
           </h4>
-<p id="appendix-A.3.5-1">LLM Agent tool calls an external tool provided by an Enterprise SaaS Application(Resource Server) without a valid access token and is issued an authentication challenge using <span>[<a href="#I-D.ietf-oauth-resource-metadata" class="cite xref">I-D.ietf-oauth-resource-metadata</a>]</span><a href="#appendix-A.3.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.5-1">LLM Agent tool calls an external tool provided by an Enterprise SaaS Application (Resource Server) without a valid access token and is issued an authentication challenge using <span>[<a href="#I-D.ietf-oauth-resource-metadata" class="cite xref">I-D.ietf-oauth-resource-metadata</a>]</span><a href="#appendix-A.3.5-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A.3.5-2.1">
-              <p id="appendix-A.3.5-2.1.1">Note:  How agents discover available tools is out-of-scope of this specification<a href="#appendix-A.3.5-2.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A.3.5-2.1.1">Note: How agents discover available tools is out of scope of this specification<a href="#appendix-A.3.5-2.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div class="alignLeft art-text artwork" id="appendix-A.3.5-3">
 <pre>
 GET /tools
-Host: saas.example.com
+Host: saas.example.net
 Accept: application/json
 
-HTTP/1.1 400 Bad Request
-WWW-Authenticate: Bearer error="invalid_request",
-  error_description="No access token was provided in this request",
-  resource_metadata=
-  "https://saas.example.com/tools/.well-known/oauth-protected-resource"
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata=
+  "https://saas.example.net/.well-known/oauth-protected-resource"
 </pre><a href="#appendix-A.3.5-3" class="pilcrow">¶</a>
 </div>
 <p id="appendix-A.3.5-4">LLM Agent fetches the external tool resource's <code>OAuth 2.0 Protected Resource Metadata</code> per <span>[<a href="#I-D.ietf-oauth-resource-metadata" class="cite xref">I-D.ietf-oauth-resource-metadata</a>]</span> to dynamically discover an authorization server that can issue an access token for the resource.<a href="#appendix-A.3.5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.5-5">
 <pre>
-GET /tools/.well-known/oauth-protected-resource
-Host: saas.example.com
+GET /.well-known/oauth-protected-resource
+Host: saas.example.net
 Accept: application/json
 
 HTTP/1.1 200 Ok
@@ -2241,7 +2239,7 @@ Content-Type: application/json
 
 {
    "resource":
-     "https://saas.example.com/tools",
+     "https://saas.example.net/",
    "authorization_servers":
      [ "https://authorization-server.saas.com" ],
    "bearer_methods_supported":
@@ -2249,7 +2247,7 @@ Content-Type: application/json
    "scopes_supported":
      ["agent.tools.read", "agent.tools.write"],
    "resource_documentation":
-     "https://saas.example.com/tools/resource_documentation.html"
+     "https://saas.example.net/tools/resource_documentation.html"
  }
 </pre><a href="#appendix-A.3.5-5" class="pilcrow">¶</a>
 </div>
@@ -2284,6 +2282,11 @@ Content-Type: application/json
 </div>
 <p id="appendix-A.3.5-8">LLM Agent has learned all necessary endpoints and supported capabilites to obtain an access token for the external tool.<a href="#appendix-A.3.5-8" class="pilcrow">¶</a></p>
 <p id="appendix-A.3.5-9">If the <code>urn:ietf:params:oauth:grant-type:jwt-bearer</code> grant type is supported the LLM can first attempt to silently obtain an access token using an Identity Assertion Authorization Grant from the Enterprise's IdP otherwise it can fallback to interactively obtaining a standard <code>authorization_code</code> from the SaaS Application's Authorization Server<a href="#appendix-A.3.5-9" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="appendix-A.3.5-10.1">
+              <p id="appendix-A.3.5-10.1.1">Note: This would benefit from an Authorization Server Metadata <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span> property to indicate whether the Identity Assertion Authorization Grant form of <code>jwt-bearer</code> would be accepted by this authorization server. There are other uses of <code>jwt-bearer</code> that may be supported by the authorization server as well, and is not necessarily a reliable indication that the Identity Assertion Authorization Grant would be supported. See <a href="https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16">issue #16</a>.<a href="#appendix-A.3.5-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </section>
 </div>
 <div id="llm-agent-obtains-an-identity-assertion-grant-for-enterprise-external-tool-from-the-enterprise-idp">
@@ -2300,7 +2303,7 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &amp;requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-&amp;resource=https://saas.example.com/tools"
+&amp;resource=https://saas.example.net/
 &amp;scope=agent.read+agent.write
 &amp;subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
 &amp;subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -2325,7 +2328,7 @@ Pragma: no-cache
 }
 </pre><a href="#appendix-A.3.6-4" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.6-5">Identity Assertion Authorization Grant<a href="#appendix-A.3.6-5" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.6-5">Identity Assertion Authorization Grant JWT claims:<a href="#appendix-A.3.6-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.6-6">
 <pre>
 {
@@ -2354,11 +2357,11 @@ signature
           <h4 id="name-llm-agent-obtains-an-access">
 <a href="#appendix-A.3.7" class="section-number selfRef">A.3.7. </a><a href="#name-llm-agent-obtains-an-access" class="section-name selfRef">LLM Agent obtains an Access Token for Enterprise External Tool</a>
           </h4>
-<p id="appendix-A.3.7-1">LLM Agent makes a token request to the previously discovered external tool's  Authorization Server token endpoint using the Identity Assertion Authorization Grant obtained from the Enterprise IdP as a JWT Assertion as defined by <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#appendix-A.3.7-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.3.7-2">The LLM Agent authenticates with it's client credentials that were registered with the SaaS Authorization Server<a href="#appendix-A.3.7-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.7-1">LLM Agent makes a token request to the previously discovered external tool's Authorization Server token endpoint using the Identity Assertion Authorization Grant obtained from the Enterprise IdP as a JWT Assertion as defined by <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#appendix-A.3.7-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.7-2">The LLM Agent authenticates with its client credentials that were registered with the SaaS Authorization Server<a href="#appendix-A.3.7-2" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A.3.7-3.1">
-              <p id="appendix-A.3.7-3.1.1">Note: How the LLM Agent registers with the Authorization Server (e.g static or dynamic client registration) is out-of-scope of this specification<a href="#appendix-A.3.7-3.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A.3.7-3.1.1">Note: How the LLM Agent registers with the Authorization Server (e.g static or dynamic client registration), and whether or not it has credentials, is out-of-scope of this specification<a href="#appendix-A.3.7-3.1.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <div class="alignLeft art-text artwork" id="appendix-A.3.7-4">
@@ -2399,7 +2402,7 @@ Pragma: no-cache
 <div class="alignLeft art-text artwork" id="appendix-A.3.8-2">
 <pre>
 GET /tools
-Host: saas.example.com
+Host: saas.example.net
 Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA"
 Accept: application/json
 

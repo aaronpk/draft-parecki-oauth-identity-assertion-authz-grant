@@ -102,7 +102,7 @@ Table of Contents
        A.2.1.  Preconditions
      A.3.  LLM Agent using Enterprise Tools
        A.3.1.  Preconditions
-       A.3.2.  LLM Agent establishes a User Identity with Enteprise
+       A.3.2.  LLM Agent establishes a User Identity with Enterprise
                IdP
        A.3.3.  IdP Authorization Request (with PKCE)
        A.3.4.  User authenticates and authorizes LLM Agent
@@ -796,8 +796,8 @@ A.3.1.  Preconditions
    *  The LLM Agent has a registered OAuth 2.0 Client (com.example.ai-
       agent) with the Enterprise IdP (cyberdyne.idp.example)
 
-   *  The LLM Agent has a registered OAuth 2.0 Client (com.example.ai-
-      agent) with the External Tool Application (saas.example.com)
+   *  The LLM Agent has a registered OAuth 2.0 Client (4960880b83dc9)
+      with the External Tool Application (saas.example.net)
 
    *  Enterprise has established a trust relationship between their IdP
       and the LLM Agent for SSO
@@ -810,14 +810,14 @@ A.3.1.  Preconditions
       of users for the External Tool Application with a specific set of
       scopes
 
-A.3.2.  LLM Agent establishes a User Identity with Enteprise IdP
+A.3.2.  LLM Agent establishes a User Identity with Enterprise IdP
 
    LLM Agent discovers the Enterprise IdP's OpenID Connect Provider
    configuration based on a configured issuer that was previously
    establshed.
 
       Note: IdP discovery where an agent discovers which IdP the agent
-      should use to authenticate a given user is out-of-scope of this
+      should use to authenticate a given user is out of scope of this
       specification.
 
 GET /.well-known/openid-configuration
@@ -850,19 +850,23 @@ Content-Type: application/json
    well as support for the Token Exchange grant type
    urn:ietf:params:oauth:grant-type:token-exchange
 
-      Note: Unfortunately Token Exchange [RFC8693] doesn't define an
-      authorization server metadata parameter for
-      requested_token_types_supported to discover if
-      urn:ietf:params:oauth:token-type:id-jag is specifically supported
-      so the LLM Agent needs to first attempt Token Exchange to learn if
-      the specific Enterprise IdP supports issuing an Identity Assertion
-      Grant.
+      Note: Token Exchange [RFC8693] doesn't define an authorization
+      server metadata parameter for requested_token_types_supported to
+      discover if urn:ietf:params:oauth:token-type:id-jag is
+      specifically supported.  Currently, the LLM Agent needs to first
+      attempt Token Exchange to learn if the specific Enterprise IdP
+      supports issuing an Identity Assertion Grant.  This specification
+      could define an Authorization Server Metadata [RFC8414] parameter
+      to enable the agent to discover if this request is supported.  See
+      issue #16 (https://github.com/aaronpk/draft-parecki-oauth-
+      identity-assertion-authz-grant/issues/16).
 
 A.3.3.  IdP Authorization Request (with PKCE)
 
-   LLM Agent generates a code_verifier and a code_challenge (usually a
-   SHA256 hash of the verifier, base64url-encoded) and redirects the
-   end-user to the Enterprise IdP with an authorization request
+   LLM Agent generates a PKCE code_verifier and a code_challenge
+   (usually a SHA256 hash of the verifier, base64url-encoded) and
+   redirects the end-user to the Enterprise IdP with an authorization
+   request
 
    GET /authorize?
      response_type=code
@@ -882,7 +886,7 @@ A.3.4.  User authenticates and authorizes LLM Agent
 
 https://ai-agent.example.com/oauth2/callback?code=SplxlOBeZQQYbYS6WxSbIA&state=xyzABC123
 
-   LLM Agent exchanges the code with PKCE code_verifier to obtain an ID
+   LLM Agent exchanges the code and PKCE code_verifier to obtain an ID
    Token and Access Token for the IdP's UserInfo endpoint
 
    POST /oauth2/token
@@ -924,30 +928,28 @@ https://ai-agent.example.com/oauth2/callback?code=SplxlOBeZQQYbYS6WxSbIA&state=x
 A.3.5.  LLM Agent calls Enterprise External Tool
 
    LLM Agent tool calls an external tool provided by an Enterprise SaaS
-   Application(Resource Server) without a valid access token and is
+   Application (Resource Server) without a valid access token and is
    issued an authentication challenge using
    [I-D.ietf-oauth-resource-metadata]
 
-      Note: How agents discover available tools is out-of-scope of this
+      Note: How agents discover available tools is out of scope of this
       specification
 
- GET /tools
- Host: saas.example.com
- Accept: application/json
+   GET /tools
+   Host: saas.example.net
+   Accept: application/json
 
- HTTP/1.1 400 Bad Request
- WWW-Authenticate: Bearer error="invalid_request",
-   error_description="No access token was provided in this request",
-   resource_metadata=
-   "https://saas.example.com/tools/.well-known/oauth-protected-resource"
+   HTTP/1.1 401 Unauthorized
+   WWW-Authenticate: Bearer resource_metadata=
+     "https://saas.example.net/.well-known/oauth-protected-resource"
 
    LLM Agent fetches the external tool resource's OAuth 2.0 Protected
    Resource Metadata per [I-D.ietf-oauth-resource-metadata] to
    dynamically discover an authorization server that can issue an access
    token for the resource.
 
-   GET /tools/.well-known/oauth-protected-resource
-   Host: saas.example.com
+   GET /.well-known/oauth-protected-resource
+   Host: saas.example.net
    Accept: application/json
 
    HTTP/1.1 200 Ok
@@ -955,7 +957,7 @@ A.3.5.  LLM Agent calls Enterprise External Tool
 
    {
       "resource":
-        "https://saas.example.com/tools",
+        "https://saas.example.net/",
       "authorization_servers":
         [ "https://authorization-server.saas.com" ],
       "bearer_methods_supported":
@@ -963,7 +965,7 @@ A.3.5.  LLM Agent calls Enterprise External Tool
       "scopes_supported":
         ["agent.tools.read", "agent.tools.write"],
       "resource_documentation":
-        "https://saas.example.com/tools/resource_documentation.html"
+        "https://saas.example.net/tools/resource_documentation.html"
     }
 
    LLM Agent discovers the Authorization Server configuration per
@@ -1004,6 +1006,16 @@ Content-Type: application/json
    a standard authorization_code from the SaaS Application's
    Authorization Server
 
+      Note: This would benefit from an Authorization Server Metadata
+      [RFC8414] property to indicate whether the Identity Assertion
+      Authorization Grant form of jwt-bearer would be accepted by this
+      authorization server.  There are other uses of jwt-bearer that may
+      be supported by the authorization server as well, and is not
+      necessarily a reliable indication that the Identity Assertion
+      Authorization Grant would be supported.  See issue #16
+      (https://github.com/aaronpk/draft-parecki-oauth-identity-
+      assertion-authz-grant/issues/16).
+
 A.3.6.  LLM Agent obtains an Identity Assertion Grant for Enterprise
         External Tool from the Enterprise IdP
 
@@ -1020,7 +1032,7 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-&resource=https://saas.example.com/tools"
+&resource=https://saas.example.net/
 &scope=agent.read+agent.write
 &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
 &subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -1044,7 +1056,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
      "expires_in": 300
    }
 
-   Identity Assertion Authorization Grant
+   Identity Assertion Authorization Grant JWT claims:
 
    {
      "alg": "ES256",
@@ -1071,12 +1083,12 @@ A.3.7.  LLM Agent obtains an Access Token for Enterprise External Tool
    Assertion Authorization Grant obtained from the Enterprise IdP as a
    JWT Assertion as defined by [RFC7523].
 
-   The LLM Agent authenticates with it's client credentials that were
+   The LLM Agent authenticates with its client credentials that were
    registered with the SaaS Authorization Server
 
       Note: How the LLM Agent registers with the Authorization Server
-      (e.g static or dynamic client registration) is out-of-scope of
-      this specification
+      (e.g static or dynamic client registration), and whether or not it
+      has credentials, is out-of-scope of this specification
 
    POST /oauth2/token HTTP/1.1
    Host: authorization-server.saas.com
@@ -1108,7 +1120,7 @@ A.3.8.  LLM Agent makes an authorized External Tool request
    Application (Resource Server) with a valid access token
 
    GET /tools
-   Host: saas.example.com
+   Host: saas.example.net
    Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA"
    Accept: application/json
 
