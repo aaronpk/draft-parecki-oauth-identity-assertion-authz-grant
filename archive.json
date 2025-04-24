@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-20T00:48:03.136521+00:00",
+  "timestamp": "2025-04-24T00:43:49.939440+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -519,26 +519,110 @@
       "id": "PR_kwDOKv5r-s6Sy-Z7",
       "title": "Added example for an AI Agent based flow",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/15",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "mcguinness",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Initial draft for an AI Agent based flow (e.g MCP)",
       "createdAt": "2025-04-16T08:03:46Z",
-      "updatedAt": "2025-04-17T05:54:22Z",
+      "updatedAt": "2025-04-22T22:13:55Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "afd78c007d3705cd7a0fa7cb87f35aded3944e87",
       "headRepository": "mcguinness/draft-parecki-oauth-identity-assertion-authz-grant",
       "headRefName": "agent-example",
-      "headRefOid": "b6e821a80817152506ea34b7e03807f8d464606d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
-      "reviews": []
+      "headRefOid": "69817ee846a54f7af7ca77b18dc6576693e8f219",
+      "closedAt": "2025-04-22T22:13:55Z",
+      "mergedAt": "2025-04-22T22:13:55Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "5a1192fbc54f2e563359b8242a2acf1810846794"
+      },
+      "comments": [
+        {
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "body": "This is great, thank you @mcguinness! I am so happy to see you are still active with this spec! I would love to get a debrief on any updates regarding MCP, especially on how it pertains to enterprise, idp, and this spec.",
+          "createdAt": "2025-04-22T18:15:17Z",
+          "updatedAt": "2025-04-22T18:16:19Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s6mAU5G",
+          "commit": {
+            "abbreviatedOid": "b6e821a"
+          },
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-22T19:16:18Z",
+          "updatedAt": "2025-04-22T19:16:19Z",
+          "comments": [
+            {
+              "originalPosition": 29,
+              "body": "Should this be a different client id for illustrative purposes?",
+              "createdAt": "2025-04-22T19:16:19Z",
+              "updatedAt": "2025-04-22T19:16:19Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6mBxod",
+          "commit": {
+            "abbreviatedOid": "b6e821a"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-22T21:59:01Z",
+          "updatedAt": "2025-04-22T21:59:02Z",
+          "comments": [
+            {
+              "originalPosition": 6,
+              "body": "```suggestion\r\n  RFC8414:\r\n```",
+              "createdAt": "2025-04-22T21:59:01Z",
+              "updatedAt": "2025-04-22T21:59:02Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6mB1kX",
+          "commit": {
+            "abbreviatedOid": "69817ee"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-04-22T22:11:08Z",
+          "updatedAt": "2025-04-22T22:11:08Z",
+          "comments": [
+            {
+              "originalPosition": 29,
+              "body": "I do think that would be helpful, I'll change one of them",
+              "createdAt": "2025-04-22T22:11:08Z",
+              "updatedAt": "2025-04-22T22:11:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6mB18s",
+          "commit": {
+            "abbreviatedOid": "69817ee"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-04-22T22:11:43Z",
+          "updatedAt": "2025-04-22T22:11:43Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
