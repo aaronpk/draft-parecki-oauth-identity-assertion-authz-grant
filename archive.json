@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-24T00:43:49.939440+00:00",
+  "timestamp": "2025-04-29T00:44:16.666876+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -338,6 +338,30 @@
       "updatedAt": "2025-04-18T05:53:52Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOKv5r-s60RMm7",
+      "title": "Client ID Registration",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/17",
+      "state": "OPEN",
+      "author": "PieterKas",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "\"client_id: : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a client_id as defined in Section 4.3 {{RFC8693}}.\"\n\nIs the expectation for this draft that the same client_id is used and registered with different authorisation servers in different domains (in this case the IdP and Resource Application Authorization Server? This might get unwieldy at scale, especially in a world where a client may have to register with multiple authorisation servers.\n\nAs an alternative, some allowance for supporting multiple client_ids might be needed. This may be either through some kind of static mapping (also hard to maintain), or by allowing the client to specify additional client_ids for which the assertion may be used. \n\nAn additional point to clarify may be that the Resource Appliction's Authorization Server MUST verifiy that the client_id in the assertion match the client_id of the client presenting the assertion.",
+      "createdAt": "2025-04-28T10:02:31Z",
+      "updatedAt": "2025-04-28T20:46:32Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "No, there is no expectation that everyone shares the same client ID database, that's why I used the language \"recognized by the Resource Application's authorization server\".\n\nI hadn't considered multiple, that could be an option.",
+          "createdAt": "2025-04-28T20:46:31Z",
+          "updatedAt": "2025-04-28T20:46:31Z"
+        }
+      ]
     }
   ],
   "pulls": [
