@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-29T00:44:16.666876+00:00",
+  "timestamp": "2025-05-01T00:51:06.342720+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -351,7 +351,7 @@
       "labels": [],
       "body": "\"client_id: : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a client_id as defined in Section 4.3 {{RFC8693}}.\"\n\nIs the expectation for this draft that the same client_id is used and registered with different authorisation servers in different domains (in this case the IdP and Resource Application Authorization Server? This might get unwieldy at scale, especially in a world where a client may have to register with multiple authorisation servers.\n\nAs an alternative, some allowance for supporting multiple client_ids might be needed. This may be either through some kind of static mapping (also hard to maintain), or by allowing the client to specify additional client_ids for which the assertion may be used. \n\nAn additional point to clarify may be that the Resource Appliction's Authorization Server MUST verifiy that the client_id in the assertion match the client_id of the client presenting the assertion.",
       "createdAt": "2025-04-28T10:02:31Z",
-      "updatedAt": "2025-04-28T20:46:32Z",
+      "updatedAt": "2025-04-29T20:36:05Z",
       "closedAt": null,
       "comments": [
         {
@@ -360,6 +360,34 @@
           "body": "No, there is no expectation that everyone shares the same client ID database, that's why I used the language \"recognized by the Resource Application's authorization server\".\n\nI hadn't considered multiple, that could be an option.",
           "createdAt": "2025-04-28T20:46:31Z",
           "updatedAt": "2025-04-28T20:46:31Z"
+        },
+        {
+          "author": "PieterKas",
+          "authorAssociation": "NONE",
+          "body": ">No, there is no expectation that everyone shares the same client ID database, that's why I used the language \"recognized by the Resource Application's authorization server\".\n\nSo, if I had a client that was registered with the IdP, and I used client_id_1 for that, I would not be expected to also use client_id_1 with the Resource applications authorization server, but could use client_id_2 with the Resource application's authorization server. How would the IdP know client_id_2 when including it in the JWT Authorization grant? There should probably be some guidance on implementation options (including a protocol option to allow the client to define what it wants as the client_id in the JWT - along with security considerations on that practice).",
+          "createdAt": "2025-04-29T14:14:27Z",
+          "updatedAt": "2025-04-29T14:14:27Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "> An additional point to clarify may be that the Resource Appliction's Authorization Server MUST verifiy that the client_id in the assertion match the client_id of the client presenting the assertion.\n\nThis is already noted here in section 6.1, was there more clarification you were thinking about:\n\n```\nThe client_id claim MUST identify the same client as the client authentication in the request.\n```\n\n> How would the IdP know client_id_2 when including it in the JWT Authorization grant? \n\nExcellent point that is also brought up in [this issue ](https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/14). Outside of recommending that the IdP maintain this mapping, we should prioritize thinking about other options or implementations that are more scalable....",
+          "createdAt": "2025-04-29T17:17:33Z",
+          "updatedAt": "2025-04-29T17:17:33Z"
+        },
+        {
+          "author": "PieterKas",
+          "authorAssociation": "NONE",
+          "body": "Cool - I am thinking of the kind of use cases we see with MCP and the potential application of this spec in that context. Static mapping is not going to be practical, so we need something more \"dynamic\" that doesn't require the IdP to know about client_id registration in the Resource Application's Authorization Server.\n\n>This is already noted here in section 6.1, was there more clarification you were thinking about:\n\nMissed it, great to see it is there already!\n\n",
+          "createdAt": "2025-04-29T18:07:29Z",
+          "updatedAt": "2025-04-29T18:07:29Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "Totally agree and its not necessarily info that Auth Servers may want on publicly available metadata endpoints, even thought ClientIDs are public..... need to give it more thought. curious on Araron's thoughts too. \n\nDCR could be an avenue to explore, but can't be the only solution.",
+          "createdAt": "2025-04-29T20:36:03Z",
+          "updatedAt": "2025-04-29T20:36:03Z"
         }
       ]
     }
