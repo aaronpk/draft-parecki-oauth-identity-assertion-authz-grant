@@ -644,7 +644,7 @@ LLM Agent makes an Identity Assertion Grant Token Exchange {{RFC8693}} request f
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
     &resource=https://saas.example.net/
-    &scope=agent.read+agent.write
+    &scope=agent.read agent.write
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
     &client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer
@@ -661,7 +661,7 @@ If access is granted, the Enterprise IdP creates a signed Identity Assertion Aut
       "issued_token_type": "urn:ietf:params:oauth:token-type:id-jag",
       "access_token": "eyJhbGciOiJIUzI1NiIsI...",
       "token_type": "N_A",
-      "scope": "agent.read+agent.write",
+      "scope": "agent.read agent.write",
       "expires_in": 300
     }
 
