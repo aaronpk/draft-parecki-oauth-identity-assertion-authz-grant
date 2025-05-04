@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-01T00:51:06.342720+00:00",
+  "timestamp": "2025-05-04T00:50:57.310075+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -351,7 +351,7 @@
       "labels": [],
       "body": "\"client_id: : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a client_id as defined in Section 4.3 {{RFC8693}}.\"\n\nIs the expectation for this draft that the same client_id is used and registered with different authorisation servers in different domains (in this case the IdP and Resource Application Authorization Server? This might get unwieldy at scale, especially in a world where a client may have to register with multiple authorisation servers.\n\nAs an alternative, some allowance for supporting multiple client_ids might be needed. This may be either through some kind of static mapping (also hard to maintain), or by allowing the client to specify additional client_ids for which the assertion may be used. \n\nAn additional point to clarify may be that the Resource Appliction's Authorization Server MUST verifiy that the client_id in the assertion match the client_id of the client presenting the assertion.",
       "createdAt": "2025-04-28T10:02:31Z",
-      "updatedAt": "2025-04-29T20:36:05Z",
+      "updatedAt": "2025-05-02T09:53:24Z",
       "closedAt": null,
       "comments": [
         {
@@ -388,6 +388,13 @@
           "body": "Totally agree and its not necessarily info that Auth Servers may want on publicly available metadata endpoints, even thought ClientIDs are public..... need to give it more thought. curious on Araron's thoughts too. \n\nDCR could be an avenue to explore, but can't be the only solution.",
           "createdAt": "2025-04-29T20:36:03Z",
           "updatedAt": "2025-04-29T20:36:03Z"
+        },
+        {
+          "author": "PieterKas",
+          "authorAssociation": "NONE",
+          "body": "Agreed that we will need multiple solutions for client_id. ",
+          "createdAt": "2025-05-02T09:53:22Z",
+          "updatedAt": "2025-05-02T09:53:22Z"
         }
       ]
     }
@@ -673,6 +680,93 @@
           "createdAt": "2025-04-22T22:11:43Z",
           "updatedAt": "2025-04-22T22:11:43Z",
           "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOKv5r-s6UyJnQ",
+      "title": "Standardizes agent.read scope syntax",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/18",
+      "state": "OPEN",
+      "author": "kamronbatman",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-05-02T18:21:30Z",
+      "updatedAt": "2025-05-03T07:24:53Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "b6b8d60624dd9c28d704a7a91e5c4c3ce121e675",
+      "headRepository": "kamronbatman/draft-parecki-oauth-identity-assertion-authorization-grant",
+      "headRefName": "patch-2",
+      "headRefOid": "7553500be6b0d55f55f6067907eb7e81ba8c3b82",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s6nqdDw",
+          "commit": {
+            "abbreviatedOid": "ff2336e"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-02T21:20:10Z",
+          "updatedAt": "2025-05-02T21:20:11Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\n    &scope=agent.read+agent.write\r\n```\r\n\r\nThe + is here because it represents a URL-encoded space",
+              "createdAt": "2025-05-02T21:20:10Z",
+              "updatedAt": "2025-05-02T21:20:11Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6nqdRK",
+          "commit": {
+            "abbreviatedOid": "ff2336e"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-02T21:20:55Z",
+          "updatedAt": "2025-05-02T21:20:55Z",
+          "comments": [
+            {
+              "originalPosition": 14,
+              "body": "You're right that this one should be a space though.",
+              "createdAt": "2025-05-02T21:20:55Z",
+              "updatedAt": "2025-05-02T21:20:56Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6nra0x",
+          "commit": {
+            "abbreviatedOid": "ff2336e"
+          },
+          "author": "kamronbatman",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-05-03T07:24:36Z",
+          "updatedAt": "2025-05-03T07:24:37Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "Yeah this is part of query params, so that makes sense.",
+              "createdAt": "2025-05-03T07:24:37Z",
+              "updatedAt": "2025-05-03T07:24:37Z"
+            }
+          ]
         }
       ]
     }
