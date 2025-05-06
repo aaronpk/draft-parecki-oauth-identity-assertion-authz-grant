@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-04T00:50:57.310075+00:00",
+  "timestamp": "2025-05-06T00:45:07.880344+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -397,6 +397,22 @@
           "updatedAt": "2025-05-02T09:53:22Z"
         }
       ]
+    },
+    {
+      "number": 19,
+      "id": "I_kwDOKv5r-s61Mtvp",
+      "title": "Nits in the draft",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/19",
+      "state": "OPEN",
+      "author": "deansaxe",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "After reviewing the draft and discussing with @aaronpk last week, I have two nits to discuss to help clarify the language in the doc:\n\nSection 5.2 under **scope** states, \"This may be fewer scopes than the application requested\".  I believe the intent is that the scopes cannot grow in their impact.  This may be fewer in number, or it may be more scopes with a narrower set of authorized actions.  I suggest rewriting this slightly to clarify the intent is to constrain the scope, not the number of scopes in use.\n\nSection 7.3 states, \"The Identity Providers SHOULD NOT issue access tokens in response to an ID-JAG it issued itself\".  I agree with the intent, but stronger language is necessary.  I suggest changing this to \"MUST NOT\".\n\n",
+      "createdAt": "2025-05-05T15:17:31Z",
+      "updatedAt": "2025-05-05T15:17:31Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
