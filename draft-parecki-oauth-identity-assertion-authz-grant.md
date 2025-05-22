@@ -661,7 +661,7 @@ If access is granted, the Enterprise IdP creates a signed Identity Assertion Aut
       "issued_token_type": "urn:ietf:params:oauth:token-type:id-jag",
       "access_token": "eyJhbGciOiJIUzI1NiIsI...",
       "token_type": "N_A",
-      "scope": "agent.read+agent.write",
+      "scope": "agent.read agent.write",
       "expires_in": 300
     }
 
