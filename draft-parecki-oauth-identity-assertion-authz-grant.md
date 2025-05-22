@@ -181,7 +181,7 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 : REQUIRED - The Issuer URL of the Resource Application's authorization server.
 
 `audience`:
-: The audience parameter MUST NOT be used.
+: The audience parameter MUST NOT be used to indicate the authorization server.
 
 `scope`:
 : OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
