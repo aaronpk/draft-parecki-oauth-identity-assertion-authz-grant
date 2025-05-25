@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-06T00:45:07.880344+00:00",
+  "timestamp": "2025-05-25T00:52:05.519935+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -413,6 +413,30 @@
       "updatedAt": "2025-05-05T15:17:31Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 20,
+      "id": "I_kwDOKv5r-s63y15Z",
+      "title": "Consider audience param in token ex request as the resource server indicator",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/20",
+      "state": "OPEN",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "According to spec, audience param must not be used\nbut there is a valid case for it to indicate  resource server information in addition to the issuerURL in the resource request param\nFirst, other IdPs may have implementations where this is necessary and secondly can help disambiguate between resource severs served by 1 AS",
+      "createdAt": "2025-05-22T14:20:18Z",
+      "updatedAt": "2025-05-22T15:24:11Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I tweaked the wording in af6a47f356ce5c0d76e32a30c59069870993a022 to clarify and leave open this possibility",
+          "createdAt": "2025-05-22T15:24:10Z",
+          "updatedAt": "2025-05-22T15:24:10Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -704,24 +728,26 @@
       "id": "PR_kwDOKv5r-s6UyJnQ",
       "title": "Standardizes agent.read scope syntax",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/18",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "kamronbatman",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-05-02T18:21:30Z",
-      "updatedAt": "2025-05-03T07:24:53Z",
+      "updatedAt": "2025-05-22T14:55:45Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "b6b8d60624dd9c28d704a7a91e5c4c3ce121e675",
       "headRepository": "kamronbatman/draft-parecki-oauth-identity-assertion-authorization-grant",
       "headRefName": "patch-2",
       "headRefOid": "7553500be6b0d55f55f6067907eb7e81ba8c3b82",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-22T14:45:55Z",
+      "mergedAt": "2025-05-22T14:45:55Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "eab870d1f256bcbdbe4071500bb4166a65ec253e"
+      },
       "comments": [],
       "reviews": [
         {
@@ -770,7 +796,7 @@
             "abbreviatedOid": "ff2336e"
           },
           "author": "kamronbatman",
-          "authorAssociation": "NONE",
+          "authorAssociation": "CONTRIBUTOR",
           "state": "COMMENTED",
           "body": "",
           "createdAt": "2025-05-03T07:24:36Z",
@@ -783,6 +809,19 @@
               "updatedAt": "2025-05-03T07:24:37Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6qj6Mp",
+          "commit": {
+            "abbreviatedOid": "7553500"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-05-22T14:45:48Z",
+          "updatedAt": "2025-05-22T14:45:48Z",
+          "comments": []
         }
       ]
     }
