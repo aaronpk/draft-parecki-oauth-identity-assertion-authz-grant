@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-25T00:52:05.519935+00:00",
+  "timestamp": "2025-05-27T00:44:50.032831+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -426,7 +426,7 @@
       "labels": [],
       "body": "According to spec, audience param must not be used\nbut there is a valid case for it to indicate  resource server information in addition to the issuerURL in the resource request param\nFirst, other IdPs may have implementations where this is necessary and secondly can help disambiguate between resource severs served by 1 AS",
       "createdAt": "2025-05-22T14:20:18Z",
-      "updatedAt": "2025-05-22T15:24:11Z",
+      "updatedAt": "2025-05-26T10:52:40Z",
       "closedAt": null,
       "comments": [
         {
@@ -435,6 +435,13 @@
           "body": "I tweaked the wording in af6a47f356ce5c0d76e32a30c59069870993a022 to clarify and leave open this possibility",
           "createdAt": "2025-05-22T15:24:10Z",
           "updatedAt": "2025-05-22T15:24:10Z"
+        },
+        {
+          "author": "siacomuzzi",
+          "authorAssociation": "NONE",
+          "body": "So, in your example, where `https://acme.chat.example/` is the issuer URL of the Resource Application's Authorization Server, if this authorization server has multiple resource servers configured, should the token exchange request look like the following?\n\n```\n&resource=https://acme.chat.example/\n&audience=https://acme.chat.example/api/v3\n```\n\nAssuming that there are other resource servers (eg, `https://acme.chat.example/api/v1`, `https://acme.chat.example/api/v2`).",
+          "createdAt": "2025-05-26T10:51:21Z",
+          "updatedAt": "2025-05-26T10:52:39Z"
         }
       ]
     }
