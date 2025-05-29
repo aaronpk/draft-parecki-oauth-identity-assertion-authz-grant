@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-27T00:44:50.032831+00:00",
+  "timestamp": "2025-05-29T00:46:19.342707+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -426,7 +426,7 @@
       "labels": [],
       "body": "According to spec, audience param must not be used\nbut there is a valid case for it to indicate  resource server information in addition to the issuerURL in the resource request param\nFirst, other IdPs may have implementations where this is necessary and secondly can help disambiguate between resource severs served by 1 AS",
       "createdAt": "2025-05-22T14:20:18Z",
-      "updatedAt": "2025-05-26T10:52:40Z",
+      "updatedAt": "2025-05-27T10:17:58Z",
       "closedAt": null,
       "comments": [
         {
@@ -442,6 +442,13 @@
           "body": "So, in your example, where `https://acme.chat.example/` is the issuer URL of the Resource Application's Authorization Server, if this authorization server has multiple resource servers configured, should the token exchange request look like the following?\n\n```\n&resource=https://acme.chat.example/\n&audience=https://acme.chat.example/api/v3\n```\n\nAssuming that there are other resource servers (eg, `https://acme.chat.example/api/v1`, `https://acme.chat.example/api/v2`).",
           "createdAt": "2025-05-26T10:51:21Z",
           "updatedAt": "2025-05-26T10:52:39Z"
+        },
+        {
+          "author": "siacomuzzi",
+          "authorAssociation": "NONE",
+          "body": "And how is that reflected in the [Identity Assertion Authorization Grant JWT](https://www.ietf.org/archive/id/draft-parecki-oauth-identity-assertion-authz-grant-03.html#name-identity-assertion-authoriz) payload?\n\nIn other words, which claim should the IdP use in the assertion to specify the resource server (`https://acme.chat.example/api/v3`)?",
+          "createdAt": "2025-05-27T10:13:11Z",
+          "updatedAt": "2025-05-27T10:17:57Z"
         }
       ]
     }
