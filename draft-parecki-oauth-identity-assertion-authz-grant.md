@@ -181,11 +181,11 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 `requested_token_type`:
 : REQUIRED - The value `urn:ietf:params:oauth:token-type:id-jag` indicates that an ID Assertion JWT is being requested.
 
-`resource`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server.
-
 `audience`:
-: The audience parameter MUST NOT be used to indicate the authorization server.
+: REQUIRED - A JSON object that identifies the Resource Application. The JSON object MUST contain the property `as` with the value of the Resource Application's Authorization Server Issuer Identifier. If the Authorization Server is used with multiple Resource Servers, the additional property `resource` can be used to identify the Resource Server. For example, `{"as":"https://login.acme.chat.example/","resource":"https://acme.chat.example/"}`.
+
+`resource`:
+: The `resource` parameter MUST NOT be used to indicate the authorization server or target service.
 
 `scope`:
 : OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
@@ -208,7 +208,7 @@ The example below uses an ID Token as the Identity Assertion, and uses a JWT Bea
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-    &resource=https://acme.chat.example/
+    &audience=%7B%22as%22%3A%22https%3A%2F%2Flogin.acme.chat.example%2F%22%2C%22resource%22%3A%22https%3A%2F%2Facme.chat.example%2F%22%7D
     &scope=chat.read+chat.history
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
