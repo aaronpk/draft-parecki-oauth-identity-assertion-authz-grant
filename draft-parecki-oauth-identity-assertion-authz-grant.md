@@ -34,6 +34,10 @@ author:
     fullname: Karl McGuinness
     organization: Independent
     email: public@karlmcguinness.com
+ -
+    fullname: Brian Campbell
+    organization: Ping Identity
+    email: bcampbell@pingidentity.com
 
 normative:
   RFC6749:
@@ -734,12 +738,16 @@ LLM Agent tool calls an external tool provided by the Enterprise SaaS Applicatio
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich, Sofia Desenberg.
+The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg.
 
 # Document History
 {:numbered="false"}
 
 [[ To be removed from the final specification ]]
+
+-04
+
+* Added Brian Campbell as co-author
 
 -03
 
