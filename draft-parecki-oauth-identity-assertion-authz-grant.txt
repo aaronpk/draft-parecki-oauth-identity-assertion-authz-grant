@@ -5,8 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 23 November 2025                                    Independent
-                                                             22 May 2025
+Expires: 20 December 2025                                    Independent
+                                                             B. Campbell
+                                                           Ping Identity
+                                                            18 June 2025
 
 
                  Identity Assertion Authorization Grant
@@ -54,7 +56,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 November 2025.
+   This Internet-Draft will expire on 20 December 2025.
 
 Copyright Notice
 
@@ -1135,12 +1137,16 @@ A.3.8.  LLM Agent makes an authorized External Tool request
 Acknowledgments
 
    The authors would like to thank the following people for their
-   contributions and reviews of this specification: Brian Campbell,
-   Kamron Batmanghelich, Sofia Desenberg.
+   contributions and reviews of this specification: Kamron
+   Batmanghelich, Sofia Desenberg.
 
 Document History
 
    [[ To be removed from the final specification ]]
+
+   -04
+
+   *  Added Brian Campbell as co-author
 
    -03
 
@@ -1172,3 +1178,8 @@ Authors' Addresses
    Karl McGuinness
    Independent
    Email: public@karlmcguinness.com
+
+
+   Brian Campbell
+   Ping Identity
+   Email: bcampbell@pingidentity.com

@@ -7,10 +7,11 @@
 <title>Identity Assertion Authorization Grant</title>
 <meta content="Aaron Parecki" name="author">
 <meta content="Karl McGuinness" name="author">
+<meta content="Brian Campbell" name="author">
 <meta content="
        This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API using Token Exchange   and JWT Profile for OAuth 2.0 Authorization Grants  . 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.29.0" name="generator">
 <meta content="cross-domain" name="keyword">
 <meta content="authorization" name="keyword">
 <meta content="authz" name="keyword">
@@ -18,18 +19,18 @@
 <meta content="enterprise" name="keyword">
 <meta content="draft-parecki-oauth-identity-assertion-authz-grant-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
-    Python 3.12.10
+  xml2rfc 3.29.0
+    Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
-    lxml 5.3.0
+    lxml 5.3.1
     platformdirs 4.3.8
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.3
-    setuptools 70.3.0
+    requests 2.32.4
+    setuptools 80.9.0
     wcwidth 0.2.13
 -->
 <link href="draft-parecki-oauth-identity-assertion-authz-grant.xml" rel="alternate" type="application/rfc+xml">
@@ -1049,11 +1050,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">ID Token Authz Grant</td>
-<td class="right">May 2025</td>
+<td class="right">June 2025</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Parecki &amp; McGuinness</td>
-<td class="center">Expires 23 November 2025</td>
+<td class="left">Parecki, et al.</td>
+<td class="center">Expires 20 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-parecki-oauth-identity-assertion-authz-grant-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-05-22" class="published">22 May 2025</time>
+<time datetime="2025-06-18" class="published">18 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-11-23">23 November 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-20">20 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1081,6 +1082,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div class="author">
       <div class="author-name">K. McGuinness</div>
 <div class="org">Independent</div>
+</div>
+<div class="author">
+      <div class="author-name">B. Campbell</div>
+<div class="org">Ping Identity</div>
 </div>
 </dd>
 </dl>
@@ -1125,7 +1130,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 23 November 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2425,7 +2430,7 @@ Content-Type: application/json
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Brian Campbell, Kamron Batmanghelich, Sofia Desenberg.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="document-history">
@@ -2434,31 +2439,37 @@ Content-Type: application/json
 <a href="#name-document-history" class="section-name selfRef">Document History</a>
       </h2>
 <p id="appendix-C-1">[[ To be removed from the final specification ]]<a href="#appendix-C-1" class="pilcrow">¶</a></p>
-<p id="appendix-C-2">-03<a href="#appendix-C-2" class="pilcrow">¶</a></p>
+<p id="appendix-C-2">-04<a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-3.1">
-          <p id="appendix-C-3.1.1">Added example for AI Agent<a href="#appendix-C-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-3.1.1">Added Brian Campbell as co-author<a href="#appendix-C-3.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-C-4">-02<a href="#appendix-C-4" class="pilcrow">¶</a></p>
+<p id="appendix-C-4">-03<a href="#appendix-C-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-5.1">
-          <p id="appendix-C-5.1.1">Changed the <code>aud</code> property to the Issuer URL instead of the token endpoint<a href="#appendix-C-5.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-5.1.1">Added example for AI Agent<a href="#appendix-C-5.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-C-6">-01<a href="#appendix-C-6" class="pilcrow">¶</a></p>
+<p id="appendix-C-6">-02<a href="#appendix-C-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-7.1">
-          <p id="appendix-C-7.1.1">Corrected the <code>scope</code> property in the JWT to match token exchange and JWT access token profile<a href="#appendix-C-7.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li class="normal" id="appendix-C-7.2">
-          <p id="appendix-C-7.2.1">Formatting and editorial fixes<a href="#appendix-C-7.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-7.1.1">Changed the <code>aud</code> property to the Issuer URL instead of the token endpoint<a href="#appendix-C-7.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="appendix-C-8">-00<a href="#appendix-C-8" class="pilcrow">¶</a></p>
+<p id="appendix-C-8">-01<a href="#appendix-C-8" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-9.1">
-          <p id="appendix-C-9.1.1">Initial revision<a href="#appendix-C-9.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-9.1.1">Corrected the <code>scope</code> property in the JWT to match token exchange and JWT access token profile<a href="#appendix-C-9.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-9.2">
+          <p id="appendix-C-9.2.1">Formatting and editorial fixes<a href="#appendix-C-9.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="appendix-C-10">-00<a href="#appendix-C-10" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C-11.1">
+          <p id="appendix-C-11.1.1">Initial revision<a href="#appendix-C-11.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 </section>
@@ -2482,6 +2493,14 @@ Content-Type: application/json
 <div class="email">
 <span>Email:</span>
 <a href="mailto:public@karlmcguinness.com" class="email">public@karlmcguinness.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Brian Campbell</span></div>
+<div dir="auto" class="left"><span class="org">Ping Identity</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:bcampbell@pingidentity.com" class="email">bcampbell@pingidentity.com</a>
 </div>
 </address>
 </section>
