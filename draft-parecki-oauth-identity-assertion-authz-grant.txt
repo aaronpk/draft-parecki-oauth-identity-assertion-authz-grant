@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 20 December 2025                                    Independent
+Expires: 22 December 2025                                    Independent
                                                              B. Campbell
                                                            Ping Identity
-                                                            18 June 2025
+                                                            20 June 2025
 
 
                  Identity Assertion Authorization Grant
@@ -17,9 +17,10 @@ Expires: 20 December 2025                                    Independent
 Abstract
 
    This specification provides a mechanism for an application to use an
-   identity assertion to obtain an access token for a third-party API
-   using Token Exchange [RFC8693] and JWT Profile for OAuth 2.0
-   Authorization Grants [RFC7523].
+   identity assertion to obtain an access token for a third-party API by
+   coordinating through a common enterprise identity provider using
+   Token Exchange [RFC8693] and JWT Profile for OAuth 2.0 Authorization
+   Grants [RFC7523].
 
 About This Document
 
@@ -56,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 December 2025.
+   This Internet-Draft will expire on 22 December 2025.
 
 Copyright Notice
 
@@ -120,26 +121,41 @@ Table of Contents
 
 1.  Introduction
 
+   In typical enterprise scenarios, applications are configured for
+   single sign-on to the enterprise identity provider (IdP) using OpenID
+   Connect or SAML.  This enables users to access all the necessary
+   enterprise applications using a single account at the IdP, and
+   enables the enterprise to manage which users can access which
+   applications.
+
+   When one application wants to access a user's data at another
+   application, it will start an interactive OAuth flow ([RFC6749]) to
+   obtain an access token for the application on behalf of the user.
+   This OAuth flow enables a direct app-to-app connection between the
+   two apps, and is not visible to the IdP used to log in to each app.
+
+   This specification enables this kind of "Cross App Access" to be
+   managed by the enterprise IdP, similar to how the IdP manages single
+   sign-on to individual applications.
+
    The draft specification Identity Chaining Across Trust Domains
    [I-D.ietf-oauth-identity-chaining] defines how to request a JWT
    authorization grant from an Authorization Server and exchange it for
    an Access Token at another Authorization Server in a different trust
-   domain.  The specification is an application of a combination of
-   OAuth 2.0 Token Exchange [RFC8693] and JSON Web Token (JWT) Profile
-   for OAuth 2.0 Client Authentication and Authorization Grants
-   [RFC7523].  The draft supports multiple different use cases by
-   leaving many details of the token exchange request and JWT
-   authorization grant unspecified.
+   domain.  The specification combines OAuth 2.0 Token Exchange
+   [RFC8693] and JSON Web Token (JWT) Profile for OAuth 2.0 Client
+   Authentication and Authorization Grants [RFC7523].  The draft
+   supports multiple different use cases by leaving many details of the
+   token exchange request and JWT authorization grant unspecified.
 
    This specification defines the additional details necessary to
-   support interoperable implementations when using identity tokens as
-   the input to the token exchange request.  This specification assumes
-   that there is a single authorization server that is trusted by two
-   applications in different trust domains, as typically found in an
-   enterprise scenario where the two applications allow users to log in
-   using the same enterprise identity provider.  The same enterprise
-   identity provider that is trusted by applications for single sign-on
-   can be extended to broker access to APIs as well.
+   support interoperable implementations in enterprise scenarios when
+   two applications are configured for single sign-on to the same
+   enterprise identity provider.  In particular, this specification uses
+   identity assertions as the input to the token exchange request.  This
+   way, the same enterprise identity provider that is trusted by
+   applications for single sign-on can be extended to broker access to
+   APIs.
 
 2.  Conventions and Definitions
 
@@ -151,15 +167,18 @@ Table of Contents
 
 2.1.  Roles
 
-   Client  Application that wants to obtain an OAuth 2.0 access token on
-      behalf of a signed-in user to an external/3rd party application's
-      API (Resource Server below).  In
+   Client  The application that wants to obtain an OAuth 2.0 access
+      token on behalf of a signed-in user to an external/3rd party
+      application's API (Resource Server below).  In
       [I-D.ietf-oauth-identity-chaining], this is the Client in trust
-      domain A.
+      domain A.  This is also sometimes referred to as the "Requesting
+      Application".
 
-   Resource Application  Application that provides an OAuth 2.0
+   Resource Application  The application that provides an OAuth 2.0
       Protected Resource.  In [I-D.ietf-oauth-identity-chaining], this
-      is the Protected Resource in trust domain B.
+      is the Protected Resource in trust domain B.  The Resource
+      Application is made up of both an Authorization Server and a
+      Resource Server as defined in Section 1.1 of [RFC6749].
 
    Authorization Server (IdP)  The Identity Provider that is trusted by
       a set of applications in an organization's app ecosystem.  In
@@ -389,9 +408,9 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
       token.)
 
    scope:  OPTIONAL if the scope of the issued token is identical to the
-      scope requested by the client; otherwise, it is REQUIRED.  This
-      may be fewer scopes than the application requested based on
-      various policies in the IdP.
+      scope requested by the client; otherwise, it is REQUIRED.  Various
+      policies in the IdP may result in different scopes being issued
+      from the scopes the application requested.
 
    expires_in:  RECOMMENDED - The lifetime in seconds of the
       authorization grant.
@@ -434,7 +453,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
    client_id:  REQUIRED - An identifier of the client that this JWT was
       issued to, which MUST be recognized by the Resource Application's
       authorization server.  For interoperability, the client identifier
-      SHOULD be a client_id as defined in Section 4.3 [RFC8693].
+      SHOULD be a client_id as defined in Section 4.3 of [RFC8693].
 
    jti:  REQUIRED - Unique ID of this JWT as defined in Section 4.1.7 of
       [RFC7519]
@@ -448,7 +467,8 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
       Section 3.3 of [RFC6749]
 
    The typ of the JWT indicated in the JWT header MUST be oauth-id-
-   jag+jwt.
+   jag+jwt.  Using typed JWTs is a recommendation of the JSON Web Token
+   Best Current Practices [RFC8725].
 
    An example JWT shown with expanded header and payload claims is
    below:
@@ -477,9 +497,9 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
    *  If the IdP is multi-tenant and uses the same issuer for all
       tenants, the Resource Application will already have IdP-specific
       logic to determine the tenant from the OpenID Connect ID Token
-      (e.g. the hd claim in Google) or SAML assertion, and will need to
-      use that if the IdP also has only one client registration for the
-      Resource Application.
+      (e.g. a custom hd claim in Google) or SAML assertion, and will
+      need to use that if the IdP also has only one client registration
+      for the Resource Application.
 
    *  sub should be an opaque ID, as iss+sub is unique.  The IdP might
       want to also include the user's email here, which it should do as
@@ -576,15 +596,15 @@ Cache-Control: no-store
    exchange.
 
    TBD: It may make more sense to request the Identity Assertion
-   Authorization Grant as an additional response_type on the
-   authorization request if using OIDC for SSO when performing a step-up
-   to skip the need for additional token exchange round-trip.
+   Authorization Grant in the authorization request if using OpenID
+   Connect for SSO when performing a step-up to skip the need for
+   additional token exchange round-trip.
 
 7.3.  Cross-Domain Use
 
    This specification is intended for cross-domain uses where the
    Client, Resource App, and Identity Provider are all in different
-   trust domains.  In particular, the Identity Provider SHOULD NOT issue
+   trust domains.  In particular, the Identity Provider MUST NOT issue
    access tokens in response to an ID-JAG it issued itself.  Doing so
    could lead to unintentional broadening of the scope of authorization.
 
@@ -680,13 +700,6 @@ Cache-Control: no-store
 
 9.2.  Informative References
 
-   [I-D.ietf-oauth-resource-metadata]
-              Jones, M. B., Hunt, P., and A. Parecki, "OAuth 2.0
-              Protected Resource Metadata", Work in Progress, Internet-
-              Draft, draft-ietf-oauth-resource-metadata-13, 15 October
-              2024, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              oauth-resource-metadata-13>.
-
    [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
               Authorization Server Metadata", RFC 8414,
               DOI 10.17487/RFC8414, June 2018,
@@ -696,6 +709,11 @@ Cache-Control: no-store
               Authentication Challenge Protocol", RFC 9470,
               DOI 10.17487/RFC9470, September 2023,
               <https://www.rfc-editor.org/rfc/rfc9470>.
+
+   [RFC9728]  Jones, M.B., Hunt, P., and A. Parecki, "OAuth 2.0
+              Protected Resource Metadata", RFC 9728,
+              DOI 10.17487/RFC9728, April 2025,
+              <https://www.rfc-editor.org/rfc/rfc9728>.
 
 Appendix A.  Use Cases
 
@@ -932,8 +950,8 @@ A.3.5.  LLM Agent calls Enterprise External Tool
 
    LLM Agent tool calls an external tool provided by an Enterprise SaaS
    Application (Resource Server) without a valid access token and is
-   issued an authentication challenge using
-   [I-D.ietf-oauth-resource-metadata]
+   issued an authentication challenge per Protected Resource Metadata
+   [RFC9728].
 
       Note: How agents discover available tools is out of scope of this
       specification
@@ -947,9 +965,8 @@ A.3.5.  LLM Agent calls Enterprise External Tool
      "https://saas.example.net/.well-known/oauth-protected-resource"
 
    LLM Agent fetches the external tool resource's OAuth 2.0 Protected
-   Resource Metadata per [I-D.ietf-oauth-resource-metadata] to
-   dynamically discover an authorization server that can issue an access
-   token for the resource.
+   Resource Metadata per [RFC9728] to dynamically discover an
+   authorization server that can issue an access token for the resource.
 
    GET /.well-known/oauth-protected-resource
    Host: saas.example.net
@@ -1138,7 +1155,7 @@ Acknowledgments
 
    The authors would like to thank the following people for their
    contributions and reviews of this specification: Kamron
-   Batmanghelich, Sofia Desenberg.
+   Batmanghelich, Sofia Desenberg, Dean H.  Saxe.
 
 Document History
 
@@ -1146,7 +1163,18 @@ Document History
 
    -04
 
+   *  Improved section references to other specs
+
+   *  Editorial clarifications
+
+   *  Updated references to RFC9728
+
+   *  Rewrote intro
+
    *  Added Brian Campbell as co-author
+
+   *  Changed "SHOULD NOT" to "MUST NOT" issue access tokens in response
+      to an ID-JAG it issued itself
 
    -03
 

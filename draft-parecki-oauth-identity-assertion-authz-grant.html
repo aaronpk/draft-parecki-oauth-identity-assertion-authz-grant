@@ -9,7 +9,7 @@
 <meta content="Karl McGuinness" name="author">
 <meta content="Brian Campbell" name="author">
 <meta content="
-       This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API using Token Exchange   and JWT Profile for OAuth 2.0 Authorization Grants  . 
+       This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API by coordinating through a common enterprise identity provider using Token Exchange   and JWT Profile for OAuth 2.0 Authorization Grants  . 
     " name="description">
 <meta content="xml2rfc 3.29.0" name="generator">
 <meta content="cross-domain" name="keyword">
@@ -1054,7 +1054,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Parecki, et al.</td>
-<td class="center">Expires 20 December 2025</td>
+<td class="center">Expires 22 December 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,12 +1067,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-parecki-oauth-identity-assertion-authz-grant-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-18" class="published">18 June 2025</time>
+<time datetime="2025-06-20" class="published">20 June 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-20">20 December 2025</time></dd>
+<dd class="expires"><time datetime="2025-12-22">22 December 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1093,7 +1093,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <h1 id="title">Identity Assertion Authorization Grant</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API using Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JWT Profile for OAuth 2.0 Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API by coordinating through a common enterprise identity provider using Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JWT Profile for OAuth 2.0 Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1130,7 +1130,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 22 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1310,8 +1310,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The draft specification Identity Chaining Across Trust Domains <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span> defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request. This specification assumes that there is a single authorization server that is trusted by two applications in different trust domains, as typically found in an enterprise scenario where the two applications allow users to log in using the same enterprise identity provider. The same enterprise identity provider that is trusted by applications for single sign-on can be extended to broker access to APIs as well.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-1">In typical enterprise scenarios, applications are configured for single sign-on to the enterprise identity provider (IdP) using OpenID Connect or SAML. This enables users to access all the necessary enterprise applications using a single account at the IdP, and enables the enterprise to manage which users can access which applications.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">When one application wants to access a user's data at another application, it will start an interactive OAuth flow (<span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>) to obtain an access token for the application on behalf of the user. This OAuth flow enables a direct app-to-app connection between the two apps, and is not visible to the IdP used to log in to each app.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This specification enables this kind of "Cross App Access" to be managed by the enterprise IdP, similar to how the IdP manages single sign-on to individual applications.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The draft specification Identity Chaining Across Trust Domains <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span> defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification combines OAuth 2.0 Token Exchange <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">This specification defines the additional details necessary to support interoperable implementations in enterprise scenarios when two applications are configured for single sign-on to the same enterprise identity provider. In particular, this specification uses identity assertions as the input to the token exchange request. This way, the same enterprise identity provider that is trusted by applications for single sign-on can be extended to broker access to APIs.<a href="#section-1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions-and-definitions">
@@ -1331,12 +1334,12 @@ appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶<
 <span class="break"></span><dl class="dlParallel" id="section-2.1-1">
           <dt id="section-2.1-1.1">Client</dt>
           <dd style="margin-left: 1.5em" id="section-2.1-1.2">
-            <p id="section-2.1-1.2.1">Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below). In <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span>, this is the Client in trust domain A.<a href="#section-2.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-1.2.1">The application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below). In <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span>, this is the Client in trust domain A. This is also sometimes referred to as the "Requesting Application".<a href="#section-2.1-1.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.1-1.3">Resource Application</dt>
           <dd style="margin-left: 1.5em" id="section-2.1-1.4">
-            <p id="section-2.1-1.4.1">Application that provides an OAuth 2.0 Protected Resource. In <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span>, this is the Protected Resource in trust domain B.<a href="#section-2.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-1.4.1">The application that provides an OAuth 2.0 Protected Resource. In <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span>, this is the Protected Resource in trust domain B. The Resource Application is made up of both an Authorization Server and a Resource Server as defined in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-1.1" class="relref">Section 1.1</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>.<a href="#section-2.1-1.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.1-1.5">Authorization Server (IdP)</dt>
@@ -1534,12 +1537,12 @@ Content-Type: application/json
 <dt id="section-5-2.11">
 <code>subject_token_type</code>:</dt>
         <dd style="margin-left: 1.5em" id="section-5-2.12">
-          <p id="section-5-2.12.1"><span class="bcp14">REQUIRED</span> - An identifier, as described in Section 3 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>, that indicates the type of the security token in the <code>subject_token</code> parameter. For an OpenID Connect ID Token: <code>urn:ietf:params:oauth:token-type:id_token</code>, or for a SAML assertion: <code>urn:ietf:params:oauth:token-type:saml2</code>.<a href="#section-5-2.12.1" class="pilcrow">¶</a></p>
+          <p id="section-5-2.12.1"><span class="bcp14">REQUIRED</span> - An identifier, as described in <span><a href="https://rfc-editor.org/rfc/rfc8693#section-3" class="relref">Section 3</a> of [<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>, that indicates the type of the security token in the <code>subject_token</code> parameter. For an OpenID Connect ID Token: <code>urn:ietf:params:oauth:token-type:id_token</code>, or for a SAML assertion: <code>urn:ietf:params:oauth:token-type:saml2</code>.<a href="#section-5-2.12.1" class="pilcrow">¶</a></p>
 </dd>
       <dd class="break"></dd>
 </dl>
-<p id="section-5-3">The additional parameters defined in Section 2.1 of <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> <code>actor_token</code> and <code>actor_token_type</code> are not used in this specification.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. Section 2.3.1 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> defines password-based authentication of the client (<code>client_id</code> and <code>client_secret</code>), however, client authentication is extensible and other mechanisms are possible. For example, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> defines client authentication using bearer JSON Web Tokens using <code>client_assertion</code> and <code>client_assertion_type</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
+<p id="section-5-3">The additional parameters defined in <span><a href="https://rfc-editor.org/rfc/rfc8693#section-2.1" class="relref">Section 2.1</a> of [<a href="#RFC8693" class="cite xref">RFC8693</a>]</span> <code>actor_token</code> and <code>actor_token_type</code> are not used in this specification.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. <span><a href="https://rfc-editor.org/rfc/rfc6749#section-2.3.1" class="relref">Section 2.3.1</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span> defines password-based authentication of the client (<code>client_id</code> and <code>client_secret</code>), however, client authentication is extensible and other mechanisms are possible. For example, <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> defines client authentication using bearer JSON Web Tokens using <code>client_assertion</code> and <code>client_assertion_type</code>.<a href="#section-5-4" class="pilcrow">¶</a></p>
 <p id="section-5-5">The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion (<span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span>) as the client authentication method, (tokens truncated for brevity):<a href="#section-5-5" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5-6">
 <pre>
@@ -1611,7 +1614,7 @@ Pragma: no-cache
 <dt id="section-5.2-3.7">
 <code>scope</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.2-3.8">
-            <p id="section-5.2-3.8.1"><span class="bcp14">OPTIONAL</span> if the scope of the issued token is identical to the scope requested by the client; otherwise, it is <span class="bcp14">REQUIRED</span>. This may be fewer scopes than the application requested based on various policies in the IdP.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-3.8.1"><span class="bcp14">OPTIONAL</span> if the scope of the issued token is identical to the scope requested by the client; otherwise, it is <span class="bcp14">REQUIRED</span>. Various policies in the IdP may result in different scopes being issued from the scopes the application requested.<a href="#section-5.2-3.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.2-3.9">
@@ -1665,47 +1668,47 @@ Cache-Control: no-store
 <dt id="section-5.3-2.3">
 <code>sub</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.4">
-            <p id="section-5.3-2.4.1"><span class="bcp14">REQUIRED</span> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.4.1"><span class="bcp14">REQUIRED</span> - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.2" class="relref">Section 4.1.2</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.5">
 <code>aud</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.6">
-            <p id="section-5.3-2.6.1"><span class="bcp14">REQUIRED</span> - The Issuer URL of the Resource Application's authorization server as defined in Section 4.1.3 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.6.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.6.1"><span class="bcp14">REQUIRED</span> - The Issuer URL of the Resource Application's authorization server as defined in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.3" class="relref">Section 4.1.3</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.7">
 <code>client_id</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.8">
-            <p id="section-5.3-2.8.1"><span class="bcp14">REQUIRED</span> - An identifier of the client that this JWT was issued to, which <span class="bcp14">MUST</span> be recognized by the Resource Application's authorization server. For interoperability, the client identifier <span class="bcp14">SHOULD</span> be a <code>client_id</code> as defined in Section 4.3 <span>[<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>.<a href="#section-5.3-2.8.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.8.1"><span class="bcp14">REQUIRED</span> - An identifier of the client that this JWT was issued to, which <span class="bcp14">MUST</span> be recognized by the Resource Application's authorization server. For interoperability, the client identifier <span class="bcp14">SHOULD</span> be a <code>client_id</code> as defined in <span><a href="https://rfc-editor.org/rfc/rfc8693#section-4.3" class="relref">Section 4.3</a> of [<a href="#RFC8693" class="cite xref">RFC8693</a>]</span>.<a href="#section-5.3-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.9">
 <code>jti</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.10">
-            <p id="section-5.3-2.10.1"><span class="bcp14">REQUIRED</span> - Unique ID of this JWT as defined in Section 4.1.7 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.10.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.10.1"><span class="bcp14">REQUIRED</span> - Unique ID of this JWT as defined in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.7" class="relref">Section 4.1.7</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.11">
 <code>exp</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.12">
-            <p id="section-5.3-2.12.1"><span class="bcp14">REQUIRED</span> - as defined in Section 4.1.4 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.12.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.12.1"><span class="bcp14">REQUIRED</span> - as defined in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.4" class="relref">Section 4.1.4</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.13">
 <code>iat</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.14">
-            <p id="section-5.3-2.14.1"><span class="bcp14">REQUIRED</span> - as defined in Section 4.1.6 of <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.14.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.14.1"><span class="bcp14">REQUIRED</span> - as defined in <span><a href="https://rfc-editor.org/rfc/rfc7519#section-4.1.6" class="relref">Section 4.1.6</a> of [<a href="#RFC7519" class="cite xref">RFC7519</a>]</span><a href="#section-5.3-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-5.3-2.15">
 <code>scope</code>:</dt>
           <dd style="margin-left: 1.5em" id="section-5.3-2.16">
-            <p id="section-5.3-2.16.1"><span class="bcp14">OPTIONAL</span> - a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span><a href="#section-5.3-2.16.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-2.16.1"><span class="bcp14">OPTIONAL</span> - a JSON string containing a space-separated list of scopes associated with the token, in the format described in <span><a href="https://rfc-editor.org/rfc/rfc6749#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC6749" class="cite xref">RFC6749</a>]</span><a href="#section-5.3-2.16.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-5.3-3">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">The <code>typ</code> of the JWT indicated in the JWT header <span class="bcp14">MUST</span> be <code>oauth-id-jag+jwt</code>. Using typed JWTs is a recommendation of the JSON Web Token Best Current Practices <span>[<a href="#RFC8725" class="cite xref">RFC8725</a>]</span>.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
 <p id="section-5.3-4">An example JWT shown with expanded header and payload claims is below:<a href="#section-5.3-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-5.3-5">
 <pre>
@@ -1731,7 +1734,7 @@ signature
 <p id="section-5.3-7">Implementation notes:<a href="#section-5.3-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.3-8.1">
-            <p id="section-5.3-8.1.1">If the IdP is multi-tenant and uses the same <code>issuer</code> for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from the OpenID Connect ID Token (e.g. the <code>hd</code> claim in Google) or SAML assertion, and will need to use that if the IdP also has only one client registration for the Resource Application.<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.3-8.1.1">If the IdP is multi-tenant and uses the same <code>issuer</code> for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from the OpenID Connect ID Token (e.g. a custom <code>hd</code> claim in Google) or SAML assertion, and will need to use that if the IdP also has only one client registration for the Resource Application.<a href="#section-5.3-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.3-8.2">
             <p id="section-5.3-8.2.1"><code>sub</code> should be an opaque ID, as <code>iss</code>+<code>sub</code> is unique. The IdP might want to also include the user's email here, which it should do as a new <code>email</code> claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.<a href="#section-5.3-8.2.1" class="pilcrow">¶</a></p>
@@ -1851,7 +1854,7 @@ Cache-Control: no-store
 </pre><a href="#section-7.2-2" class="pilcrow">¶</a>
 </div>
 <p id="section-7.2-3">The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.<a href="#section-7.2-3" class="pilcrow">¶</a></p>
-<p id="section-7.2-4">TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional <code>response_type</code> on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
+<p id="section-7.2-4">TBD: It may make more sense to request the Identity Assertion Authorization Grant in the authorization request if using OpenID Connect for SSO when performing a step-up to skip the need for additional token exchange round-trip.<a href="#section-7.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="cross-domain-use">
@@ -1859,7 +1862,7 @@ Cache-Control: no-store
         <h3 id="name-cross-domain-use">
 <a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-cross-domain-use" class="section-name selfRef">Cross-Domain Use</a>
         </h3>
-<p id="section-7.3-1">This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider <span class="bcp14">SHOULD NOT</span> issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+<p id="section-7.3-1">This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider <span class="bcp14">MUST NOT</span> issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1973,17 +1976,17 @@ Cache-Control: no-store
 <a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="I-D.ietf-oauth-resource-metadata">[I-D.ietf-oauth-resource-metadata]</dt>
-        <dd>
-<span class="refAuthor">Jones, M. B.</span>, <span class="refAuthor">Hunt, P.</span>, and <span class="refAuthor">A. Parecki</span>, <span class="refTitle">"OAuth 2.0 Protected Resource Metadata"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-resource-metadata-13</span>, <time datetime="2024-10-15" class="refDate">15 October 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-resource-metadata-13">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-resource-metadata-13</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC8414">[RFC8414]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Sakimura, N.</span>, and <span class="refAuthor">J. Bradley</span>, <span class="refTitle">"OAuth 2.0 Authorization Server Metadata"</span>, <span class="seriesInfo">RFC 8414</span>, <span class="seriesInfo">DOI 10.17487/RFC8414</span>, <time datetime="2018-06" class="refDate">June 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8414">https://www.rfc-editor.org/rfc/rfc8414</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9470">[RFC9470]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Bertocci, V.</span> and <span class="refAuthor">B. Campbell</span>, <span class="refTitle">"OAuth 2.0 Step Up Authentication Challenge Protocol"</span>, <span class="seriesInfo">RFC 9470</span>, <span class="seriesInfo">DOI 10.17487/RFC9470</span>, <time datetime="2023-09" class="refDate">September 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9470">https://www.rfc-editor.org/rfc/rfc9470</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9728">[RFC9728]</dt>
+      <dd>
+<span class="refAuthor">Jones, M.B.</span>, <span class="refAuthor">Hunt, P.</span>, and <span class="refAuthor">A. Parecki</span>, <span class="refTitle">"OAuth 2.0 Protected Resource Metadata"</span>, <span class="seriesInfo">RFC 9728</span>, <span class="seriesInfo">DOI 10.17487/RFC9728</span>, <time datetime="2025-04" class="refDate">April 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9728">https://www.rfc-editor.org/rfc/rfc9728</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2215,7 +2218,7 @@ Content-Type: application/json
           <h4 id="name-llm-agent-calls-enterprise-">
 <a href="#appendix-A.3.5" class="section-number selfRef">A.3.5. </a><a href="#name-llm-agent-calls-enterprise-" class="section-name selfRef">LLM Agent calls Enterprise External Tool</a>
           </h4>
-<p id="appendix-A.3.5-1">LLM Agent tool calls an external tool provided by an Enterprise SaaS Application (Resource Server) without a valid access token and is issued an authentication challenge using <span>[<a href="#I-D.ietf-oauth-resource-metadata" class="cite xref">I-D.ietf-oauth-resource-metadata</a>]</span><a href="#appendix-A.3.5-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.5-1">LLM Agent tool calls an external tool provided by an Enterprise SaaS Application (Resource Server) without a valid access token and is issued an authentication challenge per Protected Resource Metadata <span>[<a href="#RFC9728" class="cite xref">RFC9728</a>]</span>.<a href="#appendix-A.3.5-1" class="pilcrow">¶</a></p>
 <ul class="normal ulEmpty">
 <li class="normal ulEmpty" id="appendix-A.3.5-2.1">
               <p id="appendix-A.3.5-2.1.1">Note: How agents discover available tools is out of scope of this specification<a href="#appendix-A.3.5-2.1.1" class="pilcrow">¶</a></p>
@@ -2232,7 +2235,7 @@ WWW-Authenticate: Bearer resource_metadata=
   "https://saas.example.net/.well-known/oauth-protected-resource"
 </pre><a href="#appendix-A.3.5-3" class="pilcrow">¶</a>
 </div>
-<p id="appendix-A.3.5-4">LLM Agent fetches the external tool resource's <code>OAuth 2.0 Protected Resource Metadata</code> per <span>[<a href="#I-D.ietf-oauth-resource-metadata" class="cite xref">I-D.ietf-oauth-resource-metadata</a>]</span> to dynamically discover an authorization server that can issue an access token for the resource.<a href="#appendix-A.3.5-4" class="pilcrow">¶</a></p>
+<p id="appendix-A.3.5-4">LLM Agent fetches the external tool resource's OAuth 2.0 Protected Resource Metadata per <span>[<a href="#RFC9728" class="cite xref">RFC9728</a>]</span> to dynamically discover an authorization server that can issue an access token for the resource.<a href="#appendix-A.3.5-4" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="appendix-A.3.5-5">
 <pre>
 GET /.well-known/oauth-protected-resource
@@ -2430,7 +2433,7 @@ Content-Type: application/json
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-1">The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Dean H. Saxe.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="document-history">
@@ -2442,7 +2445,22 @@ Content-Type: application/json
 <p id="appendix-C-2">-04<a href="#appendix-C-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-C-3.1">
-          <p id="appendix-C-3.1.1">Added Brian Campbell as co-author<a href="#appendix-C-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-C-3.1.1">Improved section references to other specs<a href="#appendix-C-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-3.2">
+          <p id="appendix-C-3.2.1">Editorial clarifications<a href="#appendix-C-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-3.3">
+          <p id="appendix-C-3.3.1">Updated references to RFC9728<a href="#appendix-C-3.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-3.4">
+          <p id="appendix-C-3.4.1">Rewrote intro<a href="#appendix-C-3.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-3.5">
+          <p id="appendix-C-3.5.1">Added Brian Campbell as co-author<a href="#appendix-C-3.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-C-3.6">
+          <p id="appendix-C-3.6.1">Changed "<span class="bcp14">SHOULD NOT</span>" to "<span class="bcp14">MUST NOT</span>" issue access tokens in response to an ID-JAG it issued itself<a href="#appendix-C-3.6.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
 <p id="appendix-C-4">-03<a href="#appendix-C-4" class="pilcrow">¶</a></p>
