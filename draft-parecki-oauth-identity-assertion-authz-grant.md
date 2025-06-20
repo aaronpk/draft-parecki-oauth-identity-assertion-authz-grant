@@ -744,7 +744,7 @@ LLM Agent tool calls an external tool provided by the Enterprise SaaS Applicatio
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Dean H. Saxe.
+The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Pieter Kasselman, Kai Lehmann, Dean H. Saxe.
 
 # Document History
 {:numbered="false"}
