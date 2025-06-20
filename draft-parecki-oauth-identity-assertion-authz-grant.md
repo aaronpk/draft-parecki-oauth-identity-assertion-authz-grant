@@ -53,21 +53,27 @@ normative:
   RFC2046:
 
 informative:
-  RFC9470:
-  I-D.ietf-oauth-resource-metadata:
   RFC8414:
+  RFC9470:
+  RFC9728:
 
 --- abstract
 
-This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API using Token Exchange {{RFC8693}} and JWT Profile for OAuth 2.0 Authorization Grants {{RFC7523}}.
+This specification provides a mechanism for an application to use an identity assertion to obtain an access token for a third-party API by coordinating through a common enterprise identity provider using Token Exchange {{RFC8693}} and JWT Profile for OAuth 2.0 Authorization Grants {{RFC7523}}.
 
 --- middle
 
 # Introduction
 
-The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification is an application of a combination of OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.
+In typical enterprise scenarios, applications are configured for single sign-on to the enterprise identity provider (IdP) using OpenID Connect or SAML. This enables users to access all the necessary enterprise applications using a single account at the IdP, and enables the enterprise to manage which users can access which applications.
 
-This specification defines the additional details necessary to support interoperable implementations when using identity tokens as the input to the token exchange request. This specification assumes that there is a single authorization server that is trusted by two applications in different trust domains, as typically found in an enterprise scenario where the two applications allow users to log in using the same enterprise identity provider. The same enterprise identity provider that is trusted by applications for single sign-on can be extended to broker access to APIs as well.
+When one application wants to access a user's data at another application, it will start an interactive OAuth flow ({{RFC6749}}) to obtain an access token for the application on behalf of the user. This OAuth flow enables a direct app-to-app connection between the two apps, and is not visible to the IdP used to log in to each app.
+
+This specification enables this kind of "Cross App Access" to be managed by the enterprise IdP, similar to how the IdP manages single sign-on to individual applications.
+
+The draft specification Identity Chaining Across Trust Domains {{I-D.ietf-oauth-identity-chaining}} defines how to request a JWT authorization grant from an Authorization Server and exchange it for an Access Token at another Authorization Server in a different trust domain. The specification combines OAuth 2.0 Token Exchange {{RFC8693}} and JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants {{RFC7523}}. The draft supports multiple different use cases by leaving many details of the token exchange request and JWT authorization grant unspecified.
+
+This specification defines the additional details necessary to support interoperable implementations in enterprise scenarios when two applications are configured for single sign-on to the same enterprise identity provider. In particular, this specification uses identity assertions as the input to the token exchange request. This way, the same enterprise identity provider that is trusted by applications for single sign-on can be extended to broker access to APIs.
 
 
 # Conventions and Definitions
@@ -77,10 +83,10 @@ This specification defines the additional details necessary to support interoper
 ## Roles
 
 Client
-: Application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below). In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A.
+: The application that wants to obtain an OAuth 2.0 access token on behalf of a signed-in user to an external/3rd party application's API (Resource Server below). In {{I-D.ietf-oauth-identity-chaining}}, this is the Client in trust domain A. This is also sometimes referred to as the "Requesting Application".
 
 Resource Application
-: Application that provides an OAuth 2.0 Protected Resource. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B.
+: The application that provides an OAuth 2.0 Protected Resource. In {{I-D.ietf-oauth-identity-chaining}}, this is the Protected Resource in trust domain B. The Resource Application is made up of both an Authorization Server and a Resource Server as defined in {{Section 1.1 of RFC6749}}.
 
 Authorization Server (IdP)
 : The Identity Provider that is trusted by a set of applications in an organization's app ecosystem. In {{I-D.ietf-oauth-identity-chaining}}, this is the Authorization Server in trust domain A, which is also trusted by the Authorization Server of the Protected Resource in trust domain B.
@@ -194,11 +200,11 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 : REQUIRED - The identity assertion (e.g. the OpenID Connect ID Token or SAML assertion) for the target end-user.
 
 `subject_token_type`:
-: REQUIRED - An identifier, as described in Section 3 of {{RFC8693}}, that indicates the type of the security token in the `subject_token` parameter. For an OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`, or for a SAML assertion: `urn:ietf:params:oauth:token-type:saml2`.
+: REQUIRED - An identifier, as described in {{Section 3 of RFC8693}}, that indicates the type of the security token in the `subject_token` parameter. For an OpenID Connect ID Token: `urn:ietf:params:oauth:token-type:id_token`, or for a SAML assertion: `urn:ietf:params:oauth:token-type:saml2`.
 
-The additional parameters defined in Section 2.1 of {{RFC8693}} `actor_token` and `actor_token_type` are not used in this specification.
+The additional parameters defined in {{Section 2.1 of RFC8693}} `actor_token` and `actor_token_type` are not used in this specification.
 
-Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. Section 2.3.1 of {{RFC6749}} defines password-based authentication of the client (`client_id` and `client_secret`), however, client authentication is extensible and other mechanisms are possible. For example, {{RFC7523}} defines client authentication using bearer JSON Web Tokens using `client_assertion` and `client_assertion_type`.
+Client authentication to the authorization server is done using the standard mechanisms provided by OAuth 2.0. {{Section 2.3.1 of RFC6749}} defines password-based authentication of the client (`client_id` and `client_secret`), however, client authentication is extensible and other mechanisms are possible. For example, {{RFC7523}} defines client authentication using bearer JSON Web Tokens using `client_assertion` and `client_assertion_type`.
 
 The example below uses an ID Token as the Identity Assertion, and uses a JWT Bearer Assertion ({{RFC7523}}) as the client authentication method, (tokens truncated for brevity):
 
@@ -281,27 +287,27 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 : REQUIRED - The IdP `issuer` URL as defined in Section 4.1.1 of {{RFC7519}}
 
 `sub`:
-: REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in Section 4.1.2 of {{RFC7519}}
+: REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in {{Section 4.1.2 of RFC7519}}
 
 `aud`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in Section 4.1.3 of {{RFC7519}}
+: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in {{Section 4.1.3 of RFC7519}}
 
 `client_id`:
-: REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in Section 4.3 {{RFC8693}}.
+: REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in {{Section 4.3 RFC8693}}.
 
 `jti`:
-: REQUIRED - Unique ID of this JWT as defined in Section 4.1.7 of {{RFC7519}}
+: REQUIRED - Unique ID of this JWT as defined in {{Section 4.1.7 of RFC7519}}
 
 `exp`:
-: REQUIRED - as defined in Section 4.1.4 of {{RFC7519}}
+: REQUIRED - as defined in {{Section 4.1.4 of RFC7519}}
 
 `iat`:
-: REQUIRED - as defined in Section 4.1.6 of {{RFC7519}}
+: REQUIRED - as defined in {{Section 4.1.6 of RFC7519}}
 
 `scope`:
-: OPTIONAL - a JSON string containing a space-separated list of scopes associated with the token, in the format described in Section 3.3 of {{RFC6749}}
+: OPTIONAL - a JSON string containing a space-separated list of scopes associated with the token, in the format described in {{Section 3.3 of RFC6749}}
 
-The `typ` of the JWT indicated in the JWT header MUST be `oauth-id-jag+jwt`.
+The `typ` of the JWT indicated in the JWT header MUST be `oauth-id-jag+jwt`. Using typed JWTs is a recommendation of the JSON Web Token Best Current Practices {{RFC8725}}.
 
 An example JWT shown with expanded header and payload claims is below:
 
@@ -326,7 +332,7 @@ The authorization server MAY add additional claims as necessary.
 
 Implementation notes:
 
-* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from the OpenID Connect ID Token (e.g. the `hd` claim in Google) or SAML assertion, and will need to use that if the IdP also has only one client registration for the Resource Application.
+* If the IdP is multi-tenant and uses the same `issuer` for all tenants, the Resource Application will already have IdP-specific logic to determine the tenant from the OpenID Connect ID Token (e.g. a custom `hd` claim in Google) or SAML assertion, and will need to use that if the IdP also has only one client registration for the Resource Application.
 * `sub` should be an opaque ID, as `iss`+`sub` is unique. The IdP might want to also include the user's email here, which it should do as a new `email` claim. This would let the app dedupe existing users who may have an account with an email address but have not done SSO yet.
 
 
@@ -403,7 +409,7 @@ In the initial token exchange request, the IdP may require step-up authenticatio
 
 The Client would need to redirect the user back to the IdP to obtain a new assertion that meets the requirements and retry the token exchange.
 
-TBD: It may make more sense to request the Identity Assertion Authorization Grant as an additional `response_type` on the authorization request if using OIDC for SSO when performing a step-up to skip the need for additional token exchange round-trip.
+TBD: It may make more sense to request the Identity Assertion Authorization Grant in the authorization request if using OpenID Connect for SSO when performing a step-up to skip the need for additional token exchange round-trip.
 
 ## Cross-Domain Use
 
@@ -570,7 +576,7 @@ LLM Agent now has an identity binding for context
 
 ### LLM Agent calls Enterprise External Tool
 
-LLM Agent tool calls an external tool provided by an Enterprise SaaS Application (Resource Server) without a valid access token and is issued an authentication challenge using {{I-D.ietf-oauth-resource-metadata}}
+LLM Agent tool calls an external tool provided by an Enterprise SaaS Application (Resource Server) without a valid access token and is issued an authentication challenge per Protected Resource Metadata {{RFC9728}}.
 
 > Note: How agents discover available tools is out of scope of this specification
 
@@ -582,7 +588,7 @@ LLM Agent tool calls an external tool provided by an Enterprise SaaS Application
     WWW-Authenticate: Bearer resource_metadata=
       "https://saas.example.net/.well-known/oauth-protected-resource"
 
-LLM Agent fetches the external tool resource's `OAuth 2.0 Protected Resource Metadata` per {{I-D.ietf-oauth-resource-metadata}} to dynamically discover an authorization server that can issue an access token for the resource.
+LLM Agent fetches the external tool resource's OAuth 2.0 Protected Resource Metadata per {{RFC9728}} to dynamically discover an authorization server that can issue an access token for the resource.
 
     GET /.well-known/oauth-protected-resource
     Host: saas.example.net
@@ -747,6 +753,10 @@ The authors would like to thank the following people for their contributions and
 
 -04
 
+* Improved section references to other specs
+* Editorial clarifications
+* Updated references to RFC9728
+* Rewrote intro
 * Added Brian Campbell as co-author
 
 -03
