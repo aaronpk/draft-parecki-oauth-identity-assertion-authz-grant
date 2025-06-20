@@ -256,7 +256,7 @@ If access is granted, the IdP creates a signed Identity Assertion Authorization 
 : REQUIRED - `N_A` (because this is not an OAuth access token.)
 
 `scope`:
-: OPTIONAL if the scope of the issued token is identical to the scope requested by the client; otherwise, it is REQUIRED. This may be fewer scopes than the application requested based on various policies in the IdP.
+: OPTIONAL if the scope of the issued token is identical to the scope requested by the client; otherwise, it is REQUIRED. Various policies in the IdP may result in different scopes being issued from the scopes the application requested.
 
 `expires_in`:
 : RECOMMENDED - The lifetime in seconds of the authorization grant.
@@ -413,7 +413,7 @@ TBD: It may make more sense to request the Identity Assertion Authorization Gran
 
 ## Cross-Domain Use
 
-This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider SHOULD NOT issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.
+This specification is intended for cross-domain uses where the Client, Resource App, and Identity Provider are all in different trust domains. In particular, the Identity Provider MUST NOT issue access tokens in response to an ID-JAG it issued itself. Doing so could lead to unintentional broadening of the scope of authorization.
 
 
 # IANA Considerations
@@ -744,7 +744,7 @@ LLM Agent tool calls an external tool provided by the Enterprise SaaS Applicatio
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg.
+The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Dean H. Saxe.
 
 # Document History
 {:numbered="false"}
@@ -758,6 +758,7 @@ The authors would like to thank the following people for their contributions and
 * Updated references to RFC9728
 * Rewrote intro
 * Added Brian Campbell as co-author
+* Changed "SHOULD NOT" to "MUST NOT" issue access tokens in response to an ID-JAG it issued itself
 
 -03
 
