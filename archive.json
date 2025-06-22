@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-19T00:47:39.065665+00:00",
+  "timestamp": "2025-06-22T00:53:07.507859+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -123,15 +123,15 @@
       "id": "I_kwDOKv5r-s6Dbsyk",
       "title": "Identity Assertion Authz Grant allows broadening the scope",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/6",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "obfuscoder",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "I followed the presentation at the IETF 119 for this topic. The profile describes how an ID Token is used to get a JWT Authorization Grant and then to get an Access Token for that JWT Authorization Grant. The scope can be defined by the client when requesting the access token.\r\n\r\nAs the JWT Authorization Grant profile is designed to allow interop across several domains, each AS in the participating domain will support creating authorization grant JWTs as well as accepting authorization grant JWTs to issue access tokens.\r\n\r\nUsually a client receives an access token alongside the ID Token and the client can use Token Exchange to get additional access tokens with equal or narrowed down scope.\r\n\r\nThe ID Token does not contain any scope. So even if a client only received an Access Token with a specific narrow scope, the client could abuse this grant by asking AS of domain A for an authorization grant JWT based on the Id Token and then use this authz grant JWT at the AS of domain A again to obtain a new access token with arbitrary scope (up to what is allowed for the client as per policy).\r\n\r\nAlthough this could be prohibited by the AS not accepting authorization grant JWTs it issued itself, the client could request the authorization grant JWT from the AS of domain B with just a couple more steps.\r\n\r\nGranted, this may not be relevant for the enterprise environment the JWT authorization grant profile is meant for as the End-User is usually not asked for giving consent to the scope requested by clients and instead the allowed scope in defined by policies within the AS configs. However, I'd like to ask if this is something worth to consider.",
       "createdAt": "2024-03-25T07:25:11Z",
-      "updatedAt": "2024-07-02T20:12:06Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-20T23:07:33Z",
+      "closedAt": "2025-06-20T23:07:33Z",
       "comments": [
         {
           "author": "sdesen",
@@ -146,6 +146,13 @@
           "body": "I added a brief section in the security considerations about this. It could probably use some more filling out.",
           "createdAt": "2024-07-02T20:12:05Z",
           "updatedAt": "2024-07-02T20:12:05Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "At Dean's suggestion, I changed this to \"MUST NOT\".",
+          "createdAt": "2025-06-20T23:07:33Z",
+          "updatedAt": "2025-06-20T23:07:33Z"
         }
       ]
     },
@@ -351,7 +358,7 @@
       "labels": [],
       "body": "\"client_id: : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a client_id as defined in Section 4.3 {{RFC8693}}.\"\n\nIs the expectation for this draft that the same client_id is used and registered with different authorisation servers in different domains (in this case the IdP and Resource Application Authorization Server? This might get unwieldy at scale, especially in a world where a client may have to register with multiple authorisation servers.\n\nAs an alternative, some allowance for supporting multiple client_ids might be needed. This may be either through some kind of static mapping (also hard to maintain), or by allowing the client to specify additional client_ids for which the assertion may be used. \n\nAn additional point to clarify may be that the Resource Appliction's Authorization Server MUST verifiy that the client_id in the assertion match the client_id of the client presenting the assertion.",
       "createdAt": "2025-04-28T10:02:31Z",
-      "updatedAt": "2025-05-02T09:53:24Z",
+      "updatedAt": "2025-06-20T23:06:16Z",
       "closedAt": null,
       "comments": [
         {
@@ -395,6 +402,13 @@
           "body": "Agreed that we will need multiple solutions for client_id. ",
           "createdAt": "2025-05-02T09:53:22Z",
           "updatedAt": "2025-05-02T09:53:22Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Is there any suggested changes needed here?",
+          "createdAt": "2025-06-20T23:06:16Z",
+          "updatedAt": "2025-06-20T23:06:16Z"
         }
       ]
     },
@@ -403,16 +417,24 @@
       "id": "I_kwDOKv5r-s61Mtvp",
       "title": "Nits in the draft",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/19",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "deansaxe",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "After reviewing the draft and discussing with @aaronpk last week, I have two nits to discuss to help clarify the language in the doc:\n\nSection 5.2 under **scope** states, \"This may be fewer scopes than the application requested\".  I believe the intent is that the scopes cannot grow in their impact.  This may be fewer in number, or it may be more scopes with a narrower set of authorized actions.  I suggest rewriting this slightly to clarify the intent is to constrain the scope, not the number of scopes in use.\n\nSection 7.3 states, \"The Identity Providers SHOULD NOT issue access tokens in response to an ID-JAG it issued itself\".  I agree with the intent, but stronger language is necessary.  I suggest changing this to \"MUST NOT\".\n\n",
       "createdAt": "2025-05-05T15:17:31Z",
-      "updatedAt": "2025-05-05T15:17:31Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-20T23:08:07Z",
+      "closedAt": "2025-06-20T23:08:07Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "> Section 5.2 under scope states, \"This may be fewer scopes than the application requested\".\n\nThanks, I'm going to copy the scope language from RFC6749 and use \"different\" instead of \"fewer\".\n\n> Section 7.3 states, \"The Identity Providers SHOULD NOT issue access tokens in response to an ID-JAG it issued itself\"\n\nAgreed, I don't see any harm in saying MUST NOT here. ",
+          "createdAt": "2025-06-20T23:01:35Z",
+          "updatedAt": "2025-06-20T23:01:35Z"
+        }
+      ]
     },
     {
       "number": 20,
@@ -480,7 +502,7 @@
       "labels": [],
       "body": "**Assumptions:**\n\n* Authorization Servers identify Resource Servers with globally unique URIs\n\n**Solution:**\n\nChange the definition of the `resource` parameter to identify the resource server that the final access token will be used at. \n\n```\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&resource=https://api.example.com/\n&scope=read\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\n**Notes:**\n\n* The IdP would need to be able to uniquely identify the resource identifier, and know which authorization server is used by that resource server. The IdP could include both the AS issuer and RS identifier in the ID Assertion JWT.\n* This requires that resource identifiers are globally unique, and the IdP will need to validate that the developer of the app controls the URL, to avoid a random person from using `https://google.com/` as their resource identifier.\n* Not everyone actually uses resource identifiers or has multiple resources under an AS, so it's not clear what value to use in those cases. Just the AS issuer identifier?\n\n",
       "createdAt": "2025-06-18T22:33:17Z",
-      "updatedAt": "2025-06-18T23:40:55Z",
+      "updatedAt": "2025-06-20T21:41:26Z",
       "closedAt": null,
       "comments": [
         {
@@ -496,6 +518,20 @@
           "body": "Both this approach and #24 have the same challenge with `resource` or `audience` being  \"where the client intends to use the requested security token\".   The ID Assertion Grant is not an access token so it must first be exchanged for an access token but still needs to capture the authorization needed for an access token.     Since we are defining a new token type with its own semantics, I'm OK with this ambiguity as the end-result is authorization the requested resource. ",
           "createdAt": "2025-06-18T23:40:55Z",
           "updatedAt": "2025-06-18T23:40:55Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "The language there indicates \"target service\" which could be a combined application of the authorization server and resource server. The current implemented treats scopes as the scopes used for the eventual resource server token, further blurring the lines.",
+          "createdAt": "2025-06-19T22:41:56Z",
+          "updatedAt": "2025-06-19T22:41:56Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "> If we assume an ID Assertion Grant only supports a single issuer (aka authorization server) that has 0 or more resources then we could support multiple resource params in the request where at least 1 param value must the issuer. This would address your last point of \"Not everyone actually uses resource identifiers or has multiple resources under an AS, so it's not clear what value to use in those cases. Just the AS issuer identifier?\"\n\nI added this as a new option: #26 ",
+          "createdAt": "2025-06-20T21:41:25Z",
+          "updatedAt": "2025-06-20T21:41:25Z"
         }
       ]
     },
@@ -511,9 +547,17 @@
       "labels": [],
       "body": "Token Exchange defines `resource` as a URI and `audience` as a string.\n\nWe could use `audience` to identify the AS issuer URL, and `resource` to identify the resource server.\n\n```\nPOST /oauth2/token HTTP/1.1\nHost: acme.idp.example\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&audience=https://auth.example.com/\n&resource=https://acme.chat.example/\n&scope=chat.read+chat.history\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\n**Notes:**\n\n* This maps most cleanly to Resource Indicators (RFC8707)\n* This slightly violates the meaning of the `audience` and `resource` parameters in Token Exchange, since Token Exchange says that the client is asking for a token usable at all the requested target services.\n* For services that don't have a resource identifier, the `resource` parameter could be omitted without it being weird.",
       "createdAt": "2025-06-18T22:38:29Z",
-      "updatedAt": "2025-06-18T22:52:38Z",
+      "updatedAt": "2025-06-20T10:34:30Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "panva",
+          "authorAssociation": "NONE",
+          "body": "> This slightly violates the meaning of the audience and resource parameters in Token Exchange, since Token Exchange says that the client is asking for a token usable at all the requested target services.\n\nI believe we could squint a bit here knowing that what Token Exchange issues here is `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`, i.e. not an actual access token.\n\nThe result of this being the following assertion\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"aud\": \"https://auth.example.com/\",\n  \"resource\": \"https://acme.chat.example/\", // or \"resource\": [\"resource1\", \"resource2\", ...n] when multiple resource parameters are used\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\nI think this is OK and most expressive of the three #22 linked threads.",
+          "createdAt": "2025-06-20T10:23:46Z",
+          "updatedAt": "2025-06-20T10:34:30Z"
+        }
+      ]
     },
     {
       "number": 25,
@@ -527,7 +571,7 @@
       "labels": [],
       "body": "The `audience` value could be a structured value such as:\n\n`audience={\"as\":\"https://login.example.com/\",\"resource\":\"https://chat.example.com/\"}`\n\nA PR for this is in #21\n\n**Notes:**\n\n* For services that don't use resource identifiers, the `resource` value can be left out, however that leaves just one value in the JSON object which looks silly.",
       "createdAt": "2025-06-18T22:45:35Z",
-      "updatedAt": "2025-06-18T23:26:31Z",
+      "updatedAt": "2025-06-19T22:45:41Z",
       "closedAt": null,
       "comments": [
         {
@@ -536,8 +580,31 @@
           "body": "I am not a fan of this approach.  Using a complex object with special keys that have overlap with other request params is just asking for trouble.   We would be better off modeling this as a RAR request for a token exchange request if we wanted a custom type as this core problem statement is about the IdP authorizing access the resource and issuing a token that contains that authorization.  The RS resource is just part of the authorization just like scopes.",
           "createdAt": "2025-06-18T23:26:31Z",
           "updatedAt": "2025-06-18T23:26:31Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "\n>Using a complex object with special keys that have overlap with other request params \n\n\nI agree with this. Is there anyway to have a JSON POST body, which I guess is a RAR request?",
+          "createdAt": "2025-06-19T22:45:35Z",
+          "updatedAt": "2025-06-19T22:45:41Z"
         }
       ]
+    },
+    {
+      "number": 26,
+      "id": "I_kwDOKv5r-s68nU0Q",
+      "title": "Use multiple `resource` parameters, the Authorization Server issuer and one or more Resource Server identifiers",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/26",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Token Exchange allows parameters to be repeated, so we could pass multiple `resource` parameters.\n\n```\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&resource=https://auth.example.com/\n&resource=https://api.example.com/\n&scope=read\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\nNotes:\n\n* This is the cleanest option for what to do if there is no Resource Server indicator needed, since the request would contain only one value, the Authorization Server issuer identifier\n* Repeated parameters in form-encoded requests have a bit of a messy history, not every server framework supports them the same way. Some ignore repeated values, some require adding `[]` to indicate repeated values.\n",
+      "createdAt": "2025-06-20T21:40:59Z",
+      "updatedAt": "2025-06-20T21:40:59Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
