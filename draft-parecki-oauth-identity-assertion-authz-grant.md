@@ -187,11 +187,11 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 `requested_token_type`:
 : REQUIRED - The value `urn:ietf:params:oauth:token-type:id-jag` indicates that an ID Assertion JWT is being requested.
 
-`resource`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server.
-
 `audience`:
-: The audience parameter MUST NOT be used to indicate the authorization server.
+: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in {{Section 2 of RFC8414}}.
+
+`resource`:
+: OPTIONAL - The Resource Identifier of the Resource Application's resource server as defined in {{Section 1.2 of RFC9728}}.
 
 `scope`:
 : OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
@@ -214,7 +214,7 @@ The example below uses an ID Token as the Identity Assertion, and uses a JWT Bea
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-    &resource=https://acme.chat.example/
+    &audience=https://acme.chat.example/
     &scope=chat.read+chat.history
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -290,7 +290,10 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 : REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in {{Section 4.1.2 of RFC7519}}
 
 `aud`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in {{Section 4.1.3 of RFC7519}}
+: REQUIRED - The Issuer URL ({{Section 2 of RFC8414}}) of the Resource Application's authorization server as defined in {{Section 4.1.3 of RFC7519}}
+
+`resource`:
+: OPTIONAL - The Resource Identifier ({{Section 1.2 of RFC9728}}) of the Resource Application's resource server (either a single URI or an array of URIs)
 
 `client_id`:
 : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in {{Section 4.3 of RFC8693}}.
