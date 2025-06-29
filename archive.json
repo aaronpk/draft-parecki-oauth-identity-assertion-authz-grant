@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-22T00:53:07.507859+00:00",
+  "timestamp": "2025-06-29T00:54:25.147291+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -337,14 +337,22 @@
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16",
       "state": "OPEN",
       "author": "mcguinness",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "[OAuth 2.0 Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414) enables a client to discover capabilities of a given authorization server.   For example a client can fetch AS metadata to determine what endpoints, grant types, and scopes the AS supports and then dynamically construct a valid request for a supported granted type.  This enables the client to negotiate the right capabilities at runtime with an Authorization Server vs hard-coding assumptions for a given AS.\n\nA given client currently as no mechanism to discover\n\n- Whether an AS supports issuing `urn:ietf:params:oauth:token-type:id-jag` token type with Token Exchange\n- Whether an AS supports `oauth-id-jag+jwt` JWT as a valid JWT bearer grant type (`urn:ietf:params:oauth:grant-type:jwt-bearer`)\n\nUnfortunately [Token Exchange](https://www.rfc-editor.org/rfc/rfc8693)  doesn't define an authorization server metadata parameter for `requested_token_types_supported`  that could publish `urn:ietf:params:oauth:token-type:id-jag` as supported token type.  Adding the registration would enable clients to discover what token types they could request from a given AS\n\nSimilarly, the new draft revision of [JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants](https://www.ietf.org/archive/id/draft-jones-oauth-rfc7523bis-00.html)  also doesn't define an authorization server metadata parameter for what profiles are supported.  A new parameter such as `jwt_assertion_token_types_supported` would enable a client to know what assertion profiles an Authorization Supports such as `urn:ietf:params:oauth:token-type:id-jag`. \n\nWithout these additional values a client would need to hard-code support for this profile for a given Authorization Server.\n\n\n\n",
       "createdAt": "2025-04-18T05:53:52Z",
-      "updatedAt": "2025-04-18T05:53:52Z",
+      "updatedAt": "2025-06-27T15:53:21Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "We need to treat these two questions separately. \n\nThe question of whether an AS (IdP) supports the \"ID JAG\" token exchange is necessary to avoid hard-coding support for this with out-of-band information.\n\nThe question of whether the JWT bearer grant type is supported is less helpful, because we actually need more information than that to do anything useful. The main feedback we've heard from implementers is they want to know whether an access token request will work with this flow for a given user. That is more than just whether the grant type is supported at the AS, because it also depends on the policies configured at the IdP. So what's actually needed is more of a \"list the applications I'll be able to get an access token using an ID-JAG from given the user and application context\", which looks more like a service call and less like a static discovery document.",
+          "createdAt": "2025-06-27T15:53:21Z",
+          "updatedAt": "2025-06-27T15:53:21Z"
+        }
+      ]
     },
     {
       "number": 17,
@@ -547,7 +555,7 @@
       "labels": [],
       "body": "Token Exchange defines `resource` as a URI and `audience` as a string.\n\nWe could use `audience` to identify the AS issuer URL, and `resource` to identify the resource server.\n\n```\nPOST /oauth2/token HTTP/1.1\nHost: acme.idp.example\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&audience=https://auth.example.com/\n&resource=https://acme.chat.example/\n&scope=chat.read+chat.history\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\n**Notes:**\n\n* This maps most cleanly to Resource Indicators (RFC8707)\n* This slightly violates the meaning of the `audience` and `resource` parameters in Token Exchange, since Token Exchange says that the client is asking for a token usable at all the requested target services.\n* For services that don't have a resource identifier, the `resource` parameter could be omitted without it being weird.",
       "createdAt": "2025-06-18T22:38:29Z",
-      "updatedAt": "2025-06-20T10:34:30Z",
+      "updatedAt": "2025-06-26T22:09:18Z",
       "closedAt": null,
       "comments": [
         {
@@ -556,6 +564,20 @@
           "body": "> This slightly violates the meaning of the audience and resource parameters in Token Exchange, since Token Exchange says that the client is asking for a token usable at all the requested target services.\n\nI believe we could squint a bit here knowing that what Token Exchange issues here is `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`, i.e. not an actual access token.\n\nThe result of this being the following assertion\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"aud\": \"https://auth.example.com/\",\n  \"resource\": \"https://acme.chat.example/\", // or \"resource\": [\"resource1\", \"resource2\", ...n] when multiple resource parameters are used\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\nI think this is OK and most expressive of the three #22 linked threads.",
           "createdAt": "2025-06-20T10:23:46Z",
           "updatedAt": "2025-06-20T10:34:30Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "I have a pull request that implements this option in the spec: #27 ",
+          "createdAt": "2025-06-26T22:00:18Z",
+          "updatedAt": "2025-06-26T22:00:18Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "This should also close https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/20\n",
+          "createdAt": "2025-06-26T22:09:18Z",
+          "updatedAt": "2025-06-26T22:09:18Z"
         }
       ]
     },
@@ -605,6 +627,30 @@
       "updatedAt": "2025-06-20T21:40:59Z",
       "closedAt": null,
       "comments": []
+    },
+    {
+      "number": 28,
+      "id": "I_kwDOKv5r-s69oEQA",
+      "title": "Proof-of-Possession Token for Resource App",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/28",
+      "state": "OPEN",
+      "author": "mcguinness",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The spec currently isn't clear how a client should meet proof-of-possesion requirements such as DPOP for an ID-JAG for Resource App's Authorization Server token request or the issued token from a Resource App's Authorization Server for a Resource App's Resource Server\n\nOAuth Identity and Authorization Chaining Across Domains has a section on [Delegated Key Binding](https://drafts.oauth.net/oauth-identity-chaining/draft-ietf-oauth-identity-chaining.html#name-delegated-key-binding)\n\nID Assertions currently don't support proof-of-possesion although some folks [have found workarounds](https://github.com/openpubkey/openpubkey)\n\nSince `actor_token` is not used by this profile, we currently don't flow any `cnf` claims into the ID-JAG.  \n\n- Should the client just send a DPoP proof JWT in a DPoP header when making an access token request to the Resource App's Authorization Server?   \n  - A client is currently free to use a different key with each Resource App Authorization Server as there is not binding back to the ID-JAG\n- Should we also support a DPoP proof with ID-JAG? \n  - A client can pass the proof on the token exchange request and we could flow to the ID-JAG and the Resource App Authorization Server could verify the proof. \n\n\n\nI think it should be possible to bind a ID-JAG to a key\n\n\n",
+      "createdAt": "2025-06-27T05:18:48Z",
+      "updatedAt": "2025-06-27T07:44:21Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "panva",
+          "authorAssociation": "NONE",
+          "body": "> I think it should be possible to bind a ID-JAG to a key\n\nI think so too.\n\n- Proof of possession presented during Token Exchange -> ID-JAG gets a `cnf` as per [RFC7800](https://www.rfc-editor.org/rfc/rfc7800.html) _/ [DPoP](https://www.rfc-editor.org/rfc/rfc9449.html). /but there's no indication in the response that binding was done tho (token_type is fixed to N_A), does it matter? I think not, the client can simply do PoP again during ID-JAG exchange/_\n- Proof of possession presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - it must match and tokens get constrained, failure otherwise\n\t- (ID-JAG doesn't have cnf) - tokens get constrained\n- Proof of possession not presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - failure\n\t- (ID-JAG doesn't have cnf) - tokens are not constrained or error (if RS is configured to require constrained tokens)\n\n",
+          "createdAt": "2025-06-27T07:44:21Z",
+          "updatedAt": "2025-06-27T07:44:21Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -1018,6 +1064,126 @@
       "mergeCommit": null,
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOKv5r-s6cT3tt",
+      "title": "use both `audience` and `resource` to identify the resource application",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/27",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "this implements the change described in #24\r\n\r\n* `audience` identifies the authorization server and is required\r\n* `resource` identifies the resource server and is optional",
+      "createdAt": "2025-06-26T21:59:46Z",
+      "updatedAt": "2025-06-27T17:46:51Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "5be151b152692b48c3390d512ed7ea3c298bd7ff",
+      "headRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "resource-audience",
+      "headRefOid": "8e82dcf1f0e936f37d3551bba0e343d64e3b573e",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOKv5r-s6wqJ9s",
+          "commit": {
+            "abbreviatedOid": "16ad824"
+          },
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-26T22:06:10Z",
+          "updatedAt": "2025-06-26T22:06:10Z",
+          "comments": [
+            {
+              "originalPosition": 12,
+              "body": "No mention for 8707?",
+              "createdAt": "2025-06-26T22:06:10Z",
+              "updatedAt": "2025-06-26T22:16:32Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6wqKkE",
+          "commit": {
+            "abbreviatedOid": "16ad824"
+          },
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-26T22:07:43Z",
+          "updatedAt": "2025-06-26T22:07:44Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "Not sure how an array would work for scopes. \r\nE.g. unless each api uses the same scopes, or all scopes for each api are included in request? should there be clarity there",
+              "createdAt": "2025-06-26T22:07:44Z",
+              "updatedAt": "2025-06-26T22:07:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6wu1YK",
+          "commit": {
+            "abbreviatedOid": "16ad824"
+          },
+          "author": "panva",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-27T07:17:20Z",
+          "updatedAt": "2025-06-27T07:17:20Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "The semantics of multiple resource indicators and their relation to the scope parameter is the same as at the authorization endpoint for a given AS. The only thing that's different here is the encoding, we're used to seeing these as `application/x-www-form-urlencoded` in which case `resource` can appear multiple times, but when encoded as `application/json` we expect an array (much like if it was part of a JAR Request Object).",
+              "createdAt": "2025-06-27T07:17:20Z",
+              "updatedAt": "2025-06-27T07:17:20Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6w2N5Q",
+          "commit": {
+            "abbreviatedOid": "16ad824"
+          },
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-06-27T15:28:00Z",
+          "updatedAt": "2025-06-27T15:28:00Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "yeah, there is no pairing between resource indicators and scopes in a regular authorization request, and that isn't changing with the addition of this parameter here either. Basically it's undefined in both places.",
+              "createdAt": "2025-06-27T15:28:00Z",
+              "updatedAt": "2025-06-27T15:28:00Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOKv5r-s6w3xEK",
+          "commit": {
+            "abbreviatedOid": "8e82dcf"
+          },
+          "author": "panva",
+          "authorAssociation": "NONE",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-06-27T17:46:50Z",
+          "updatedAt": "2025-06-27T17:46:51Z",
+          "comments": []
+        }
+      ]
     }
   ]
 }
