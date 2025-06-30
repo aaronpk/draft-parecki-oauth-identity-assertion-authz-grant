@@ -45,6 +45,7 @@ normative:
   RFC7521:
   RFC7523:
   RFC8693:
+  RFC8707:
   RFC8725:
   I-D.ietf-oauth-identity-chaining:
   IANA.MediaTypes:
@@ -187,11 +188,11 @@ The Client makes a Token Exchange {{RFC8693}} request to the IdP's Token Endpoin
 `requested_token_type`:
 : REQUIRED - The value `urn:ietf:params:oauth:token-type:id-jag` indicates that an ID Assertion JWT is being requested.
 
-`resource`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server.
-
 `audience`:
-: The audience parameter MUST NOT be used to indicate the authorization server.
+: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in {{Section 2 of RFC8414}}.
+
+`resource`:
+: OPTIONAL - The Resource Identifier of the Resource Application's resource server as defined in {{Section 2 of RFC8707}}.
 
 `scope`:
 : OPTIONAL - The space-separated list of scopes at the Resource Application that is being requested.
@@ -214,7 +215,7 @@ The example below uses an ID Token as the Identity Assertion, and uses a JWT Bea
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-    &resource=https://acme.chat.example/
+    &audience=https://acme.chat.example/
     &scope=chat.read+chat.history
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
     &subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -290,7 +291,10 @@ The Identity Assertion Authorization Grant JWT is issued and signed by the IdP, 
 : REQUIRED - The subject identifier (e.g. user ID) of the resource owner at the Resource Application as defined in {{Section 4.1.2 of RFC7519}}
 
 `aud`:
-: REQUIRED - The Issuer URL of the Resource Application's authorization server as defined in {{Section 4.1.3 of RFC7519}}
+: REQUIRED - The Issuer URL ({{Section 2 of RFC8414}}) of the Resource Application's authorization server as defined in {{Section 4.1.3 of RFC7519}}
+
+`resource`:
+: OPTIONAL - The Resource Identifier ({{Section 2 of RFC8707}}) of the Resource Application's resource server (either a single URI or an array of URIs)
 
 `client_id`:
 : REQUIRED - An identifier of the client that this JWT was issued to, which MUST be recognized by the Resource Application's authorization server. For interoperability, the client identifier SHOULD be a `client_id` as defined in {{Section 4.3 of RFC8693}}.
@@ -494,7 +498,7 @@ LLM Agent discovers the Enterprise IdP's OpenID Connect Provider configuration b
     Content-Type: application/json
 
     {
-      "issuer": "https://cyberdyne.idp.example",
+      "issuer": "https://cyberdyne.idp.example/",
       "authorization_endpoint": "https://cyberdyne.idp.example/oauth2/authorize",
       "token_endpoint": "https://cyberdyne.idp.example/oauth2/token",
       "userinfo_endpoint": "https://cyberdyne.idp.example/oauth2/userinfo",
@@ -561,7 +565,7 @@ LLM Agent exchanges the `code` and PKCE `code_verifier` to obtain an ID Token an
 LLM Agent validates the ID Token using the published JWKS for the IdP
 
     {
-      "iss": "https://cyberdyne.idp.example",
+      "iss": "https://cyberdyne.idp.example/",
       "sub": "1997e829-2029-41d4-a716-446655440000",
       "aud": "com.example.ai-agent",
       "exp": 1984444800,
@@ -601,7 +605,7 @@ LLM Agent fetches the external tool resource's OAuth 2.0 Protected Resource Meta
        "resource":
          "https://saas.example.net/",
        "authorization_servers":
-         [ "https://authorization-server.saas.com" ],
+         [ "https://authorization-server.saas.com/" ],
        "bearer_methods_supported":
          ["header", "body"],
        "scopes_supported":
@@ -620,7 +624,7 @@ LLM Agent discovers the Authorization Server configuration per {{RFC8414}}
     Content-Type: application/json
 
     {
-      "issuer": "https://authorization-server.saas.com",
+      "issuer": "https://authorization-server.saas.com/",
       "authorization_endpoint": "https://authorization-server.saas.com/oauth2/authorize",
       "token_endpoint": "https://authorization-server.saas.com/oauth2/token",
       "jwks_uri": "https://authorization-server.saas.com/oauth2/keys",
@@ -653,6 +657,7 @@ LLM Agent makes an Identity Assertion Grant Token Exchange {{RFC8693}} request f
 
     grant_type=urn:ietf:params:oauth:grant-type:token-exchange
     &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
+    &audience=https://authorization-server.saas.com/
     &resource=https://saas.example.net/
     &scope=agent.read+agent.write
     &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
@@ -687,6 +692,7 @@ Identity Assertion Authorization Grant JWT claims:
       "iss": "https://cyberdyne.idp.example",
       "sub": "1llb-b4c0-0000-8000-t800b4ck0000",
       "aud": "https://authorization-server.saas.com",
+      "resource": "https://saas.example.net/",
       "client_id": "com.example.ai-agent",
       "exp": 1984445160,
       "iat": 1984445100,
@@ -744,12 +750,17 @@ LLM Agent tool calls an external tool provided by the Enterprise SaaS Applicatio
 # Acknowledgments
 {:numbered="false"}
 
-The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Pieter Kasselman, Kai Lehmann, Dean H. Saxe.
+The authors would like to thank the following people for their contributions and reviews of this specification: Kamron Batmanghelich, Sofia Desenberg, Meghna Dubey, George Fletcher, Pieter Kasselman, Kai Lehmann, Dean H. Saxe, Filip Skokan.
 
 # Document History
 {:numbered="false"}
 
 [[ To be removed from the final specification ]]
+
+-05
+
+* Use `audience` instead of `resource` to reference the authorization server issuer
+* Add optional `resource` to indicate the resource server identifier
 
 -04
 
