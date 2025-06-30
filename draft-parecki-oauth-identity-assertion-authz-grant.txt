@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 22 December 2025                                    Independent
+Expires: 1 January 2026                                      Independent
                                                              B. Campbell
                                                            Ping Identity
-                                                            20 June 2025
+                                                            30 June 2025
 
 
                  Identity Assertion Authorization Grant
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 December 2025.
+   This Internet-Draft will expire on 1 January 2026.
 
 Copyright Notice
 
@@ -318,11 +318,12 @@ Location: https://acme.idp.example/authorize?response_type=code&scope=openid&cli
       urn:ietf:params:oauth:token-type:id-jag indicates that an ID
       Assertion JWT is being requested.
 
-   resource:  REQUIRED - The Issuer URL of the Resource Application's
-      authorization server.
+   audience:  REQUIRED - The Issuer URL of the Resource Application's
+      authorization server as defined in Section 2 of [RFC8414].
 
-   audience:  The audience parameter MUST NOT be used to indicate the
-      authorization server.
+   resource:  OPTIONAL - The Resource Identifier of the Resource
+      Application's resource server as defined in Section 2 of
+      [RFC8707].
 
    scope:  OPTIONAL - The space-separated list of scopes at the Resource
       Application that is being requested.
@@ -357,7 +358,7 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
-&resource=https://acme.chat.example/
+&audience=https://acme.chat.example/
 &scope=chat.read+chat.history
 &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
 &subject_token_type=urn:ietf:params:oauth:token-type:id_token
@@ -447,8 +448,13 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
       resource owner at the Resource Application as defined in
       Section 4.1.2 of [RFC7519]
 
-   aud:  REQUIRED - The Issuer URL of the Resource Application's
-      authorization server as defined in Section 4.1.3 of [RFC7519]
+   aud:  REQUIRED - The Issuer URL (Section 2 of [RFC8414]) of the
+      Resource Application's authorization server as defined in
+      Section 4.1.3 of [RFC7519]
+
+   resource:  OPTIONAL - The Resource Identifier (Section 2 of
+      [RFC8707]) of the Resource Application's resource server (either a
+      single URI or an array of URIs)
 
    client_id:  REQUIRED - An identifier of the client that this JWT was
       issued to, which MUST be recognized by the Resource Application's
@@ -693,6 +699,10 @@ Cache-Control: no-store
               DOI 10.17487/RFC8693, January 2020,
               <https://www.rfc-editor.org/rfc/rfc8693>.
 
+   [RFC8707]  Campbell, B., Bradley, J., and H. Tschofenig, "Resource
+              Indicators for OAuth 2.0", RFC 8707, DOI 10.17487/RFC8707,
+              February 2020, <https://www.rfc-editor.org/rfc/rfc8707>.
+
    [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, "JSON Web Token Best
               Current Practices", BCP 225, RFC 8725,
               DOI 10.17487/RFC8725, February 2020,
@@ -849,7 +859,7 @@ HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "issuer": "https://cyberdyne.idp.example",
+  "issuer": "https://cyberdyne.idp.example/",
   "authorization_endpoint": "https://cyberdyne.idp.example/oauth2/authorize",
   "token_endpoint": "https://cyberdyne.idp.example/oauth2/token",
   "userinfo_endpoint": "https://cyberdyne.idp.example/oauth2/userinfo",
@@ -933,7 +943,7 @@ https://ai-agent.example.com/oauth2/callback?code=SplxlOBeZQQYbYS6WxSbIA&state=x
    LLM Agent validates the ID Token using the published JWKS for the IdP
 
    {
-     "iss": "https://cyberdyne.idp.example",
+     "iss": "https://cyberdyne.idp.example/",
      "sub": "1997e829-2029-41d4-a716-446655440000",
      "aud": "com.example.ai-agent",
      "exp": 1984444800,
@@ -979,7 +989,7 @@ A.3.5.  LLM Agent calls Enterprise External Tool
       "resource":
         "https://saas.example.net/",
       "authorization_servers":
-        [ "https://authorization-server.saas.com" ],
+        [ "https://authorization-server.saas.com/" ],
       "bearer_methods_supported":
         ["header", "body"],
       "scopes_supported":
@@ -999,7 +1009,7 @@ HTTP/1.1 200 Ok
 Content-Type: application/json
 
 {
-  "issuer": "https://authorization-server.saas.com",
+  "issuer": "https://authorization-server.saas.com/",
   "authorization_endpoint": "https://authorization-server.saas.com/oauth2/authorize",
   "token_endpoint": "https://authorization-server.saas.com/oauth2/token",
   "jwks_uri": "https://authorization-server.saas.com/oauth2/keys",
@@ -1052,6 +1062,7 @@ Content-Type: application/x-www-form-urlencoded
 
 grant_type=urn:ietf:params:oauth:grant-type:token-exchange
 &requested_token_type=urn:ietf:params:oauth:token-type:id-jag
+&audience=https://authorization-server.saas.com/
 &resource=https://saas.example.net/
 &scope=agent.read+agent.write
 &subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...
@@ -1088,6 +1099,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
      "iss": "https://cyberdyne.idp.example",
      "sub": "1llb-b4c0-0000-8000-t800b4ck0000",
      "aud": "https://authorization-server.saas.com",
+     "resource": "https://saas.example.net/",
      "client_id": "com.example.ai-agent",
      "exp": 1984445160,
      "iat": 1984445100,
@@ -1155,12 +1167,19 @@ Acknowledgments
 
    The authors would like to thank the following people for their
    contributions and reviews of this specification: Kamron
-   Batmanghelich, Sofia Desenberg, Pieter Kasselman, Kai Lehmann, Dean
-   H.  Saxe.
+   Batmanghelich, Sofia Desenberg, Meghna Dubey, George Fletcher, Pieter
+   Kasselman, Kai Lehmann, Dean H.  Saxe, Filip Skokan.
 
 Document History
 
    [[ To be removed from the final specification ]]
+
+   -05
+
+   *  Use audience instead of resource to reference the authorization
+      server issuer
+
+   *  Add optional resource to indicate the resource server identifier
 
    -04
 
