@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-06-29T00:54:25.147291+00:00",
+  "timestamp": "2025-07-01T00:55:07.969603+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -449,15 +449,15 @@
       "id": "I_kwDOKv5r-s63y15Z",
       "title": "Consider audience param in token ex request as the resource server indicator",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/20",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "sdesen",
       "authorAssociation": "NONE",
       "assignees": [],
       "labels": [],
       "body": "According to spec, audience param must not be used\nbut there is a valid case for it to indicate  resource server information in addition to the issuerURL in the resource request param\nFirst, other IdPs may have implementations where this is necessary and secondly can help disambiguate between resource severs served by 1 AS",
       "createdAt": "2025-05-22T14:20:18Z",
-      "updatedAt": "2025-05-27T10:17:58Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T23:21:24Z",
+      "closedAt": "2025-06-30T23:21:24Z",
       "comments": [
         {
           "author": "aaronpk",
@@ -479,6 +479,13 @@
           "body": "And how is that reflected in the [Identity Assertion Authorization Grant JWT](https://www.ietf.org/archive/id/draft-parecki-oauth-identity-assertion-authz-grant-03.html#name-identity-assertion-authoriz) payload?\n\nIn other words, which claim should the IdP use in the assertion to specify the resource server (`https://acme.chat.example/api/v3`)?",
           "createdAt": "2025-05-27T10:13:11Z",
           "updatedAt": "2025-05-27T10:17:57Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "This is resolved in #27 ",
+          "createdAt": "2025-06-30T23:21:24Z",
+          "updatedAt": "2025-06-30T23:21:24Z"
         }
       ]
     },
@@ -487,31 +494,39 @@
       "id": "I_kwDOKv5r-s68QGkz",
       "title": "How to identify the resource server",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/22",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Problem: The token endpoint at the Authorization Server needs to know which resource to issue the token for. Currently only the Authorization Server is identified in the ID Assertion JWT.\n\nThis is the meta issue to link out to the other issues describing the options under consideration. Please keep the discussions in the appropriate threads.",
       "createdAt": "2025-06-18T22:27:54Z",
-      "updatedAt": "2025-06-18T22:27:54Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2025-06-30T23:21:56Z",
+      "closedAt": "2025-06-30T23:21:56Z",
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "We're going with the option in #24, merged in #27 ",
+          "createdAt": "2025-06-30T23:21:56Z",
+          "updatedAt": "2025-06-30T23:21:56Z"
+        }
+      ]
     },
     {
       "number": 23,
       "id": "I_kwDOKv5r-s68QI9U",
       "title": "Change the `resource` param in the token exchange request to identify the RS",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/23",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "**Assumptions:**\n\n* Authorization Servers identify Resource Servers with globally unique URIs\n\n**Solution:**\n\nChange the definition of the `resource` parameter to identify the resource server that the final access token will be used at. \n\n```\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&resource=https://api.example.com/\n&scope=read\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\n**Notes:**\n\n* The IdP would need to be able to uniquely identify the resource identifier, and know which authorization server is used by that resource server. The IdP could include both the AS issuer and RS identifier in the ID Assertion JWT.\n* This requires that resource identifiers are globally unique, and the IdP will need to validate that the developer of the app controls the URL, to avoid a random person from using `https://google.com/` as their resource identifier.\n* Not everyone actually uses resource identifiers or has multiple resources under an AS, so it's not clear what value to use in those cases. Just the AS issuer identifier?\n\n",
       "createdAt": "2025-06-18T22:33:17Z",
-      "updatedAt": "2025-06-20T21:41:26Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T23:22:02Z",
+      "closedAt": "2025-06-30T23:22:02Z",
       "comments": [
         {
           "author": "mcguinness",
@@ -548,15 +563,15 @@
       "id": "I_kwDOKv5r-s68QK1K",
       "title": "Use `audience` to identify the AS and `resource` to identify the RS",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/24",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Token Exchange defines `resource` as a URI and `audience` as a string.\n\nWe could use `audience` to identify the AS issuer URL, and `resource` to identify the resource server.\n\n```\nPOST /oauth2/token HTTP/1.1\nHost: acme.idp.example\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&audience=https://auth.example.com/\n&resource=https://acme.chat.example/\n&scope=chat.read+chat.history\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\n**Notes:**\n\n* This maps most cleanly to Resource Indicators (RFC8707)\n* This slightly violates the meaning of the `audience` and `resource` parameters in Token Exchange, since Token Exchange says that the client is asking for a token usable at all the requested target services.\n* For services that don't have a resource identifier, the `resource` parameter could be omitted without it being weird.",
       "createdAt": "2025-06-18T22:38:29Z",
-      "updatedAt": "2025-06-26T22:09:18Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T23:21:34Z",
+      "closedAt": "2025-06-30T23:21:34Z",
       "comments": [
         {
           "author": "panva",
@@ -578,6 +593,13 @@
           "body": "This should also close https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/20\n",
           "createdAt": "2025-06-26T22:09:18Z",
           "updatedAt": "2025-06-26T22:09:18Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Added in #27 ",
+          "createdAt": "2025-06-30T23:21:34Z",
+          "updatedAt": "2025-06-30T23:21:34Z"
         }
       ]
     },
@@ -586,15 +608,15 @@
       "id": "I_kwDOKv5r-s68QOBE",
       "title": "Include both the AS issuer URL and RS identifier in a single parameter",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/25",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "The `audience` value could be a structured value such as:\n\n`audience={\"as\":\"https://login.example.com/\",\"resource\":\"https://chat.example.com/\"}`\n\nA PR for this is in #21\n\n**Notes:**\n\n* For services that don't use resource identifiers, the `resource` value can be left out, however that leaves just one value in the JSON object which looks silly.",
       "createdAt": "2025-06-18T22:45:35Z",
-      "updatedAt": "2025-06-19T22:45:41Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T23:22:08Z",
+      "closedAt": "2025-06-30T23:22:08Z",
       "comments": [
         {
           "author": "mcguinness",
@@ -617,15 +639,15 @@
       "id": "I_kwDOKv5r-s68nU0Q",
       "title": "Use multiple `resource` parameters, the Authorization Server issuer and one or more Resource Server identifiers",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/26",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "Token Exchange allows parameters to be repeated, so we could pass multiple `resource` parameters.\n\n```\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&resource=https://auth.example.com/\n&resource=https://api.example.com/\n&scope=read\n&subject_token=eyJraWQiOiJzMTZ0cVNtODhwREo4VGZCXzdrSEtQ...\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer\n&client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0...\n```\n\nNotes:\n\n* This is the cleanest option for what to do if there is no Resource Server indicator needed, since the request would contain only one value, the Authorization Server issuer identifier\n* Repeated parameters in form-encoded requests have a bit of a messy history, not every server framework supports them the same way. Some ignore repeated values, some require adding `[]` to indicate repeated values.\n",
       "createdAt": "2025-06-20T21:40:59Z",
-      "updatedAt": "2025-06-20T21:40:59Z",
-      "closedAt": null,
+      "updatedAt": "2025-06-30T23:22:13Z",
+      "closedAt": "2025-06-30T23:22:13Z",
       "comments": []
     },
     {
@@ -1044,25 +1066,33 @@
       "id": "PR_kwDOKv5r-s6bJcXw",
       "title": "use multi-part audience instead of resource in token exchange",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/21",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-06-18T21:29:17Z",
-      "updatedAt": "2025-06-18T21:29:17Z",
+      "updatedAt": "2025-06-30T23:19:43Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "9a3af61be3101b3422c5f5844eb45607f0c9f987",
       "headRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "headRefName": "audience",
       "headRefOid": "4bbc0729ceee46dc5ab423f03c703ace2601cf73",
-      "closedAt": null,
+      "closedAt": "2025-06-30T23:19:42Z",
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Closing in favor of #27 ",
+          "createdAt": "2025-06-30T23:19:42Z",
+          "updatedAt": "2025-06-30T23:19:42Z"
+        }
+      ],
       "reviews": []
     },
     {
@@ -1070,24 +1100,26 @@
       "id": "PR_kwDOKv5r-s6cT3tt",
       "title": "use both `audience` and `resource` to identify the resource application",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/27",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "aaronpk",
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
       "body": "this implements the change described in #24\r\n\r\n* `audience` identifies the authorization server and is required\r\n* `resource` identifies the resource server and is optional",
       "createdAt": "2025-06-26T21:59:46Z",
-      "updatedAt": "2025-06-27T17:46:51Z",
+      "updatedAt": "2025-06-30T23:20:57Z",
       "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "baseRefName": "main",
       "baseRefOid": "5be151b152692b48c3390d512ed7ea3c298bd7ff",
       "headRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
       "headRefName": "resource-audience",
       "headRefOid": "8e82dcf1f0e936f37d3551bba0e343d64e3b573e",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-06-30T23:20:57Z",
+      "mergedAt": "2025-06-30T23:20:57Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "0cf60b46bc5061f6fe7689b45d69a9b1d2412ba3"
+      },
       "comments": [],
       "reviews": [
         {
