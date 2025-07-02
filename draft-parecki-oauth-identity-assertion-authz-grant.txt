@@ -577,7 +577,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
    Authorization Server Metadata [RFC8414].  Identity and Authorization
    Chaining Across Domains [I-D.ietf-oauth-identity-chaining] defines a
    new metadata property
-   identity_chaining_requested_token_types_supported.
+   identity_chaining_requested_token_types_supported for this purpose.
 
    To advertise support for the Identity Assertion Authorization Grant,
    the authorization server SHOULD include the following value in the
