@@ -95,6 +95,7 @@ Table of Contents
    8.  IANA Considerations
      8.1.  Media Types
      8.2.  OAuth URI Registration
+     8.3.  JSON Web Token Claims Registration
    9.  References
      9.1.  Normative References
      9.2.  Informative References
@@ -637,6 +638,20 @@ Cache-Control: no-store
 
    *  Specification Document: This document
 
+8.3.  JSON Web Token Claims Registration
+
+   This section registers resource in the "JSON Web Token Claims"
+   subregistry of the "JSON Web Token (JWT)" registry [IANA.JWT].  The
+   "JSON Web Token Claims" subregistry was established by [RFC7519].
+
+   *  Claim Name: resource
+
+   *  Claim Description: Resource
+
+   *  Change Controller: IESG
+
+   *  Specification Document(s): Section 5.3
+
 9.  References
 
 9.1.  Normative References
@@ -648,6 +663,8 @@ Cache-Control: no-store
               Draft, draft-ietf-oauth-identity-chaining-04, 27 February
               2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
               oauth-identity-chaining-04>.
+
+   [IANA.JWT] "*** BROKEN REFERENCE ***".
 
    [IANA.MediaTypes]
               "*** BROKEN REFERENCE ***".
