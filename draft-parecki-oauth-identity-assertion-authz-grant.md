@@ -384,8 +384,7 @@ The Resource Application token endpoint responds with an OAuth 2.0 Token Respons
       "token_type": "Bearer",
       "access_token": "2YotnFZFEjr1zCsicMWpAA",
       "expires_in": 86400,
-      "scope": "chat.read chat.history",
-      "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+      "scope": "chat.read chat.history"
     }
 
 
@@ -727,8 +726,7 @@ SaaS Authorization Server validates the Identity Assertion Authorization Grant u
       "token_type": "Bearer",
       "access_token": "2YotnFZFEjr1zCsicMWpAA",
       "expires_in": 86400,
-      "scope": "agent.read agent.write",
-      "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+      "scope": "agent.read agent.write"
     }
 
 ### LLM Agent makes an authorized External Tool request
