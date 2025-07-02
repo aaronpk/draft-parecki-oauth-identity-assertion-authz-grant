@@ -391,7 +391,7 @@ The Resource Application token endpoint responds with an OAuth 2.0 Token Respons
 
 # Authorization Server (IdP) Metadata {#idp-metadata}
 
-An IdP can advertise its support for this profile in its OAuth Authorization Server Metadata {{RFC8414}}. Identity and Authorization Chaining Across Domains {{I-D.ietf-oauth-identity-chaining}} defines a new metadata property `identity_chaining_requested_token_types_supported`.
+An IdP can advertise its support for this profile in its OAuth Authorization Server Metadata {{RFC8414}}. Identity and Authorization Chaining Across Domains {{I-D.ietf-oauth-identity-chaining}} defines a new metadata property `identity_chaining_requested_token_types_supported` for this purpose.
 
 To advertise support for the Identity Assertion Authorization Grant, the authorization server SHOULD include the following value in the `identity_chaining_requested_token_types_supported` property:
 
