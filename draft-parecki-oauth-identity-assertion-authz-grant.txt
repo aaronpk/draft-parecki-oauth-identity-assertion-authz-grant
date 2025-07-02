@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 1 January 2026                                      Independent
+Expires: 3 January 2026                                      Independent
                                                              B. Campbell
                                                            Ping Identity
-                                                            30 June 2025
+                                                             2 July 2025
 
 
                  Identity Assertion Authorization Grant
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2026.
+   This Internet-Draft will expire on 3 January 2026.
 
 Copyright Notice
 
@@ -566,8 +566,7 @@ grant_type=urn:ietf:params:oauth:grant-type:token-exchange
      "token_type": "Bearer",
      "access_token": "2YotnFZFEjr1zCsicMWpAA",
      "expires_in": 86400,
-     "scope": "chat.read chat.history",
-     "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+     "scope": "chat.read chat.history"
    }
 
 7.  Security Considerations
@@ -1142,8 +1141,7 @@ A.3.7.  LLM Agent obtains an Access Token for Enterprise External Tool
      "token_type": "Bearer",
      "access_token": "2YotnFZFEjr1zCsicMWpAA",
      "expires_in": 86400,
-     "scope": "agent.read agent.write",
-     "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+     "scope": "agent.read agent.write"
    }
 
 A.3.8.  LLM Agent makes an authorized External Tool request
