@@ -389,6 +389,15 @@ The Resource Application token endpoint responds with an OAuth 2.0 Token Respons
     }
 
 
+# Authorization Server (IdP) Metadata {#idp-metadata}
+
+An IdP can advertise its support for this profile in its OAuth Authorization Server Metadata {{RFC8414}}. Identity and Authorization Chaining Across Domains {{I-D.ietf-oauth-identity-chaining}} defines a new metadata property `identity_chaining_requested_token_types_supported`.
+
+To advertise support for the Identity Assertion Authorization Grant, the authorization server SHOULD include the following value in the `identity_chaining_requested_token_types_supported` property:
+
+`urn:ietf:params:oauth:token-type:id-jag`
+
+
 # Security Considerations
 
 ## Client Authentication
@@ -524,12 +533,11 @@ LLM Agent discovers the Enterprise IdP's OpenID Connect Provider configuration b
       "grant_types_supported": [
         "authorization_code", "refresh_token", "urn:ietf:params:oauth:grant-type:token-exchange"
       ],
+      "identity_chaining_requested_token_types_supported": ["urn:ietf:params:oauth:token-type:id-jag"],
       ...
     }
 
-LLM Agent discovers all necessary endpoints for authentication as well as support for the Token Exchange grant type `urn:ietf:params:oauth:grant-type:token-exchange`
-
-> Note: Token Exchange {{RFC8693}} doesn't define an authorization server metadata parameter for `requested_token_types_supported` to discover if `urn:ietf:params:oauth:token-type:id-jag` is specifically supported. Currently, the LLM Agent needs to first attempt Token Exchange to learn if the specific Enterprise IdP supports issuing an Identity Assertion Grant. This specification could define an Authorization Server Metadata {{RFC8414}} parameter to enable the agent to discover if this request is supported. See [issue #16](https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16).
+LLM Agent discovers all necessary endpoints for authentication as well as support for the Identity Chaining requested token type `urn:ietf:params:oauth:token-type:id-jag`
 
 ### IdP Authorization Request (with PKCE)
 
@@ -771,6 +779,7 @@ The authors would like to thank the following people for their contributions and
 
 * Use `audience` instead of `resource` to reference the authorization server issuer
 * Add optional `resource` to indicate the resource server identifier
+* Added a section on how to advertise support in the IdP metadata
 
 -04
 
