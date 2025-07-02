@@ -50,6 +50,7 @@ normative:
   I-D.ietf-oauth-identity-chaining:
   IANA.MediaTypes:
   IANA.oauth-parameters:
+  IANA.JWT:
   RFC6838:
   RFC2046:
 
@@ -434,6 +435,17 @@ This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth U
 * Common Name: Token type URI for a Identity Assertion JWT Authorization Grant
 * Change Controller: IESG
 * Specification Document: This document
+
+
+## JSON Web Token Claims Registration
+
+This section registers `resource` in the "JSON Web Token Claims" subregistry of the "JSON Web Token (JWT)" registry {{IANA.JWT}}. The "JSON Web Token Claims" subregistry was established by {{RFC7519}}.
+
+* Claim Name: `resource`
+* Claim Description: Resource
+* Change Controller: IESG
+* Specification Document(s): {{jwt-authorization-grant}}
+
 
 
 
