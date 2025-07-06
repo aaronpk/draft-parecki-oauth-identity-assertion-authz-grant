@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-03T00:48:02.769232+00:00",
+  "timestamp": "2025-07-06T00:53:48.869162+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -669,7 +669,7 @@
       "labels": [],
       "body": "The spec currently isn't clear how a client should meet proof-of-possesion requirements such as DPOP for an ID-JAG for Resource App's Authorization Server token request or the issued token from a Resource App's Authorization Server for a Resource App's Resource Server\n\nOAuth Identity and Authorization Chaining Across Domains has a section on [Delegated Key Binding](https://drafts.oauth.net/oauth-identity-chaining/draft-ietf-oauth-identity-chaining.html#name-delegated-key-binding)\n\nID Assertions currently don't support proof-of-possesion although some folks [have found workarounds](https://github.com/openpubkey/openpubkey)\n\nSince `actor_token` is not used by this profile, we currently don't flow any `cnf` claims into the ID-JAG.  \n\n- Should the client just send a DPoP proof JWT in a DPoP header when making an access token request to the Resource App's Authorization Server?   \n  - A client is currently free to use a different key with each Resource App Authorization Server as there is not binding back to the ID-JAG\n- Should we also support a DPoP proof with ID-JAG? \n  - A client can pass the proof on the token exchange request and we could flow to the ID-JAG and the Resource App Authorization Server could verify the proof. \n\n\n\nI think it should be possible to bind a ID-JAG to a key\n\n\n",
       "createdAt": "2025-06-27T05:18:48Z",
-      "updatedAt": "2025-06-27T07:44:21Z",
+      "updatedAt": "2025-07-04T11:33:46Z",
       "closedAt": null,
       "comments": [
         {
@@ -678,6 +678,20 @@
           "body": "> I think it should be possible to bind a ID-JAG to a key\n\nI think so too.\n\n- Proof of possession presented during Token Exchange -> ID-JAG gets a `cnf` as per [RFC7800](https://www.rfc-editor.org/rfc/rfc7800.html) _/ [DPoP](https://www.rfc-editor.org/rfc/rfc9449.html). /but there's no indication in the response that binding was done tho (token_type is fixed to N_A), does it matter? I think not, the client can simply do PoP again during ID-JAG exchange/_\n- Proof of possession presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - it must match and tokens get constrained, failure otherwise\n\t- (ID-JAG doesn't have cnf) - tokens get constrained\n- Proof of possession not presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - failure\n\t- (ID-JAG doesn't have cnf) - tokens are not constrained or error (if RS is configured to require constrained tokens)\n\n",
           "createdAt": "2025-06-27T07:44:21Z",
           "updatedAt": "2025-06-27T07:44:21Z"
+        },
+        {
+          "author": "mcguinness",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Since the client needs to send the DPoP proof in a header for a token request with sender-constrained ID-JAG for the Resource App's AS, its not clear that the client is also requesting that the issued access token is also sender-constrained.  The DPoP proof is needed to validate the ID-JAG but also indicates desire to key bind the access token with RFC 9449.   \n\nThe simple answer is that if the ID-JAG contains a `cnf` claim then the issued access token is also bound to the same `cnf` when the AS supports issuing sender-constrained access token for the audience.   A client can't use a different key and can't opt-out of sender-constraining an access token for Resource App if they presented a sender-constrained ID-JAG and the Resource App supports sender-constrained access tokens for the Resource Apps' audience.  Thoughts?",
+          "createdAt": "2025-07-03T22:08:29Z",
+          "updatedAt": "2025-07-03T22:08:29Z"
+        },
+        {
+          "author": "panva",
+          "authorAssociation": "NONE",
+          "body": "It's the AS decision whether to issue a sender-constrained token for a particular RS or not, that depends on the configuration at or discretion of the AS. A client sending a proof of possession to the call is but a prerequisite to the decision process.\n\n> https://www.rfc-editor.org/rfc/rfc9449.html#section-5-9\n> An authorization server MAY elect to issue access tokens that are not DPoP bound, which is signaled to the client with a value of Bearer in the token_type parameter of the access token response\n\nSo to update the earlier post\n\n- Proof of possession presented during Token Exchange -> ID-JAG gets a `cnf` as per [RFC7800](https://www.rfc-editor.org/rfc/rfc7800.html) _/ [DPoP](https://www.rfc-editor.org/rfc/rfc9449.html). /but there's no indication in the response that binding was done tho (token_type is fixed to N_A), does it matter? I think not, the client can simply do PoP again during ID-JAG exchange/_\n- Proof of possession presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - it must match and tokens may get constrained per the RS configuration at the AS, failure otherwise\n\t- (ID-JAG doesn't have cnf) - tokens may get constrained per the RS configuration at the AS\n- Proof of possession not presented during ID-JAG exchange\n\t- (ID-JAG has cnf) - failure\n\t- (ID-JAG doesn't have cnf) - tokens are not constrained or error (if RS configuration at the AS is to require constrained tokens for that RS)",
+          "createdAt": "2025-07-04T11:33:46Z",
+          "updatedAt": "2025-07-04T11:33:46Z"
         }
       ]
     },
@@ -717,7 +731,7 @@
       "labels": [],
       "body": "What claim in the JAG will represent the value sent in `resource` param?",
       "createdAt": "2025-07-02T19:46:59Z",
-      "updatedAt": "2025-07-02T20:18:26Z",
+      "updatedAt": "2025-07-03T14:35:08Z",
       "closedAt": "2025-07-02T20:14:45Z",
       "comments": [
         {
@@ -740,6 +754,13 @@
           "body": "@sdesen it's not explicitly in the ID-JAG description yet but the `resource` claim is now also in the IANA consideration for exactly that purpose. Let's leave the issue open with an action item to describe this better",
           "createdAt": "2025-07-02T20:18:26Z",
           "updatedAt": "2025-07-02T20:18:26Z"
+        },
+        {
+          "author": "sdesen",
+          "authorAssociation": "NONE",
+          "body": "Ah, I understand. Thank you. \nIf it gets to that point, and an array is supported, I have some thoughts on the scopes parameter and how it related to the resource indicators.",
+          "createdAt": "2025-07-03T14:34:21Z",
+          "updatedAt": "2025-07-03T14:35:08Z"
         }
       ]
     },
