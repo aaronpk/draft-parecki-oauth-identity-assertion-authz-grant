@@ -48,9 +48,9 @@ normative:
   RFC8707:
   RFC8725:
   I-D.ietf-oauth-identity-chaining:
-  IANA.MediaTypes:
+  IANA.media-types:
   IANA.oauth-parameters:
-  IANA.JWT:
+  IANA.jwt:
   RFC6838:
   RFC2046:
 
@@ -433,7 +433,7 @@ This specification is intended for cross-domain uses where the Client, Resource 
 
 ## Media Types
 
-This section registers `oauth-id-jag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.MediaTypes}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
+This section registers `oauth-id-jag+jwt`, a new media type {{RFC2046}} in the "Media Types" registry {{IANA.media-types}} in the manner described in {{RFC6838}}. It can be used to indicate that the content is a Identity Assertion Authorization Grant JWT.
 
 
 ## OAuth URI Registration
@@ -448,7 +448,7 @@ This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth U
 
 ## JSON Web Token Claims Registration
 
-This section registers `resource` in the "JSON Web Token Claims" subregistry of the "JSON Web Token (JWT)" registry {{IANA.JWT}}. The "JSON Web Token Claims" subregistry was established by {{RFC7519}}.
+This section registers `resource` in the "JSON Web Token Claims" subregistry of the "JSON Web Token (JWT)" registry {{IANA.jwt}}. The "JSON Web Token Claims" subregistry was established by {{RFC7519}}.
 
 * Claim Name: `resource`
 * Claim Description: Resource
@@ -778,6 +778,7 @@ The authors would like to thank the following people for their contributions and
 -06
 
 * Update change controller for registration requests from IESG to IETF per general IANA suggestion
+* Fix the two IANA "*** BROKEN REFERENCE ***"s
 
 -05
 
