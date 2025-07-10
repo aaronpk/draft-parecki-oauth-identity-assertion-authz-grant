@@ -442,7 +442,7 @@ This section registers `urn:ietf:params:oauth:token-type:id-jag` in the "OAuth U
 
 * URN: urn:ietf:params:oauth:token-type:id-jag
 * Common Name: Token type URI for a Identity Assertion JWT Authorization Grant
-* Change Controller: IESG
+* Change Controller: IETF
 * Specification Document: This document
 
 
@@ -452,7 +452,7 @@ This section registers `resource` in the "JSON Web Token Claims" subregistry of 
 
 * Claim Name: `resource`
 * Claim Description: Resource
-* Change Controller: IESG
+* Change Controller: IETF
 * Specification Document(s): {{jwt-authorization-grant}}
 
 
@@ -774,6 +774,10 @@ The authors would like to thank the following people for their contributions and
 {:numbered="false"}
 
 [[ To be removed from the final specification ]]
+
+-06
+
+* Update change controller for registration requests from IESG to IETF per general IANA suggestion
 
 -05
 
