@@ -773,7 +773,7 @@ The authors would like to thank the following people for their contributions and
 # Document History
 {:numbered="false"}
 
-[[ To be removed from the final specification ]]
+\[\[ To be removed from the final specification ]]
 
 -06
 
