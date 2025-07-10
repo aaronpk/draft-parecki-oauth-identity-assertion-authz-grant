@@ -5,10 +5,10 @@
 Web Authorization Protocol                                    A. Parecki
 Internet-Draft                                                      Okta
 Intended status: Standards Track                           K. McGuinness
-Expires: 3 January 2026                                      Independent
+Expires: 11 January 2026                                     Independent
                                                              B. Campbell
                                                            Ping Identity
-                                                             2 July 2025
+                                                            10 July 2025
 
 
                  Identity Assertion Authorization Grant
@@ -57,7 +57,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 3 January 2026.
+   This Internet-Draft will expire on 11 January 2026.
 
 Copyright Notice
 
@@ -634,7 +634,7 @@ Cache-Control: no-store
 9.1.  Media Types
 
    This section registers oauth-id-jag+jwt, a new media type [RFC2046]
-   in the "Media Types" registry [IANA.MediaTypes] in the manner
+   in the "Media Types" registry [IANA.media-types] in the manner
    described in [RFC6838].  It can be used to indicate that the content
    is a Identity Assertion Authorization Grant JWT.
 
@@ -649,21 +649,21 @@ Cache-Control: no-store
    *  Common Name: Token type URI for a Identity Assertion JWT
       Authorization Grant
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Specification Document: This document
 
 9.3.  JSON Web Token Claims Registration
 
    This section registers resource in the "JSON Web Token Claims"
-   subregistry of the "JSON Web Token (JWT)" registry [IANA.JWT].  The
+   subregistry of the "JSON Web Token (JWT)" registry [IANA.jwt].  The
    "JSON Web Token Claims" subregistry was established by [RFC7519].
 
    *  Claim Name: resource
 
    *  Claim Description: Resource
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Specification Document(s): Section 5.3
 
@@ -675,14 +675,16 @@ Cache-Control: no-store
               Schwenkschuster, A., Kasselman, P., Burgin, K., Jenkins,
               M. J., and B. Campbell, "OAuth Identity and Authorization
               Chaining Across Domains", Work in Progress, Internet-
-              Draft, draft-ietf-oauth-identity-chaining-04, 27 February
-              2025, <https://datatracker.ietf.org/doc/html/draft-ietf-
-              oauth-identity-chaining-04>.
+              Draft, draft-ietf-oauth-identity-chaining-05, 3 July 2025,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-
+              identity-chaining-05>.
 
-   [IANA.JWT] "*** BROKEN REFERENCE ***".
+   [IANA.jwt] IANA, "JSON Web Token (JWT)",
+              <https://www.iana.org/assignments/jwt>.
 
-   [IANA.MediaTypes]
-              "*** BROKEN REFERENCE ***".
+   [IANA.media-types]
+              IANA, "Media Types",
+              <https://www.iana.org/assignments/media-types>.
 
    [IANA.oauth-parameters]
               IANA, "OAuth Parameters",
@@ -1193,6 +1195,13 @@ Acknowledgments
 Document History
 
    [[ To be removed from the final specification ]]
+
+   -06
+
+   *  Update change controller for registration requests from IESG to
+      IETF per general IANA suggestion
+
+   *  Fix the two IANA "_** BROKEN REFERENCE **_"s
 
    -05
 
