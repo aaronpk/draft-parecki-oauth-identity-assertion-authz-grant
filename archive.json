@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-06T00:53:48.869162+00:00",
+  "timestamp": "2025-07-13T00:55:26.465851+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -707,7 +707,7 @@
       "labels": [],
       "body": "Probably need a JWT claims registration for `resource` too...\r\n\r\n_Originally posted by @bc-pi in https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/27#discussion_r2178259002_\r\n            ",
       "createdAt": "2025-07-01T18:08:23Z",
-      "updatedAt": "2025-07-02T02:41:53Z",
+      "updatedAt": "2025-07-10T17:54:12Z",
       "closedAt": "2025-07-02T02:41:46Z",
       "comments": [
         {
@@ -716,6 +716,20 @@
           "body": "Please let me know if I did that right",
           "createdAt": "2025-07-02T02:41:53Z",
           "updatedAt": "2025-07-02T02:41:53Z"
+        },
+        {
+          "author": "bc-pi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Please let me know if I did that right\n\nmostly, yes :) I'll do a little PR to fix things up. ",
+          "createdAt": "2025-07-10T17:39:32Z",
+          "updatedAt": "2025-07-10T17:39:32Z"
+        },
+        {
+          "author": "bc-pi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "please see #32",
+          "createdAt": "2025-07-10T17:54:12Z",
+          "updatedAt": "2025-07-10T17:54:12Z"
         }
       ]
     },
@@ -1342,6 +1356,49 @@
           ]
         }
       ]
+    },
+    {
+      "number": 32,
+      "id": "PR_kwDOKv5r-s6eWers",
+      "title": "tidy up the IANA section and references ",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/pull/32",
+      "state": "MERGED",
+      "author": "bc-pi",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-10T17:47:30Z",
+      "updatedAt": "2025-07-10T17:59:59Z",
+      "baseRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "baseRefName": "main",
+      "baseRefOid": "b20976d12d72a61aba5d97607289682d59262752",
+      "headRepository": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
+      "headRefName": "iana-tidy-up",
+      "headRefOid": "89c7390fd7f71dbf1b0960e1eb945b3101a108d8",
+      "closedAt": "2025-07-10T17:59:52Z",
+      "mergedAt": "2025-07-10T17:59:52Z",
+      "mergedBy": "aaronpk",
+      "mergeCommit": {
+        "oid": "e090202a69539bdd480404ed4078b27a3e951d43"
+      },
+      "comments": [
+        {
+          "author": "bc-pi",
+          "authorAssociation": "COLLABORATOR",
+          "body": "note \r\nhttps://drafts.aaronpk.com/draft-parecki-oauth-identity-assertion-authz-grant/iana-tidy-up/draft-parecki-oauth-identity-assertion-authz-grant.html#name-normative-references \r\n\r\nvs \r\n\r\nhttps://www.ietf.org/archive/id/draft-parecki-oauth-identity-assertion-authz-grant-05.html#section-10.1",
+          "createdAt": "2025-07-10T17:49:56Z",
+          "updatedAt": "2025-07-10T17:49:56Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "thank you!",
+          "createdAt": "2025-07-10T17:59:59Z",
+          "updatedAt": "2025-07-10T17:59:59Z"
+        }
+      ],
+      "reviews": []
     }
   ]
 }
