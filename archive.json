@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-13T00:55:26.465851+00:00",
+  "timestamp": "2025-07-17T00:51:29.550334+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -791,6 +791,22 @@
       "body": "Is there a concern about the bursts of requests, for apps with many integrations, needed to obtain id-jag and their refresh tokens within the lifetime of the id_token? \nAnother option is to use the `offline_access` scope in the OIDC AuthN request, to allow for refreshing of id_tokens, should this spec recommend `offline_access` ?",
       "createdAt": "2025-07-02T19:48:32Z",
       "updatedAt": "2025-07-02T19:48:32Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 33,
+      "id": "I_kwDOKv5r-s7A8Qh-",
+      "title": "Define error code to indicate the client should *not* fall back to redirect-based OAuth flow",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/33",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-16T18:56:11Z",
+      "updatedAt": "2025-07-16T18:56:11Z",
       "closedAt": null,
       "comments": []
     }
