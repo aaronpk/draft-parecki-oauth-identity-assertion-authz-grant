@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-17T00:51:29.550334+00:00",
+  "timestamp": "2025-07-20T00:56:32.860399+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -335,15 +335,15 @@
       "id": "I_kwDOKv5r-s6zDlEk",
       "title": "Add Authorization Server metadata to enable discovery of grant/token type.",
       "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/16",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "mcguinness",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "[OAuth 2.0 Authorization Server Metadata](https://datatracker.ietf.org/doc/html/rfc8414) enables a client to discover capabilities of a given authorization server.   For example a client can fetch AS metadata to determine what endpoints, grant types, and scopes the AS supports and then dynamically construct a valid request for a supported granted type.  This enables the client to negotiate the right capabilities at runtime with an Authorization Server vs hard-coding assumptions for a given AS.\n\nA given client currently as no mechanism to discover\n\n- Whether an AS supports issuing `urn:ietf:params:oauth:token-type:id-jag` token type with Token Exchange\n- Whether an AS supports `oauth-id-jag+jwt` JWT as a valid JWT bearer grant type (`urn:ietf:params:oauth:grant-type:jwt-bearer`)\n\nUnfortunately [Token Exchange](https://www.rfc-editor.org/rfc/rfc8693)  doesn't define an authorization server metadata parameter for `requested_token_types_supported`  that could publish `urn:ietf:params:oauth:token-type:id-jag` as supported token type.  Adding the registration would enable clients to discover what token types they could request from a given AS\n\nSimilarly, the new draft revision of [JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants](https://www.ietf.org/archive/id/draft-jones-oauth-rfc7523bis-00.html)  also doesn't define an authorization server metadata parameter for what profiles are supported.  A new parameter such as `jwt_assertion_token_types_supported` would enable a client to know what assertion profiles an Authorization Supports such as `urn:ietf:params:oauth:token-type:id-jag`. \n\nWithout these additional values a client would need to hard-code support for this profile for a given Authorization Server.\n\n\n\n",
       "createdAt": "2025-04-18T05:53:52Z",
-      "updatedAt": "2025-07-02T23:14:16Z",
-      "closedAt": null,
+      "updatedAt": "2025-07-18T20:33:08Z",
+      "closedAt": "2025-07-18T20:33:08Z",
       "comments": [
         {
           "author": "aaronpk",
@@ -358,6 +358,13 @@
           "body": "This PR on the Identity Chaining draft establishes the new `identity_chaining_requested_token_types_supported` property in AS metadata. I added a section to this draft for it. We'll address the second question about the JWT Bearer grant type later.",
           "createdAt": "2025-07-02T23:14:16Z",
           "updatedAt": "2025-07-02T23:14:16Z"
+        },
+        {
+          "author": "aaronpk",
+          "authorAssociation": "OWNER",
+          "body": "Closing this in favor of discussing the specifics of the JWT Assertion Grant discovery question in #34",
+          "createdAt": "2025-07-18T20:33:08Z",
+          "updatedAt": "2025-07-18T20:33:08Z"
         }
       ]
     },
@@ -804,9 +811,41 @@
       "authorAssociation": "OWNER",
       "assignees": [],
       "labels": [],
-      "body": "",
+      "body": "Once an app is connected through this mechanism, an admin might want to _prevent_ users from going through an interactive OAuth flow entirely.",
       "createdAt": "2025-07-16T18:56:11Z",
-      "updatedAt": "2025-07-16T18:56:11Z",
+      "updatedAt": "2025-07-18T20:30:03Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 34,
+      "id": "I_kwDOKv5r-s7BYFUT",
+      "title": "Authorization Server Metadata to enable discovery of JWT Assertion Grant",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/34",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "A given client currently as no mechanism to discover whether an AS supports `oauth-id-jag+jwt` JWT as a valid JWT bearer grant type (`urn:ietf:params:oauth:grant-type:jwt-bearer`)\n\n(This was split off from #16 to focus on only the Resource App discovery question)",
+      "createdAt": "2025-07-18T20:32:39Z",
+      "updatedAt": "2025-07-18T20:32:39Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 35,
+      "id": "I_kwDOKv5r-s7BYYz-",
+      "title": "Refresh tokens",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/35",
+      "state": "OPEN",
+      "author": "aaronpk",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "There are two places where refresh tokens might come into the picture:\n\n* The Token Exchange request (use an ID Token to get an ID-JAG)\n* The Access Token request (use an ID-JAG to get an access token)\n\nWe should have some guidance or security considerations around the implications of returning refresh tokens for both of these.\n\n## IDP refresh tokens\n\nThe implication of returning a refresh token along with the ID-JAG is that the requesting application could use the refresh token in place of the ID token in future requests. This could allow the IDP to return new ID-JAGs without a new ID token having been requested.\n\n## Resource App refresh tokens\n\nThe resource app could return a refresh token along with the access token. This pattern should be discouraged, as this enables the client to request access tokens in the future which the IDP wouldn't know about.\n",
+      "createdAt": "2025-07-18T21:19:21Z",
+      "updatedAt": "2025-07-18T21:19:21Z",
       "closedAt": null,
       "comments": []
     }
