@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-20T00:56:32.860399+00:00",
+  "timestamp": "2025-07-24T00:51:29.602117+00:00",
   "repo": "aaronpk/draft-parecki-oauth-identity-assertion-authz-grant",
   "labels": [
     {
@@ -846,6 +846,38 @@
       "body": "There are two places where refresh tokens might come into the picture:\n\n* The Token Exchange request (use an ID Token to get an ID-JAG)\n* The Access Token request (use an ID-JAG to get an access token)\n\nWe should have some guidance or security considerations around the implications of returning refresh tokens for both of these.\n\n## IDP refresh tokens\n\nThe implication of returning a refresh token along with the ID-JAG is that the requesting application could use the refresh token in place of the ID token in future requests. This could allow the IDP to return new ID-JAGs without a new ID token having been requested.\n\n## Resource App refresh tokens\n\nThe resource app could return a refresh token along with the access token. This pattern should be discouraged, as this enables the client to request access tokens in the future which the IDP wouldn't know about.\n",
       "createdAt": "2025-07-18T21:19:21Z",
       "updatedAt": "2025-07-18T21:19:21Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 36,
+      "id": "I_kwDOKv5r-s7B7IJu",
+      "title": "Why are public clients optional?",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/36",
+      "state": "OPEN",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "```\n[8.1. ](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant-05#section-8.1)[Client Authentication](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-identity-assertion-authz-grant-05#name-client-authentication)\nThis specification SHOULD only be supported for confidential clients. Public clients SHOULD redirect the user with an OAuth 2.0 Authorization Request.\n```\n\nWhy SHOULD and not MUST?",
+      "createdAt": "2025-07-22T17:28:23Z",
+      "updatedAt": "2025-07-22T17:28:23Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 37,
+      "id": "I_kwDOKv5r-s7CJfne",
+      "title": "id-jag SHOULD be short-lived",
+      "url": "https://github.com/aaronpk/draft-parecki-oauth-identity-assertion-authz-grant/issues/37",
+      "state": "OPEN",
+      "author": "sdesen",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "A short lived id-jag token mitigates many threats such as token theft and the need to implement token revocation mechanisms, among others (although other mitigations in place such as client auth)\nShould the security considerations or somewhere in the spec specificy that the token should be short lived? Sorry if this was already present and I missed it, or if it will be present in the pending Refresh token updates.",
+      "createdAt": "2025-07-23T18:07:45Z",
+      "updatedAt": "2025-07-23T18:07:45Z",
       "closedAt": null,
       "comments": []
     }
